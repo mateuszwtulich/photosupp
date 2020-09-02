@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="issues">
+    <option name="index">
+      <map>
+        <entry key="/a.dummy">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../HamburgSud/json-parser/report.json">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/manager/model/AlgoId.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/manager/model/AssignmentGroup.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/manager/model/AssignmentGroupId.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/manager/model/AssignmentGroupType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/manager/model/KnowledgeObjectId.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/manager/model/TMEvent.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/manager/model/TicketId.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/manager/model/TopicId.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/manager/model/UserId.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/metadata/actors/MetaDataActor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/metadata/actors/MetaDataEvents.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/metadata/actors/MetaDataReply.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/metadata/config/MetaConfig.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/metadata/controllers/MetaDataController.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/ml/actors/MLSendRequestsActor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/ticketsystem/config/IrisConnectConfig.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/ticketsystem/config/PriorityStrategyConfigs.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/ticketsystem/config/StrategyConfig.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/ticketsystem/model/TSCustomer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/utils/ListZipper.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/ml/actors/MLActor.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/ml/actors/MLPrepareRequestActor.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/ml/config/MLConfig.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/ml/controllers/MLController.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/test/tickets/actors/ticket/TicketActorReassignedSpec.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/test/tickets/actors/ticket/TicketActorResolvedSpec.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../calendarWorkspace/ProjectCalendar/calendar-api/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/pom.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/core/config/CorsConfig.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/core/config/SwaggerConfig.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/config/CorsConfig.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/config/SwaggerConfig.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/config/CorsConfig.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/config/SwaggerConfig.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/dataaccess/api/entity/AbstractApplicationPersistenceEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/security/user/dataaccess/api/dao/AccountDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/security/user/dataaccess/api/dao/UserDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/security/user/dataaccess/api/entity/UserEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/security/user/logic/impl/UserHandlingImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/user/dataaccess/api/dao/AccountDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/user/dataaccess/api/dao/UserDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/user/dataaccess/api/dao/VerificationTokenDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/user/dataaccess/api/entity/AccountEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/user/dataaccess/api/entity/UserEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/user/dataaccess/api/entity/VerificationTokenEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/user/logic/api/UserHandling.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/user/logic/impl/UserHandlingImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/resources/application.properties">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/photosupp.iml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/pom.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
