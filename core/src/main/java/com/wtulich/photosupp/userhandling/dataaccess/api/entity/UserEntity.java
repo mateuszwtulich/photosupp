@@ -1,15 +1,19 @@
-package com.wtulich.photosupp.userhandling.user.dataaccess.api.entity;
+package com.wtulich.photosupp.userhandling.dataaccess.api.entity;
 
 import com.sun.istack.NotNull;
 import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationPersistenceEntity;
+import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.MediaContentEntity;
+import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.OrderEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -29,6 +33,10 @@ public class UserEntity extends AbstractApplicationPersistenceEntity {
     @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "ACCOUNT_ID", nullable = false, referencedColumnName = "id", unique = true)
     private AccountEntity account;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, targetEntity = OrderEntity.class)
+    private List<OrderEntity> orderList;
+
 
     public String getName() {
         return name;

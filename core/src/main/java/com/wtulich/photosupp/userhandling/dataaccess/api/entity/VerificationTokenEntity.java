@@ -1,4 +1,4 @@
-package com.wtulich.photosupp.userhandling.user.dataaccess.api.entity;
+package com.wtulich.photosupp.userhandling.dataaccess.api.entity;
 
 import com.sun.istack.NotNull;
 import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationPersistenceEntity;

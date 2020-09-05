@@ -8,6 +8,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../HamburgSud/intermodal/core/src/main/java/com/hamburgsud/globe/intermodal/joborderhandling/joborder/dataaccess/api/entity/JobOrderEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../HamburgSud/json-parser/report.json">
           <value>
             <set />
@@ -148,6 +153,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../calendarWorkspace/ProjectCalendar/calendar-api/roles_service/src/main/java/org/capgemini/role/entity/Role.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/core/pom.xml">
           <value>
             <set />
@@ -188,6 +198,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/security/enums/ApplicationPermissions.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/security/user/dataaccess/api/dao/AccountDao.java">
           <value>
             <set />
@@ -208,7 +223,177 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/dataaccess/api/dao/MediaContentDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/dataaccess/api/dao/OrderDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/dataaccess/api/entity/MediaContentEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/dataaccess/api/entity/OrderEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/dataaccess/api/dao/AddressDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/dataaccess/api/dao/IndicatorDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/dataaccess/api/dao/PriceIndicator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/dataaccess/api/dao/PriceIndicatorDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/dataaccess/api/dao/ServiceDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/dataaccess/api/entity/Address.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/dataaccess/api/entity/AddressEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/dataaccess/api/entity/BookingEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/dataaccess/api/entity/IndicatorEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/dataaccess/api/entity/PriceIndicatorEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/dataaccess/api/entity/PriceIndicatorKey.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/dataaccess/api/entity/ServiceEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/api/dao/AccountDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/api/dao/PermissionDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/api/dao/RoleDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/api/dao/UserDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/api/entity/PermissionEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/api/entity/RoleEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/api/entity/UserEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/api/entity/VerificationTokenEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/dataaccess/api/dao/AccountDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/dataaccess/api/dao/PermissionDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/dataaccess/api/dao/RoleDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/dataaccess/api/dao/UserDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/dataaccess/api/entity/PermissionEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/dataaccess/api/entity/RoleEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/dataaccess/api/entity/UserEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/dataaccess/api/entity/VerificationTokenEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/user/dataaccess/api/dao/AccountDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/user/dataaccess/api/dao/PermissionDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/user/dataaccess/api/dao/RoleDao.java">
           <value>
             <set />
           </value>
@@ -224,6 +409,16 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/user/dataaccess/api/entity/AccountEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/user/dataaccess/api/entity/PermissionEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/user/dataaccess/api/entity/RoleEntity.java">
           <value>
             <set />
           </value>
