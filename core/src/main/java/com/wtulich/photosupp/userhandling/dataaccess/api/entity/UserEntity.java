@@ -2,7 +2,6 @@ package com.wtulich.photosupp.userhandling.dataaccess.api.entity;
 
 import com.sun.istack.NotNull;
 import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationPersistenceEntity;
-import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.MediaContentEntity;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.OrderEntity;
 
 import javax.persistence.CascadeType;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "USER")
+@Table(name = "PHOTOSUPP_USER")
 public class UserEntity extends AbstractApplicationPersistenceEntity {
     private static final long serialVersionUID = 1L;
 

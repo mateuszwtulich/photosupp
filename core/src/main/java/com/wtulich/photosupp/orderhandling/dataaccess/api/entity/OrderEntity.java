@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "ORDER")
+@Table(name = "PHOTOSUPP_ORDER")
 public class OrderEntity extends AbstractApplicationPersistenceEntity {
     private static final long serialVersionUID = 1L;
 
@@ -48,10 +48,10 @@ public class OrderEntity extends AbstractApplicationPersistenceEntity {
     @JoinColumn(name = "USER_ID", nullable = false, referencedColumnName = "id")
     private UserEntity user;
 
-//    @NotNull
-//    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-//    @JoinColumn(name = "COORDINATOR_ID", nullable = false, referencedColumnName = "id")
-//    private UserEntity coordinator;
+    @NotNull
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinColumn(name = "COORDINATOR_ID", nullable = false, referencedColumnName = "id")
+    private UserEntity coordinator;
 
     @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "BOOKING_ID", nullable = true, referencedColumnName = "id", unique = true)
@@ -100,13 +100,13 @@ public class OrderEntity extends AbstractApplicationPersistenceEntity {
         this.user = user;
     }
 
-//    public UserEntity getCoordinator() {
-//        return coordinator;
-//    }
-//
-//    public void setCoordinator(UserEntity coordinator) {
-//        this.coordinator = coordinator;
-//    }
+    public UserEntity getCoordinator() {
+        return coordinator;
+    }
+
+    public void setCoordinator(UserEntity coordinator) {
+        this.coordinator = coordinator;
+    }
 
     public BookingEntity getBooking() {
         return booking;
@@ -134,13 +134,13 @@ public class OrderEntity extends AbstractApplicationPersistenceEntity {
                 price.equals(that.price) &&
                 createdAt.equals(that.createdAt) &&
                 user.equals(that.user) &&
-//                coordinator.equals(that.coordinator) &&
+                coordinator.equals(that.coordinator) &&
                 Objects.equals(booking, that.booking) &&
                 Objects.equals(mediaContentList, that.mediaContentList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderNumber, status, price, createdAt, user, booking, mediaContentList);
+        return Objects.hash(orderNumber, status, price, createdAt, user, coordinator, booking, mediaContentList);
     }
 }
