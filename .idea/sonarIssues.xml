@@ -18,6 +18,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-webmvc/5.2.5.RELEASE/2388837e6f967bb71399a6076c7070c0b0b1fddc/spring-webmvc-5.2.5.RELEASE-sources.jar!/org/springframework/web/servlet/view/RedirectView.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-java/app/manager/model/AlgoId.java">
           <value>
             <set />
@@ -158,6 +163,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../calendarWorkspace/ProjectCalendar/calendar-api/users_service/src/main/java/org/capgemini/user/controller/AccountController.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/core/pom.xml">
           <value>
             <set />
@@ -223,12 +233,22 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/dataaccess/api/dao/CommentDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/dataaccess/api/dao/MediaContentDao.java">
           <value>
             <set />
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/dataaccess/api/dao/OrderDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/dataaccess/api/entity/CommentEntity.java">
           <value>
             <set />
           </value>

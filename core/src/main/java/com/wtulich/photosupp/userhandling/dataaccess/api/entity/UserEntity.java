@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -29,11 +30,16 @@ public class UserEntity extends AbstractApplicationPersistenceEntity {
     private String surname;
 
     @NotNull
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinColumn(name = "ROLE_ID", nullable = false, referencedColumnName = "id")
+    private RoleEntity role;
+
+    @NotNull
     @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "ACCOUNT_ID", nullable = false, referencedColumnName = "id", unique = true)
     private AccountEntity account;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, targetEntity = OrderEntity.class)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, targetEntity = OrderEntity.class, orphanRemoval = true)
     private List<OrderEntity> orderList;
 
 
@@ -53,6 +59,14 @@ public class UserEntity extends AbstractApplicationPersistenceEntity {
         this.surname = surname;
     }
 
+    public RoleEntity getRole() {
+        return role;
+    }
+
+    public void setRole(RoleEntity role) {
+        this.role = role;
+    }
+
     public AccountEntity getAccount() {
         return account;
     }
@@ -67,12 +81,13 @@ public class UserEntity extends AbstractApplicationPersistenceEntity {
         if (!(o instanceof UserEntity)) return false;
         UserEntity that = (UserEntity) o;
         return name.equals(that.name) &&
+                role.equals(that.role) &&
                 surname.equals(that.surname) &&
                 account.equals(that.account);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, surname, account);
+        return Objects.hash(name, role, surname, account);
     }
 }

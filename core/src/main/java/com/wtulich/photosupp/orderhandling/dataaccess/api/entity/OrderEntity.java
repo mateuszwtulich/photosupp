@@ -57,7 +57,10 @@ public class OrderEntity extends AbstractApplicationPersistenceEntity {
     @JoinColumn(name = "BOOKING_ID", nullable = true, referencedColumnName = "id", unique = true)
     private BookingEntity booking;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, targetEntity = MediaContentEntity.class)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, targetEntity = CommentEntity.class, orphanRemoval = true)
+    private List<CommentEntity> commentList;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, targetEntity = MediaContentEntity.class, orphanRemoval = true)
     private List<MediaContentEntity> mediaContentList;
 
     public Long getOrderNumber() {
