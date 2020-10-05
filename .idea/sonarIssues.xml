@@ -18,6 +18,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../HamburgSud/json-parser/src/main/java/application/JsonExtractor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-webmvc/5.2.5.RELEASE/2388837e6f967bb71399a6076c7070c0b0b1fddc/spring-webmvc-5.2.5.RELEASE-sources.jar!/org/springframework/web/servlet/view/RedirectView.java">
           <value>
             <set />
@@ -123,6 +128,31 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/docu/controllers/swagger/ApiSpecs.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/manager/model/AssignmentGroupId.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/manager/model/DevopsId.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/manager/model/KnowledgeObjectId.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/manager/model/TopicId.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/ml/actors/MLActor.scala">
           <value>
             <set />
@@ -139,6 +169,81 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/ml/controllers/MLController.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/sample/controllers/SampleController.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/sample/dto/SampleUserDto.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/sample/mapper/Mapper.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/sample/model/SampleUser.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/topics/actors/TopicsActor.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/topics/actors/TopicsCommands.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/topics/actors/TopicsEvents.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/topics/controllers/TopicsController.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/topics/controllers/TopicsControllerOld.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/topics/dto/TopicResponseDto.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/util/views/tmmain.scala.html">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/conf/routes">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/conf/routes.swagger">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/conf/swagger-custom-mappings.yml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/conf/swagger.yml">
           <value>
             <set />
           </value>
@@ -319,6 +424,66 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/dataaccess/api/entity/ServiceEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/mapper/IAddressMapper.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/mapper/IIndicatorMapper.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/mapper/IServiceMapper.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/mapper/IndicatorMapper.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/to/AddressEto.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/to/AddressTo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/to/CalculateCto.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/to/CalculateTo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/to/IndicatorEto.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/to/IndicatorTo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/to/ServiceEto.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/to/ServiceTo.java">
           <value>
             <set />
           </value>
