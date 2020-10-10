@@ -1,27 +1,16 @@
-package com.wtulich.photosupp.userhandling.dataaccess.api.entity;
+package com.wtulich.photosupp.userhandling.logic.api.to;
 
 import com.sun.istack.NotNull;
-import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationPersistenceEntity;
+import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationEntityTransportObject;
 import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
 import java.util.Objects;
 
-@Entity
-@Table(name = "PERMISSION")
-public class PermissionEntity extends AbstractApplicationPersistenceEntity {
-    private static final long serialVersionUID = 1L;
+public class PermissionEto extends AbstractApplicationEntityTransportObject {
 
     @NotNull
-    @Column(name = "NAME", nullable = false, unique = true)
-    @Enumerated(EnumType.STRING)
     private ApplicationPermissions name;
 
-    @Column(name = "DESCRIPTION")
     private String description;
 
     public ApplicationPermissions getName() {
@@ -43,9 +32,9 @@ public class PermissionEntity extends AbstractApplicationPersistenceEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PermissionEntity)) return false;
+        if (!(o instanceof PermissionEto)) return false;
         if (!super.equals(o)) return false;
-        PermissionEntity that = (PermissionEntity) o;
+        PermissionEto that = (PermissionEto) o;
         return name == that.name &&
                 Objects.equals(description, that.description);
     }

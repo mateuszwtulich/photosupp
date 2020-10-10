@@ -1,13 +1,11 @@
 package com.wtulich.photosupp.serviceordering.logic.api.to;
 
 import com.sun.istack.NotNull;
+import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationEntityTransportObject;
 
 import java.util.Objects;
 
-public class ServiceEto {
-
-    @NotNull
-    private Long id;
+public class ServiceEto extends AbstractApplicationEntityTransportObject {
 
     @NotNull
     private String name;
@@ -16,14 +14,6 @@ public class ServiceEto {
 
     @NotNull
     private Double basePrice;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -54,14 +44,13 @@ public class ServiceEto {
         if (this == o) return true;
         if (!(o instanceof ServiceEto)) return false;
         ServiceEto that = (ServiceEto) o;
-        return id.equals(that.id) &&
-                name.equals(that.name) &&
+        return  name.equals(that.name) &&
                 Objects.equals(description, that.description) &&
                 basePrice.equals(that.basePrice);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, basePrice);
+        return Objects.hash(name, description, basePrice);
     }
 }

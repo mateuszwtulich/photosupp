@@ -1,13 +1,11 @@
 package com.wtulich.photosupp.serviceordering.logic.api.to;
 
 import com.sun.istack.NotNull;
+import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationEntityTransportObject;
 
 import java.util.Objects;
 
-public class AddressEto {
-
-    @NotNull
-    private Long id;
+public class AddressEto extends AbstractApplicationEntityTransportObject {
 
     @NotNull
     private String city;
@@ -23,14 +21,6 @@ public class AddressEto {
 
     @NotNull
     private String postalCode;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getCity() {
         return city;
@@ -77,8 +67,7 @@ public class AddressEto {
         if (this == o) return true;
         if (!(o instanceof AddressEto)) return false;
         AddressEto that = (AddressEto) o;
-        return id.equals(that.id) &&
-                city.equals(that.city) &&
+        return city.equals(that.city) &&
                 street.equals(that.street) &&
                 buildingNumber.equals(that.buildingNumber) &&
                 apartmentNumber.equals(that.apartmentNumber) &&
@@ -87,6 +76,6 @@ public class AddressEto {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, city, street, buildingNumber, apartmentNumber, postalCode);
+        return Objects.hash(city, street, buildingNumber, apartmentNumber, postalCode);
     }
 }

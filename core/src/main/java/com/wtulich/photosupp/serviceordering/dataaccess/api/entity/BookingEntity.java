@@ -36,9 +36,8 @@ public class BookingEntity extends AbstractApplicationPersistenceEntity {
     @Column(name = "END_DATE", nullable = false)
     private LocalDate end;
 
-    @NotNull
     @Column(name = "FINAL_PRICE", nullable = false)
-    private Double finalPrice;
+    private Double predictedPrice;
 
     @NotNull
     @Column(name = "MODIFICATION_DATE", nullable = false)
@@ -47,6 +46,10 @@ public class BookingEntity extends AbstractApplicationPersistenceEntity {
     @NotNull
     @Column(name = "IS_CONFIRMED", nullable = false)
     private boolean isConfirmed = false;
+
+    @ManyToOne(targetEntity = AddressEntity.class, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "id", nullable = false)
+    private AddressEntity address;
 
     @NotNull
     @ManyToOne(targetEntity = UserEntity.class, cascade = CascadeType.MERGE)
@@ -58,7 +61,6 @@ public class BookingEntity extends AbstractApplicationPersistenceEntity {
     @JoinColumn(name = "SERVICE_ID", referencedColumnName = "id", nullable = false)
     private ServiceEntity service;
 
-    @NotNull
     @OneToMany(mappedBy = "booking", fetch = FetchType.LAZY, targetEntity = PriceIndicatorEntity.class)
     private List<PriceIndicatorEntity> priceIndicatorList;
 
@@ -94,12 +96,12 @@ public class BookingEntity extends AbstractApplicationPersistenceEntity {
         this.end = end;
     }
 
-    public Double getFinalPrice() {
-        return finalPrice;
+    public Double getPredictedPrice() {
+        return predictedPrice;
     }
 
-    public void setFinalPrice(Double finalPrice) {
-        this.finalPrice = finalPrice;
+    public void setPredictedPrice(Double predictedPrice) {
+        this.predictedPrice = predictedPrice;
     }
 
     public LocalDate getModificationDate() {
@@ -116,6 +118,14 @@ public class BookingEntity extends AbstractApplicationPersistenceEntity {
 
     public void setConfirmed(boolean confirmed) {
         isConfirmed = confirmed;
+    }
+
+    public AddressEntity getAddress() {
+        return address;
+    }
+
+    public void setAddress(AddressEntity address) {
+        this.address = address;
     }
 
     public UserEntity getUser() {
@@ -146,21 +156,23 @@ public class BookingEntity extends AbstractApplicationPersistenceEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BookingEntity)) return false;
+        if (!super.equals(o)) return false;
         BookingEntity that = (BookingEntity) o;
         return isConfirmed == that.isConfirmed &&
                 name.equals(that.name) &&
                 Objects.equals(description, that.description) &&
                 start.equals(that.start) &&
                 end.equals(that.end) &&
-                finalPrice.equals(that.finalPrice) &&
+                Objects.equals(predictedPrice, that.predictedPrice) &&
                 modificationDate.equals(that.modificationDate) &&
+                Objects.equals(address, that.address) &&
                 user.equals(that.user) &&
                 service.equals(that.service) &&
-                priceIndicatorList.equals(that.priceIndicatorList);
+                Objects.equals(priceIndicatorList, that.priceIndicatorList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, start, end, finalPrice, modificationDate, isConfirmed, user, service, priceIndicatorList);
+        return Objects.hash(super.hashCode(), name, description, start, end, predictedPrice, modificationDate, isConfirmed, address, user, service, priceIndicatorList);
     }
 }

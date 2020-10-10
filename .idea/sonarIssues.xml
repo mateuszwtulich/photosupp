@@ -3,12 +3,62 @@
   <component name="issues">
     <option name="index">
       <map>
+        <entry key="/Dummy.txt">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/a.dummy">
           <value>
             <set />
           </value>
         </entry>
+        <entry key="/a.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/sbtShell">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../HamburgSud/intermodal/core/src/main/java/com/hamburgsud/globe/intermodal/joborderhandling/joborder/dataaccess/api/entity/JobOrderEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../HamburgSud/intermodal/core/src/main/java/com/hamburgsud/globe/intermodal/template/common/api/to/TemplateLegRateDownloadTo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../HamburgSud/intermodal/core/src/main/java/com/hamburgsud/globe/intermodal/template/dataaccess/impl/dao/TemplateLegRateDownloadDaoImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../HamburgSud/intermodal/core/src/main/resources/application.properties">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../HamburgSud/intermodal/core/src/main/resources/config/application-oracle.properties">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../HamburgSud/intermodal/core/src/main/resources/config/application.properties">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../HamburgSud/intermodal/core/src/main/resources/json-logback.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../HamburgSud/intermodal/core/src/test/resources/logback.xml">
           <value>
             <set />
           </value>
@@ -133,6 +183,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/manager/controllers/TMController.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/manager/model/AlgoId.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/manager/model/AssignmentGroupId.scala">
           <value>
             <set />
@@ -169,6 +229,41 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/ml/controllers/MLController.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/ml/controllers/MLControllerOld.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/ml/dto/AlgListDto.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/ml/dto/AlgWithMLQueuedRequestDto.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/ml/dto/AlgoIdWithMLQueuedRequestDto.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/ml/dto/FetchTicketDto.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/ml/dto/MLQueuedRequestDto.scala">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../bmwWorkspace/cce-ticketmanager-play/app/ml/model/MLPriority.scala">
           <value>
             <set />
           </value>
@@ -308,6 +403,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/dataaccess/api/entity/AbstractApplicationEntityTransportObject.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/dataaccess/api/entity/AbstractApplicationPersistenceEntity.java">
           <value>
             <set />
@@ -338,6 +438,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/utils/enums/MediaType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/utils/enums/OrderStatus.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/dataaccess/api/dao/CommentDao.java">
           <value>
             <set />
@@ -364,6 +474,51 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/dataaccess/api/entity/OrderEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/logic/api/mapper/ICommentMapper.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/logic/api/mapper/IMediaContentMapper.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/logic/api/mapper/IOrderMapper.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/logic/api/to/CommentEto.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/logic/api/to/CommentTo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/logic/api/to/MediaContentEto.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/logic/api/to/MediaContentTo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/logic/api/to/OrderEto.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/orderhandling/logic/api/to/OrderTo.java">
           <value>
             <set />
           </value>
@@ -438,6 +593,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/mapper/IPriceIndicator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/mapper/IServiceMapper.java">
           <value>
             <set />
@@ -458,6 +618,21 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/to/BookingEto.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/to/BookingEtoWithOrderId.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/to/BookingTo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/to/CalculateCto.java">
           <value>
             <set />
@@ -474,6 +649,16 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/to/IndicatorTo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/to/PriceIndicatorEto.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/serviceordering/logic/api/to/PriceIndicatorTo.java">
           <value>
             <set />
           </value>
@@ -564,6 +749,56 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/dataaccess/api/entity/VerificationTokenEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/mapper/IAccountMapper.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/mapper/IRoleMapper.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/mapper/IUserMapper.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/to/AccountEto.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/to/AccountTo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/to/PermissionEto.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/to/RoleEto.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/to/RoleTo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/to/UserEto.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/to/UserTo.java">
           <value>
             <set />
           </value>
