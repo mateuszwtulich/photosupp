@@ -12,11 +12,13 @@ import com.wtulich.photosupp.userhandling.logic.api.usecase.UcManageRole;
 import com.wtulich.photosupp.userhandling.logic.impl.validator.RoleValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.annotation.Validated;
 
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Objects;
 
+@Validated
 public class UcManageRoleImpl implements UcManageRole {
     private static final Logger LOG = LoggerFactory.getLogger(UcManageRoleImpl.class);
     private static final String ID_CANNOT_BE_NULL = "id cannot be a null value";
@@ -48,7 +50,8 @@ public class UcManageRoleImpl implements UcManageRole {
 
         Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
 
-        RoleEntity roleEntity = roleDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Role with id {} does not exist."));
+        RoleEntity roleEntity = roleDao.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("Role with id " + id + " does not exist."));
         roleValidator.verifyIfRoleAlreadyExists(roleTo);
         LOG.debug("Update Role with id {} from database.", id);
 

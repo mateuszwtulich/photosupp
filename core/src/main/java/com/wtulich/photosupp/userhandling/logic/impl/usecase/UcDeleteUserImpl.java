@@ -12,7 +12,6 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-@Named
 @Validated
 public class UcDeleteUserImpl implements UcDeleteUser {
 

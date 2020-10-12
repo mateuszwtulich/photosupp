@@ -9,8 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Named
 public class RoleValidator {
     private static final Logger LOG = LoggerFactory.getLogger(RoleValidator.class);
 
@@ -34,7 +37,7 @@ public class RoleValidator {
     }
 
     private void verifyIfRolePermissionsAlreadyExists(List<PermissionEntity> permissions) throws EntityAlreadyExistsException {
-        if (roleDao.existsByPermissions(permissions)) {
+        if (roleDao.existsByPermissionsIn(permissions)) {
             LOG.error("Role with permissions already exists");
             throw new EntityAlreadyExistsException("Role with permissions already exists");
         }

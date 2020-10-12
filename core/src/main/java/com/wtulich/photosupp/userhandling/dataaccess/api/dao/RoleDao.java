@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface RoleDao extends JpaRepository<RoleEntity, Long> {
     boolean existsByName(String name);
-    boolean existsByPermissions(List<PermissionEntity> permissions);
+    boolean existsByPermissionsIn(List<PermissionEntity> permissions);
 }

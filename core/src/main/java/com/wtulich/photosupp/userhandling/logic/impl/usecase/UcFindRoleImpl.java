@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Named
 @Validated
 public class UcFindRoleImpl implements UcFindRole {
 

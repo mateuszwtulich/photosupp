@@ -7,21 +7,10 @@ import java.util.Objects;
 public class AccountTo {
 
     @NotNull
-    private String username;
-
-    @NotNull
     private String password;
 
     @NotNull
     private  String email;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getPassword() {
         return password;
@@ -44,13 +33,12 @@ public class AccountTo {
         if (this == o) return true;
         if (!(o instanceof AccountTo)) return false;
         AccountTo accountTo = (AccountTo) o;
-        return username.equals(accountTo.username) &&
-                password.equals(accountTo.password) &&
+        return password.equals(accountTo.password) &&
                 email.equals(accountTo.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, password, email);
+        return Objects.hash(password, email);
     }
 }

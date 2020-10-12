@@ -9,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-@Named
 @Validated
 public class UcDeleteRoleImpl implements UcDeleteRole {
 

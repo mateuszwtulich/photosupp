@@ -13,7 +13,7 @@ public class UserTo {
     private String surname;
 
     @NotNull
-    private Long accountId;
+    private AccountTo accountTo;
 
     @NotNull
     private Long roleId;
@@ -34,12 +34,12 @@ public class UserTo {
         this.surname = surname;
     }
 
-    public Long getAccountId() {
-        return accountId;
+    public AccountTo getAccountTo() {
+        return accountTo;
     }
 
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
+    public void setAccountTo(AccountTo accountTo) {
+        this.accountTo = accountTo;
     }
 
     public Long getRoleId() {
@@ -57,12 +57,12 @@ public class UserTo {
         UserTo userTo = (UserTo) o;
         return name.equals(userTo.name) &&
                 surname.equals(userTo.surname) &&
-                accountId.equals(userTo.accountId) &&
+                accountTo.equals(userTo.accountTo) &&
                 roleId.equals(userTo.roleId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, surname, accountId, roleId);
+        return Objects.hash(name, surname, accountTo, roleId);
     }
 }

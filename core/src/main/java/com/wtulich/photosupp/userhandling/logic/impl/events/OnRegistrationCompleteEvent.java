@@ -1,4 +1,4 @@
-package com.wtulich.photosupp.userhandling.logic.impl.usecase;
+package com.wtulich.photosupp.userhandling.logic.impl.events;
 
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.AccountEntity;
 import org.springframework.context.ApplicationEvent;

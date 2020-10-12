@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AccountDao extends JpaRepository<AccountEntity, Long> {
+    boolean existsByEmail(String email);
 }
