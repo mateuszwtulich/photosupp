@@ -6,7 +6,7 @@ import com.wtulich.photosupp.userhandling.logic.api.to.RoleTo;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface IRoleMapper {
+public interface RoleMapper {
     RoleEntity toRoleEntity(RoleTo roleTo);
 
     RoleEto toRoleEto(RoleEntity roleEntity);

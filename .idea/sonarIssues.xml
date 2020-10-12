@@ -23,7 +23,17 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../HamburgSud/intermodal/client/src/main/webapp/app/shared/search/search-table/search-table.component.ts">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../HamburgSud/intermodal/core/src/main/java/com/hamburgsud/globe/intermodal/joborderhandling/joborder/dataaccess/api/entity/JobOrderEntity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../HamburgSud/intermodal/core/src/main/java/com/hamburgsud/globe/intermodal/joborderhandling/joborder/logic/impl/usecase/UcFindJobOrderCostItemImpl.java">
           <value>
             <set />
           </value>
@@ -69,6 +79,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../../HamburgSud/json-parser/src/main/java/application/JsonExtractor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/2.2.6.RELEASE/420165e5f33e63759bcf57b1adbe81a7274a1c36/spring-data-commons-2.2.6.RELEASE-sources.jar!/org/springframework/data/repository/CrudRepository.java">
           <value>
             <set />
           </value>
@@ -413,6 +428,31 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/logic/api/exception/EntityAlreadyExistsException.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/logic/api/validator/AbstractDeleteValidator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/logic/api/validator/DeleteValidator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/logic/api/validator/GeneralValidator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/logic/api/validator/T.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/general/security/enums/ApplicationPermissions.java">
           <value>
             <set />
@@ -753,6 +793,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/exception/AccountAlreadyExistsException.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/mapper/IAccountMapper.java">
           <value>
             <set />
@@ -799,6 +844,141 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/to/UserTo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/usecase/OnRegistrationCompleteEvent.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/usecase/RegistrationListener.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/usecase/UcDeleteAccount.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/usecase/UcDeleteRole.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/usecase/UcDeleteUser.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/usecase/UcFindAccount.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/usecase/UcFindRole.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/usecase/UcFindUser.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/usecase/UcManageAccount.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/usecase/UcManageRegistration.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/usecase/UcManageRole.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/usecase/UcManageUser.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/usecase/UcUpdateAccount.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/api/validator/UserHandlingValidator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/impl/listener/RegistrationListener.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/impl/usecase/OnRegistrationCompleteEvent.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/impl/usecase/RegistrationListener.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/impl/usecase/UcDeleteRoleImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/impl/usecase/UcDeleteUserImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/impl/usecase/UcFindAccountImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/impl/usecase/UcFindRoleImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/impl/usecase/UcFindUserImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/impl/usecase/UcManageRoleImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/logic/impl/validator/RoleValidator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/service/api/ui/UserRestService.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/service/impl/ui/UserRestService.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/core/src/main/java/com/wtulich/photosupp/userhandling/service/impl/ui/UserRestServiceImpl.java">
           <value>
             <set />
           </value>
