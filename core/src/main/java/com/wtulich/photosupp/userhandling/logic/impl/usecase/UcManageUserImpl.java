@@ -17,7 +17,9 @@ import com.wtulich.photosupp.userhandling.logic.api.usecase.UcManageUser;
 import com.wtulich.photosupp.userhandling.logic.impl.validator.AccountValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.inject.Inject;
 import java.util.Objects;
@@ -46,7 +48,7 @@ public class UcManageUserImpl implements UcManageUser {
     private AccountValidator accountValidator;
 
     @Override
-    public UserEto createUserAndAccountEntities(UserTo userTo) throws AccountAlreadyExistsException {
+    public UserEto createUserAndAccountEntities(UserTo userTo) {
         LOG.debug("Create User with surname {} in database.", userTo.getSurname());
         AccountEntity accountEntity = createAccountEntities(userTo.getAccountTo());
 
@@ -81,13 +83,21 @@ public class UcManageUserImpl implements UcManageUser {
         return accountMapper.toAccountEto(accountEntity);
     }
 
-    private AccountEntity createAccountEntities(AccountTo accountTo) throws AccountAlreadyExistsException {
-        accountValidator.verifyIfAccountAlreadyExists(accountTo);
+    private AccountEntity createAccountEntities(AccountTo accountTo) {
+        verifyAccount(accountTo);
 
         AccountEntity accountEntity = toAccountEntity(accountTo);
         LOG.debug("Create Account with username {} in database.", accountEntity.getUsername());
 
         return accountDao.save(accountEntity);
+    }
+
+    private void verifyAccount(AccountTo accountTo){
+        try {
+            accountValidator.verifyIfAccountAlreadyExists(accountTo);
+        } catch (AccountAlreadyExistsException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        }
     }
 
     private AccountEntity toAccountEntity(AccountTo accountTo) {
@@ -105,14 +115,14 @@ public class UcManageUserImpl implements UcManageUser {
         Objects.requireNonNull(userId, ID_CANNOT_BE_NULL);
 
         return userDao.findById(userId).orElseThrow(() ->
-                new IllegalArgumentException("User with id " + userId + " does not exist."));
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id " + userId + " does not exist."));
     }
 
     private RoleEntity getRoleById(Long roleId){
         Objects.requireNonNull(roleId, ID_CANNOT_BE_NULL);
 
         return roleDao.findById(roleId).orElseThrow(() ->
-                new IllegalArgumentException("Role with id " + roleId + " does not exist."));
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Role with id " + roleId + " does not exist."));
     }
 
     private String extractUsername(String email){

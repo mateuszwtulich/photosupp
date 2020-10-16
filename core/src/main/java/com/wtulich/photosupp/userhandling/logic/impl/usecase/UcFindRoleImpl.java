@@ -7,12 +7,14 @@ import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
 import com.wtulich.photosupp.userhandling.logic.api.usecase.UcFindRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Validated
@@ -33,14 +35,17 @@ public class UcFindRoleImpl implements UcFindRole {
         Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
 
         LOG.debug("Get Role with id {} from database.", id);
-        RoleEntity roleEntity = roleDao.findById(id).get();
+        RoleEntity roleEntity = roleDao.findById(id).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NO_CONTENT, "Role with id " + id + " does not exist."));
         return roleMapper.toRoleEto(roleEntity);
     }
 
     @Override
-    public List<RoleEto> findAllRoles() {
+    public List<RoleEto>  findAllRoles() {
         LOG.debug("Get all Roles from database.");
-        return roleDao.findAll().stream()
+        Optional<List<RoleEntity>> rolesList = Optional.of(roleDao.findAll());
+
+        return rolesList.orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT)).stream()
                 .map(roleEntity -> roleMapper.toRoleEto(roleEntity))
                 .collect(Collectors.toList());
     }

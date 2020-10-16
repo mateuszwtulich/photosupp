@@ -12,7 +12,9 @@ import com.wtulich.photosupp.userhandling.logic.api.usecase.UcManageRole;
 import com.wtulich.photosupp.userhandling.logic.impl.validator.RoleValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -36,8 +38,8 @@ public class UcManageRoleImpl implements UcManageRole {
     private RoleValidator roleValidator;
 
     @Override
-    public RoleEto createRole(RoleTo roleTo) throws EntityAlreadyExistsException {
-        roleValidator.verifyIfRoleAlreadyExists(roleTo);
+    public RoleEto createRole(RoleTo roleTo) {
+        verifyRole(roleTo);
         LOG.debug("Create Role with name {} in database.", roleTo.getName());
 
         RoleEntity roleEntity = roleMapper.toRoleEntity(roleTo);
@@ -46,16 +48,25 @@ public class UcManageRoleImpl implements UcManageRole {
     }
 
     @Override
-    public RoleEto updateRole(RoleTo roleTo, Long id) throws EntityAlreadyExistsException {
+    public RoleEto updateRole(RoleTo roleTo, Long id) {
 
         Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
 
         RoleEntity roleEntity = roleDao.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("Role with id " + id + " does not exist."));
-        roleValidator.verifyIfRoleAlreadyExists(roleTo);
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Role with id " + id + " does not exist."));
+
+        verifyRole(roleTo);
         LOG.debug("Update Role with id {} from database.", id);
 
         return roleMapper.toRoleEto(mapRoleEntity(roleEntity, roleTo));
+    }
+
+    private void verifyRole(RoleTo roleTo){
+        try {
+            roleValidator.verifyIfRoleAlreadyExists(roleTo);
+        } catch (EntityAlreadyExistsException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        }
     }
 
     private RoleEntity mapRoleEntity(RoleEntity roleEntity, RoleTo roleTo){

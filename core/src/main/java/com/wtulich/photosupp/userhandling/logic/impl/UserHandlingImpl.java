@@ -94,17 +94,17 @@ public class UserHandlingImpl implements UserHandling {
     }
 
     @Override
-    public RoleEto createRole(RoleTo roleTo) throws EntityAlreadyExistsException {
+    public RoleEto createRole(RoleTo roleTo) {
         return ucManageRole.createRole(roleTo);
     }
 
     @Override
-    public RoleEto updateRole(RoleTo roleTo, Long id) throws EntityAlreadyExistsException {
+    public RoleEto updateRole(RoleTo roleTo, Long id) {
         return ucManageRole.updateRole(roleTo, id);
     }
 
     @Override
-    public UserEto createUserAndAccountEntities(UserTo userTo) throws EntityAlreadyExistsException, AccountAlreadyExistsException {
+    public UserEto createUserAndAccountEntities(UserTo userTo) {
         return ucManageUser.createUserAndAccountEntities(userTo);
     }
 
