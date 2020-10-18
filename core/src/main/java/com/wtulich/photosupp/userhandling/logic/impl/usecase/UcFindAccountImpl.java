@@ -12,11 +12,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Validated
+@Named
 public class UcFindAccountImpl implements UcFindAccount {
     private static final Logger LOG = LoggerFactory.getLogger(UcFindAccountImpl.class);
 

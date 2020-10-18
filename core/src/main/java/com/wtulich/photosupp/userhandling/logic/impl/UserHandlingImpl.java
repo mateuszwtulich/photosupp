@@ -22,9 +22,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Named
+@Transactional
 public class UserHandlingImpl implements UserHandling {
     private static final Logger LOG = LoggerFactory.getLogger(UserHandlingImpl.class);
     //For pagination of users

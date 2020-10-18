@@ -11,8 +11,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 @Validated
+@Named
 public class UcDeleteUserImpl implements UcDeleteUser {
 
     private static final Logger LOG = LoggerFactory.getLogger(UcDeleteUserImpl.class);

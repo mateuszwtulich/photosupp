@@ -2,6 +2,8 @@ package com.wtulich.photosupp.userhandling.logic.impl.usecase;
 
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.UserDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
+import com.wtulich.photosupp.userhandling.logic.api.mapper.AccountMapper;
+import com.wtulich.photosupp.userhandling.logic.api.mapper.RoleMapper;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.UserMapper;
 import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
 import com.wtulich.photosupp.userhandling.logic.api.usecase.UcFindUser;
@@ -12,12 +14,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.Optional;
 
 @Validated
+@Named
 public class UcFindUserImpl implements UcFindUser {
 
     private static final Logger LOG = LoggerFactory.getLogger(UcFindUserImpl.class);
@@ -29,6 +33,12 @@ public class UcFindUserImpl implements UcFindUser {
     @Inject
     private UserMapper userMapper;
 
+    @Inject
+    private AccountMapper accountMapper;
+
+    @Inject
+    private RoleMapper roleMapper;
+
     @Override
     public UserEto findUser(Long id) {
 
@@ -38,7 +48,7 @@ public class UcFindUserImpl implements UcFindUser {
         UserEntity userEntity = userDao.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NO_CONTENT, "User with id " + id + " does not exist."));
 
-        return userMapper.toUserEto(userEntity);
+        return toUserEto(userEntity);
     }
 
     @Override
@@ -47,7 +57,7 @@ public class UcFindUserImpl implements UcFindUser {
         Optional<List<UserEntity>> usersList = Optional.of(userDao.findAll());
 
         return usersList.orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT)).stream()
-                .map(userEntity -> userMapper.toUserEto(userEntity))
+                .map(userEntity -> toUserEto(userEntity))
                 .collect(Collectors.toList());
     }
 
@@ -59,7 +69,14 @@ public class UcFindUserImpl implements UcFindUser {
 
         return userDao.findAllByRole_Id(roleId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT)).stream()
-                .map(userEntity -> userMapper.toUserEto(userEntity))
+                .map(userEntity -> toUserEto(userEntity))
                 .collect(Collectors.toList());
+    }
+
+    private UserEto toUserEto(UserEntity userEntity){
+        UserEto userEto = userMapper.toUserEto(userEntity);
+        userEto.setAccountEto(accountMapper.toAccountEto(userEntity.getAccount()));
+        userEto.setRoleEto(roleMapper.toRoleEto(userEntity.getRole()));
+        return userEto;
     }
 }

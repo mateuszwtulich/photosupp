@@ -8,6 +8,7 @@ import com.wtulich.photosupp.userhandling.dataaccess.api.entity.RoleEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
 import com.wtulich.photosupp.userhandling.logic.api.exception.AccountAlreadyExistsException;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.AccountMapper;
+import com.wtulich.photosupp.userhandling.logic.api.mapper.RoleMapper;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.UserMapper;
 import com.wtulich.photosupp.userhandling.logic.api.to.AccountEto;
 import com.wtulich.photosupp.userhandling.logic.api.to.AccountTo;
@@ -17,14 +18,18 @@ import com.wtulich.photosupp.userhandling.logic.api.usecase.UcManageUser;
 import com.wtulich.photosupp.userhandling.logic.impl.validator.AccountValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Objects;
 
 @Validated
+@Named
 public class UcManageUserImpl implements UcManageUser {
     private static final Logger LOG = LoggerFactory.getLogger(UcManageUserImpl.class);
     private static final String ID_CANNOT_BE_NULL = "id cannot be a null value";
@@ -45,6 +50,9 @@ public class UcManageUserImpl implements UcManageUser {
     private AccountMapper accountMapper;
 
     @Inject
+    private RoleMapper roleMapper;
+
+    @Inject
     private AccountValidator accountValidator;
 
     @Override
@@ -56,7 +64,7 @@ public class UcManageUserImpl implements UcManageUser {
         userEntity.setRole(getRoleById(userTo.getRoleId()));
         userEntity.setAccount(accountEntity);
 
-        return userMapper.toUserEto(userDao.save(userEntity));
+        return toUserEto(userDao.save(userEntity));
     }
 
     @Override
@@ -67,7 +75,7 @@ public class UcManageUserImpl implements UcManageUser {
         userEntity.setName(userTo.getName());
         userEntity.setSurname(userTo.getSurname());
 
-        return userMapper.toUserEto(userEntity);
+        return toUserEto(userEntity);
     }
 
     @Override
@@ -109,6 +117,13 @@ public class UcManageUserImpl implements UcManageUser {
         accountEntity.setPassword(accountTo.getPassword());
 
         return accountEntity;
+    }
+
+    private UserEto toUserEto(UserEntity userEntity){
+        UserEto userEto = userMapper.toUserEto(userEntity);
+        userEto.setAccountEto(accountMapper.toAccountEto(userEntity.getAccount()));
+        userEto.setRoleEto(roleMapper.toRoleEto(userEntity.getRole()));
+        return userEto;
     }
 
     private UserEntity getUserById(Long userId){

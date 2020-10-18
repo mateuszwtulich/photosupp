@@ -10,8 +10,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 @Validated
+@Named
 public class UcDeleteRoleImpl implements UcDeleteRole {
 
     private static final Logger LOG = LoggerFactory.getLogger(UcDeleteRoleImpl.class);
