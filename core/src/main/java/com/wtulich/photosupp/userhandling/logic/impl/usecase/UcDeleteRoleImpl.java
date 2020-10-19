@@ -17,6 +17,7 @@ import javax.inject.Named;
 public class UcDeleteRoleImpl implements UcDeleteRole {
 
     private static final Logger LOG = LoggerFactory.getLogger(UcDeleteRoleImpl.class);
+    private static final String DELETE_ROLE_LOG = "Delete Role with id {} in database.";
 
     @Inject
     private RoleDao roleDao;
@@ -25,7 +26,7 @@ public class UcDeleteRoleImpl implements UcDeleteRole {
     public void deleteRole(Long id) {
         RoleEntity roleEntity = roleDao.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Role with id " + id + " does not exist."));
-        LOG.debug("Delete Role with id {} from database.", roleEntity.getId());
+        LOG.debug(DELETE_ROLE_LOG, roleEntity.getId());
 
         roleDao.deleteById(roleEntity.getId());
     }

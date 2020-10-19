@@ -14,7 +14,10 @@ public class AccountEto extends AbstractApplicationEntityTransportObject {
     private String password;
 
     @NotNull
-    private  String email;
+    private String email;
+
+    @NotNull
+    private boolean isActivated;
 
     public String getUsername() {
         return username;
@@ -40,19 +43,28 @@ public class AccountEto extends AbstractApplicationEntityTransportObject {
         this.email = email;
     }
 
+    public boolean getIsActivated() {
+        return isActivated;
+    }
+
+    public void setActivated(boolean isActivated) {
+        this.isActivated = isActivated;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof AccountEto)) return false;
         if (!super.equals(o)) return false;
         AccountEto that = (AccountEto) o;
-        return username.equals(that.username) &&
+        return isActivated == that.isActivated &&
+                username.equals(that.username) &&
                 password.equals(that.password) &&
                 email.equals(that.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), username, password, email);
+        return Objects.hash(super.hashCode(), username, password, email, isActivated);
     }
 }

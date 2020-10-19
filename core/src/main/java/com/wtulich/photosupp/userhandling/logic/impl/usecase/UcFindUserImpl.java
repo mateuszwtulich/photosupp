@@ -3,8 +3,10 @@ package com.wtulich.photosupp.userhandling.logic.impl.usecase;
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.UserDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.AccountMapper;
+import com.wtulich.photosupp.userhandling.logic.api.mapper.PermissionsMapper;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.RoleMapper;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.UserMapper;
+import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
 import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
 import com.wtulich.photosupp.userhandling.logic.api.usecase.UcFindUser;
 import org.slf4j.Logger;
@@ -26,6 +28,9 @@ public class UcFindUserImpl implements UcFindUser {
 
     private static final Logger LOG = LoggerFactory.getLogger(UcFindUserImpl.class);
     private static final String ID_CANNOT_BE_NULL = "id cannot be a null value";
+    private static final String GET_USER_LOG = "Get User with id {} from database.";
+    private static final String GET_ALL_USERS_LOG = "Get all Users from database.";
+    private static final String GET_USERS_ROLE_LOG = "Get Users with Role id {} from database.";
 
     @Inject
     private UserDao userDao;
@@ -39,12 +44,15 @@ public class UcFindUserImpl implements UcFindUser {
     @Inject
     private RoleMapper roleMapper;
 
+    @Inject
+    private PermissionsMapper permissionsMapper;
+
     @Override
     public UserEto findUser(Long id) {
 
         Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
 
-        LOG.debug("Get User with id {} from database.", id);
+        LOG.debug(GET_USER_LOG, id);
         UserEntity userEntity = userDao.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NO_CONTENT, "User with id " + id + " does not exist."));
 
@@ -53,7 +61,7 @@ public class UcFindUserImpl implements UcFindUser {
 
     @Override
     public List<UserEto> findAllUsers() {
-        LOG.debug("Get all Users from database.");
+        LOG.debug(GET_ALL_USERS_LOG);
         Optional<List<UserEntity>> usersList = Optional.of(userDao.findAll());
 
         return usersList.orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT)).stream()
@@ -65,7 +73,7 @@ public class UcFindUserImpl implements UcFindUser {
     public List<UserEto> findAllUsersByRoleId(Long roleId) {
 
         Objects.requireNonNull(roleId, ID_CANNOT_BE_NULL);
-        LOG.debug("Get Users with Role id {} from database.", roleId);
+        LOG.debug(GET_USERS_ROLE_LOG, roleId);
 
         return userDao.findAllByRole_Id(roleId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT)).stream()
@@ -76,7 +84,12 @@ public class UcFindUserImpl implements UcFindUser {
     private UserEto toUserEto(UserEntity userEntity){
         UserEto userEto = userMapper.toUserEto(userEntity);
         userEto.setAccountEto(accountMapper.toAccountEto(userEntity.getAccount()));
-        userEto.setRoleEto(roleMapper.toRoleEto(userEntity.getRole()));
+
+        RoleEto roleEto = roleMapper.toRoleEto(userEntity.getRole());
+        roleEto.setPermissionEtoList(userEntity.getRole().getPermissions().stream()
+                .map(p -> permissionsMapper.toPermissionEto(p))
+                .collect(Collectors.toList()));
+        userEto.setRoleEto(roleEto);
         return userEto;
     }
 }

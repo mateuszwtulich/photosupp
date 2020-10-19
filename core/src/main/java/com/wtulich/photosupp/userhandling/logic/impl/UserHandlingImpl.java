@@ -1,8 +1,6 @@
 package com.wtulich.photosupp.userhandling.logic.impl;
 
-import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
 import com.wtulich.photosupp.userhandling.logic.api.UserHandling;
-import com.wtulich.photosupp.userhandling.logic.api.exception.AccountAlreadyExistsException;
 import com.wtulich.photosupp.userhandling.logic.api.to.AccountEto;
 import com.wtulich.photosupp.userhandling.logic.api.to.AccountTo;
 import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
@@ -19,13 +17,16 @@ import com.wtulich.photosupp.userhandling.logic.api.usecase.UcManageRole;
 import com.wtulich.photosupp.userhandling.logic.api.usecase.UcManageUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.List;
 
-@Named
+@Service
 @Transactional
 public class UserHandlingImpl implements UserHandling {
     private static final Logger LOG = LoggerFactory.getLogger(UserHandlingImpl.class);
@@ -106,8 +107,8 @@ public class UserHandlingImpl implements UserHandling {
     }
 
     @Override
-    public UserEto createUserAndAccountEntities(UserTo userTo) {
-        return ucManageUser.createUserAndAccountEntities(userTo);
+    public UserEto createUserAndAccountEntities(UserTo userTo, HttpServletRequest request, Errors errors) {
+        return ucManageUser.createUserAndAccountEntities(userTo, request, errors);
     }
 
     @Override
@@ -118,5 +119,10 @@ public class UserHandlingImpl implements UserHandling {
     @Override
     public AccountEto updateUserAccount(AccountTo accountTo, Long userId) {
         return ucManageUser.updateUserAccount(accountTo, userId);
+    }
+
+    @Override
+    public RedirectView confirmRegistration(String token) {
+        return ucManageRegistration.confirmRegistration(token);
     }
 }

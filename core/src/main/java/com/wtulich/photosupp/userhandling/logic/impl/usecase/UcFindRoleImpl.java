@@ -25,6 +25,8 @@ public class UcFindRoleImpl implements UcFindRole {
 
     private static final Logger LOG = LoggerFactory.getLogger(UcFindRoleImpl.class);
     private static final String ID_CANNOT_BE_NULL = "id cannot be a null value";
+    private static final String GET_ROLE_LOG = "Get Role with id {} from database.";
+    private static final String GET_ALL_ROLES_LOG = "Get all Roles from database.";
 
     @Inject
     private RoleDao roleDao;
@@ -40,7 +42,7 @@ public class UcFindRoleImpl implements UcFindRole {
 
         Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
 
-        LOG.debug("Get Role with id {} from database.", id);
+        LOG.debug(GET_ROLE_LOG, id);
         RoleEntity roleEntity = roleDao.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NO_CONTENT, "Role with id " + id + " does not exist."));
         return toRoleEto(roleEntity);
@@ -48,7 +50,7 @@ public class UcFindRoleImpl implements UcFindRole {
 
     @Override
     public List<RoleEto>  findAllRoles() {
-        LOG.debug("Get all Roles from database.");
+        LOG.debug(GET_ALL_ROLES_LOG);
         Optional<List<RoleEntity>> rolesList = Optional.of(roleDao.findAll());
 
         return rolesList.orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT)).stream()

@@ -10,10 +10,13 @@ import com.wtulich.photosupp.userhandling.logic.impl.UserHandlingImpl;
 import com.wtulich.photosupp.userhandling.service.api.ui.UserRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -44,8 +47,13 @@ public class UserRestServiceImpl implements UserRestService {
     }
 
     @Override
-    public UserEto createUser(UserTo userTo) {
-        return userHandling.createUserAndAccountEntities(userTo);
+    public UserEto createUser(UserTo userTo, HttpServletRequest request, Errors errors) {
+        return userHandling.createUserAndAccountEntities(userTo, request, errors);
+    }
+
+    @Override
+    public RedirectView confirmRegistration(String token) {
+        return userHandling.confirmRegistration(token);
     }
 
     @Override
@@ -60,7 +68,7 @@ public class UserRestServiceImpl implements UserRestService {
 
     @Override
     public void deleteUser(Long id) {
-        deleteUser(id);
+        userHandling.deleteUserAndAllRelatedEntities(id);
     }
 
     @Override

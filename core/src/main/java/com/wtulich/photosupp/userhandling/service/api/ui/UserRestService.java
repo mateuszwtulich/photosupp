@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.MediaType;
+import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.view.RedirectView;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RequestMapping(value = "/user/v1")
@@ -75,7 +80,7 @@ public interface UserRestService extends RestService {
             @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @GetMapping(value = "/users/{roleId}/",
+    @GetMapping(value = "/users/role/{id}/",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
     List<UserEto> getAllUsersByRoleId(@PathVariable(value = "id") Long roleId);
 
@@ -94,7 +99,19 @@ public interface UserRestService extends RestService {
     @PostMapping(value = "/user",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    UserEto createUser(@Validated @RequestBody UserTo userTo);
+    UserEto createUser(@Validated @RequestBody UserTo userTo, HttpServletRequest request, Errors errors);
+
+
+    @ApiOperation(value = "Confirm registration.",
+            tags = {"registration", "account"},
+            response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 429, message = "Too many requests"),
+    })
+    @GetMapping(value = "user/account/registrationConfirm")
+    RedirectView confirmRegistration(@RequestParam("token") String token);
 
 
     @ApiOperation(value = "Updates user",

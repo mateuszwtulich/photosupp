@@ -20,7 +20,9 @@ import java.util.stream.Collectors;
 @Validated
 @Named
 public class UcFindAccountImpl implements UcFindAccount {
+
     private static final Logger LOG = LoggerFactory.getLogger(UcFindAccountImpl.class);
+    private static final String GET_ALL_ACCOUNTS_LOG = "Get all Accounts from database.";
 
     @Inject
     private AccountDao accountDao;
@@ -30,7 +32,7 @@ public class UcFindAccountImpl implements UcFindAccount {
 
     @Override
     public List<AccountEto> findAllAccounts() {
-        LOG.debug("Get all Accounts from database.");
+        LOG.debug(GET_ALL_ACCOUNTS_LOG);
         Optional<List<AccountEntity>> accountsList = Optional.of(accountDao.findAll());
 
         return accountsList.orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT)).stream()

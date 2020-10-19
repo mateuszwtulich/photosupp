@@ -5,12 +5,10 @@ import com.wtulich.photosupp.userhandling.dataaccess.api.dao.PermissionDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.RoleDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.PermissionEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.RoleEntity;
-import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.PermissionsMapper;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.RoleMapper;
 import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
 import com.wtulich.photosupp.userhandling.logic.api.to.RoleTo;
-import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
 import com.wtulich.photosupp.userhandling.logic.api.usecase.UcManageRole;
 import com.wtulich.photosupp.userhandling.logic.impl.validator.RoleValidator;
 import org.slf4j.Logger;
@@ -29,8 +27,12 @@ import java.util.stream.Collectors;
 @Validated
 @Named
 public class UcManageRoleImpl implements UcManageRole {
+
     private static final Logger LOG = LoggerFactory.getLogger(UcManageRoleImpl.class);
     private static final String ID_CANNOT_BE_NULL = "id cannot be a null value";
+    private static final String CREATE_ROLE_LOG = "Create Role with name {} in database.";
+    private static final String UPDATE_ROLE_LOG = "Update Role with id {} from database.";
+    private static final String PERMISSION_DOES_NOT_EXIST = "Permissions do not exist.";
 
     @Inject
     private RoleDao roleDao;
@@ -50,7 +52,7 @@ public class UcManageRoleImpl implements UcManageRole {
     @Override
     public RoleEto createRole(RoleTo roleTo) {
         verifyRole(roleTo);
-        LOG.debug("Create Role with name {} in database.", roleTo.getName());
+        LOG.debug(CREATE_ROLE_LOG, roleTo.getName());
 
         RoleEntity roleEntity = roleMapper.toRoleEntity(roleTo);
         roleEntity.setPermissions(getPermissionsByIds(roleTo.getPermissionIds()));
@@ -66,7 +68,7 @@ public class UcManageRoleImpl implements UcManageRole {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Role with id " + id + " does not exist."));
 
         verifyRole(roleTo);
-        LOG.debug("Update Role with id {} from database.", id);
+        LOG.debug(UPDATE_ROLE_LOG, id);
 
         return toRoleEto(mapRoleEntity(roleEntity, roleTo));
     }
@@ -75,6 +77,7 @@ public class UcManageRoleImpl implements UcManageRole {
         try {
             roleValidator.verifyIfRoleAlreadyExists(roleTo);
         } catch (EntityAlreadyExistsException e) {
+            LOG.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         }
     }
@@ -96,6 +99,6 @@ public class UcManageRoleImpl implements UcManageRole {
 
     private List<PermissionEntity> getPermissionsByIds(List<Long> permissionIds){
         return Optional.of(permissionDao.findAllById(permissionIds))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Permissions do not exist."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, PERMISSION_DOES_NOT_EXIST));
     }
 }
