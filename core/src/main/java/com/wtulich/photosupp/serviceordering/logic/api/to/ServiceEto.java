@@ -15,6 +15,16 @@ public class ServiceEto extends AbstractApplicationEntityTransportObject {
     @NotNull
     private Double basePrice;
 
+    public ServiceEto() {
+    }
+
+    public ServiceEto(Long id, String name, String description, Double basePrice) {
+        super(id);
+        this.name = name;
+        this.description = description;
+        this.basePrice = basePrice;
+    }
+
     public String getName() {
         return name;
     }

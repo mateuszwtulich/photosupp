@@ -2,6 +2,7 @@ package com.wtulich.photosupp.userhandling.logic.api.to;
 
 import com.sun.istack.NotNull;
 import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationEntityTransportObject;
+import net.bytebuddy.implementation.bind.annotation.Default;
 
 import java.util.Objects;
 
@@ -18,6 +19,17 @@ public class AccountEto extends AbstractApplicationEntityTransportObject {
 
     @NotNull
     private boolean isActivated;
+
+    public AccountEto() {
+    }
+
+    public AccountEto(Long id, String username, String password, String email, boolean isActivated) {
+        super(id);
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.isActivated = isActivated;
+    }
 
     public String getUsername() {
         return username;

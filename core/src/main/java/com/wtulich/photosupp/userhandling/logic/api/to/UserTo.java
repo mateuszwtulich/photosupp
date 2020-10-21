@@ -6,6 +6,16 @@ import java.util.Objects;
 
 public class UserTo {
 
+    public UserTo() {
+    }
+
+    public UserTo(String name, String surname, AccountTo accountTo, Long roleId) {
+        this.name = name;
+        this.surname = surname;
+        this.accountTo = accountTo;
+        this.roleId = roleId;
+    }
+
     @NotNull
     private String name;
 

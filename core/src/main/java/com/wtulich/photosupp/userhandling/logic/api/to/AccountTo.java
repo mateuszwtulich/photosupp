@@ -6,6 +6,14 @@ import java.util.Objects;
 
 public class AccountTo {
 
+    public AccountTo() {
+    }
+
+    public AccountTo(String password, String email) {
+        this.password = password;
+        this.email = email;
+    }
+
     @NotNull
     private String password;
 

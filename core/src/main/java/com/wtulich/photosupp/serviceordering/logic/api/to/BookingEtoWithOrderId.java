@@ -38,6 +38,26 @@ public class BookingEtoWithOrderId extends AbstractApplicationEntityTransportObj
     @NotNull
     private Long orderId;
 
+    public BookingEtoWithOrderId() {
+    }
+
+    public BookingEtoWithOrderId(Long id, String name, String description, ServiceEto serviceEto, AddressEto addressEto,
+                                 boolean isConfirmed, Double predictedPrice, LocalDate start, LocalDate end,
+                                 LocalDate modificationDate, List<PriceIndicatorEto> priceIndicatorEtoList, Long orderId) {
+        super(id);
+        this.name = name;
+        this.description = description;
+        this.serviceEto = serviceEto;
+        this.addressEto = addressEto;
+        this.isConfirmed = isConfirmed;
+        this.predictedPrice = predictedPrice;
+        this.start = start;
+        this.end = end;
+        this.modificationDate = modificationDate;
+        this.priceIndicatorEtoList = priceIndicatorEtoList;
+        this.orderId = orderId;
+    }
+
     public String getName() {
         return name;
     }

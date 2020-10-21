@@ -6,6 +6,7 @@ import com.wtulich.photosupp.userhandling.dataaccess.api.dao.UserDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.AccountEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.RoleEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
+import com.wtulich.photosupp.userhandling.logic.api.exception.AccountAlreadyExistsException;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.AccountMapper;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.PermissionsMapper;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.RoleMapper;
@@ -21,16 +22,16 @@ import com.wtulich.photosupp.userhandling.logic.impl.validator.AccountValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.mail.internet.AddressException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Validated
 @Named
@@ -73,7 +74,8 @@ public class UcManageUserImpl implements UcManageUser {
 
 
     @Override
-    public UserEto createUserAndAccountEntities(UserTo userTo, HttpServletRequest request, Errors errors) {
+    public Optional<UserEto> createUserAndAccountEntities(UserTo userTo, HttpServletRequest request, Errors errors)
+            throws AccountAlreadyExistsException, AddressException {
         LOG.debug(CREATE_USER_LOG, userTo.getSurname());
         AccountEntity accountEntity = createAccountEntities(userTo.getAccountTo());
         sendMailOfAccountCreation(accountEntity, request, errors);
@@ -86,7 +88,7 @@ public class UcManageUserImpl implements UcManageUser {
     }
 
     @Override
-    public UserEto updateUser(UserTo userTo, Long userId) {
+    public Optional<UserEto> updateUser(UserTo userTo, Long userId) {
         LOG.debug(UPDATE_USER_LOG, userId);
         UserEntity userEntity = getUserById(userId);
 
@@ -98,20 +100,21 @@ public class UcManageUserImpl implements UcManageUser {
     }
 
     @Override
-    public AccountEto updateUserAccount(AccountTo accountTo, Long userId) {
+    public Optional<AccountEto> updateUserAccount(AccountTo accountTo, Long userId) throws AccountAlreadyExistsException, AddressException {
         LOG.debug(UPDATE_ACCOUNT_LOG, userId);
         UserEntity userEntity = getUserById(userId);
 
+        verifyAccount(accountTo);
         AccountEntity accountEntity = userEntity.getAccount();
         accountEntity.setPassword(accountTo.getPassword());
         accountEntity.setEmail(accountTo.getEmail());
         accountEntity.setUsername(extractUsername(accountTo.getEmail()));
 
         userEntity.setAccount(accountEntity);
-        return accountMapper.toAccountEto(accountEntity);
+        return Optional.of(accountMapper.toAccountEto(accountEntity));
     }
 
-    private AccountEntity createAccountEntities(AccountTo accountTo) {
+    private AccountEntity createAccountEntities(AccountTo accountTo) throws AccountAlreadyExistsException, AddressException {
         verifyAccount(accountTo);
 
         AccountEntity accountEntity = toAccountEntity(accountTo);
@@ -120,14 +123,9 @@ public class UcManageUserImpl implements UcManageUser {
         return accountDao.save(accountEntity);
     }
 
-    private void verifyAccount(AccountTo accountTo){
-        try {
+    private void verifyAccount(AccountTo accountTo) throws AccountAlreadyExistsException, AddressException {
             accountValidator.verifyIfAccountAlreadyExists(accountTo);
             accountValidator.isValidEmailAddress(accountTo.getEmail());
-        } catch (Exception e) {
-            LOG.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
-        }
     }
 
     private void sendMailOfAccountCreation(AccountEntity accountEntity, HttpServletRequest request, Errors errors) {
@@ -148,7 +146,7 @@ public class UcManageUserImpl implements UcManageUser {
         return accountEntity;
     }
 
-    private UserEto toUserEto(UserEntity userEntity){
+    private Optional<UserEto> toUserEto(UserEntity userEntity){
         UserEto userEto = userMapper.toUserEto(userEntity);
         userEto.setAccountEto(accountMapper.toAccountEto(userEntity.getAccount()));
 
@@ -157,21 +155,21 @@ public class UcManageUserImpl implements UcManageUser {
                 .map(p -> permissionsMapper.toPermissionEto(p))
                 .collect(Collectors.toList()));
         userEto.setRoleEto(roleEto);
-        return userEto;
+        return Optional.of(userEto);
     }
 
     private UserEntity getUserById(Long userId){
         Objects.requireNonNull(userId, ID_CANNOT_BE_NULL);
 
         return userDao.findById(userId).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id " + userId + " does not exist."));
+                new IllegalArgumentException("User with id " + userId + " does not exist."));
     }
 
     private RoleEntity getRoleById(Long roleId){
         Objects.requireNonNull(roleId, ID_CANNOT_BE_NULL);
 
         return roleDao.findById(roleId).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Role with id " + roleId + " does not exist."));
+                new IllegalArgumentException("Role with id " + roleId + " does not exist."));
     }
 
     private String extractUsername(String email){

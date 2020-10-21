@@ -35,6 +35,24 @@ public class BookingEto extends AbstractApplicationEntityTransportObject {
 
     private List<PriceIndicatorEto> priceIndicatorEtoList;
 
+    public BookingEto() {
+    }
+
+    public BookingEto(Long id, String name, String description, ServiceEto serviceEto, AddressEto addressEto, boolean isConfirmed,
+                      Double predictedPrice, LocalDate start, LocalDate end, LocalDate modificationDate, List<PriceIndicatorEto> priceIndicatorEtoList) {
+        super(id);
+        this.name = name;
+        this.description = description;
+        this.serviceEto = serviceEto;
+        this.addressEto = addressEto;
+        this.isConfirmed = isConfirmed;
+        this.predictedPrice = predictedPrice;
+        this.start = start;
+        this.end = end;
+        this.modificationDate = modificationDate;
+        this.priceIndicatorEtoList = priceIndicatorEtoList;
+    }
+
     public String getName() {
         return name;
     }

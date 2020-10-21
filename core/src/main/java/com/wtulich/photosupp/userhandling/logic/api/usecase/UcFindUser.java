@@ -1,14 +1,15 @@
 package com.wtulich.photosupp.userhandling.logic.api.usecase;
 
+import java.util.Optional;
 import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
 
 import java.util.List;
 
 public interface UcFindUser {
 
-    UserEto findUser(Long id);
+    Optional<UserEto> findUser(Long id);
 
-    List<UserEto> findAllUsers();
+    Optional<List<UserEto>> findAllUsers();
 
-    List<UserEto> findAllUsersByRoleId(Long roleId);
+    Optional<List<UserEto>> findAllUsersByRoleId(Long roleId);
 }

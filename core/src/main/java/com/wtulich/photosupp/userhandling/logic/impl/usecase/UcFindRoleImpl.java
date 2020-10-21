@@ -38,24 +38,23 @@ public class UcFindRoleImpl implements UcFindRole {
     private PermissionsMapper permissionsMapper;
 
     @Override
-    public RoleEto findRole(Long id) {
+    public Optional<RoleEto> findRole(Long id) {
 
         Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
 
         LOG.debug(GET_ROLE_LOG, id);
         RoleEntity roleEntity = roleDao.findById(id).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NO_CONTENT, "Role with id " + id + " does not exist."));
-        return toRoleEto(roleEntity);
+                new IllegalArgumentException("Role with id " + id + " does not exist."));
+        return Optional.of(toRoleEto(roleEntity));
     }
 
     @Override
-    public List<RoleEto>  findAllRoles() {
+    public Optional<List<RoleEto>>  findAllRoles() {
         LOG.debug(GET_ALL_ROLES_LOG);
-        Optional<List<RoleEntity>> rolesList = Optional.of(roleDao.findAll());
 
-        return rolesList.orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT)).stream()
+        return Optional.of(roleDao.findAll().stream()
                 .map(roleEntity -> toRoleEto(roleEntity))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     private RoleEto toRoleEto(RoleEntity roleEntity){

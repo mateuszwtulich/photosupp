@@ -3,10 +3,11 @@ package com.wtulich.photosupp.userhandling.logic.api.usecase;
 import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UcFindRole {
 
-    RoleEto findRole(Long id);
+    Optional<RoleEto> findRole(Long id);
 
-    List<RoleEto> findAllRoles();
+    Optional<List<RoleEto>> findAllRoles();
 }

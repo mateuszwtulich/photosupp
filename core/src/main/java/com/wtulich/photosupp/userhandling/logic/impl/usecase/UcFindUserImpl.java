@@ -48,37 +48,31 @@ public class UcFindUserImpl implements UcFindUser {
     private PermissionsMapper permissionsMapper;
 
     @Override
-    public UserEto findUser(Long id) {
+    public Optional<UserEto> findUser(Long id) {
 
         Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
-
         LOG.debug(GET_USER_LOG, id);
-        UserEntity userEntity = userDao.findById(id).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NO_CONTENT, "User with id " + id + " does not exist."));
 
-        return toUserEto(userEntity);
+        return Optional.of(toUserEto(userDao.findById(id).get()));
     }
 
     @Override
-    public List<UserEto> findAllUsers() {
+    public Optional<List<UserEto>> findAllUsers() {
         LOG.debug(GET_ALL_USERS_LOG);
-        Optional<List<UserEntity>> usersList = Optional.of(userDao.findAll());
 
-        return usersList.orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT)).stream()
+        return Optional.of(userDao.findAll().stream()
                 .map(userEntity -> toUserEto(userEntity))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     @Override
-    public List<UserEto> findAllUsersByRoleId(Long roleId) {
+    public Optional<List<UserEto>> findAllUsersByRoleId(Long roleId) {
 
         Objects.requireNonNull(roleId, ID_CANNOT_BE_NULL);
         LOG.debug(GET_USERS_ROLE_LOG, roleId);
 
-        return userDao.findAllByRole_Id(roleId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT)).stream()
-                .map(userEntity -> toUserEto(userEntity))
-                .collect(Collectors.toList());
+        return Optional.of(userDao.findAllByRole_Id(roleId).get().stream()
+                .map(this::toUserEto).collect(Collectors.toList()));
     }
 
     private UserEto toUserEto(UserEntity userEntity){

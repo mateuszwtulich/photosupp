@@ -5,15 +5,13 @@ import com.wtulich.photosupp.userhandling.dataaccess.api.entity.AccountEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.VerificationTokenEntity;
 import com.wtulich.photosupp.userhandling.logic.api.usecase.UcManageRegistration;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Locale;
-
+import java.util.Optional;
 
 @Validated
 @Named
@@ -29,12 +27,12 @@ public class UcManageRegistrationImpl implements UcManageRegistration {
     private MessageSource messages;
 
     @Override
-    public RedirectView confirmRegistration(String token) {
+    public Optional<RedirectView> confirmRegistration(String token) {
         VerificationTokenEntity verificationTokenEntity = verificationTokenDao.findByToken(token).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, VERIFICATION_TOKEN_NOT_FOUND));
+                new IllegalArgumentException(VERIFICATION_TOKEN_NOT_FOUND));
         AccountEntity accountEntity = verificationTokenEntity.getAccount();
         accountEntity.setActivated(true);
 
-        return new RedirectView(messages.getMessage("frontend", null, Locale.getDefault()) + "/login");
+        return Optional.of(new RedirectView(messages.getMessage("frontend", null, Locale.getDefault()) + "/login"));
     }
 }

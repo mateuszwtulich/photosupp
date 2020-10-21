@@ -16,6 +16,17 @@ public class RoleEto extends AbstractApplicationEntityTransportObject {
     @NotNull
     private List<PermissionEto> permissionEtoList;
 
+    public RoleEto() {
+        super();
+    }
+
+    public RoleEto(Long id, String name, String description, List<PermissionEto> permissionEtoList) {
+        super(id);
+        this.name = name;
+        this.description = description;
+        this.permissionEtoList = permissionEtoList;
+    }
+
     public String getName() {
         return name;
     }

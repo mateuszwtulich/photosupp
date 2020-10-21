@@ -31,6 +31,20 @@ public class OrderEto extends AbstractApplicationEntityTransportObject {
     @NotNull
     private LocalDate createdAt;
 
+    public OrderEto() {
+    }
+
+    public OrderEto(Long id, String orderNumber, UserEto coordinator, UserEto user, OrderStatus status,
+                    BookingEto booking, Double price, LocalDate createdAt) {
+        super(id);
+        this.orderNumber = orderNumber;
+        this.coordinator = coordinator;
+        this.user = user;
+        this.status = status;
+        this.booking = booking;
+        this.price = price;
+        this.createdAt = createdAt;
+    }
 
     public String getOrderNumber() {
         return orderNumber;

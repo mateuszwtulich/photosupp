@@ -17,6 +17,16 @@ public class MediaContentEto extends AbstractApplicationEntityTransportObject {
     @NotNull
     private OrderEto orderEto;
 
+    public MediaContentEto() {
+    }
+
+    public MediaContentEto(Long id, MediaType type, String url, OrderEto orderEto) {
+        super(id);
+        this.type = type;
+        this.url = url;
+        this.orderEto = orderEto;
+    }
+
     public MediaType getType() {
         return type;
     }

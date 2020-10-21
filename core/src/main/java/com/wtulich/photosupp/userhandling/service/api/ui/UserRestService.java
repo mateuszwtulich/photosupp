@@ -21,11 +21,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+@RestController
 @RequestMapping(value = "/user/v1")
 public interface UserRestService extends RestService {
 
@@ -38,7 +40,7 @@ public interface UserRestService extends RestService {
             @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @GetMapping(value = "/user/{id}/",
+    @GetMapping(value = "/user/{id}",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
     UserEto getUser(@PathVariable(value = "id") Long id);
 
@@ -52,7 +54,7 @@ public interface UserRestService extends RestService {
             @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @GetMapping(value = "/users/",
+    @GetMapping(value = "/users",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
     List<UserEto> getAllUsers();
 
@@ -80,7 +82,7 @@ public interface UserRestService extends RestService {
             @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @GetMapping(value = "/users/role/{id}/",
+    @GetMapping(value = "/users/role/{id}",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
     List<UserEto> getAllUsersByRoleId(@PathVariable(value = "id") Long roleId);
 
@@ -125,7 +127,7 @@ public interface UserRestService extends RestService {
             @ApiResponse(code = 422, message = "Could not process entity"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @PutMapping(value = "/user/{id}/",
+    @PutMapping(value = "/user/{id}",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     UserEto updateUser(@PathVariable(value = "id") Long id, @Validated @RequestBody  UserTo userTo);
@@ -157,7 +159,7 @@ public interface UserRestService extends RestService {
             @ApiResponse(code = 404, message = "Entity not found"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @DeleteMapping(value = "/user/{id}/",
+    @DeleteMapping(value = "/user/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     void deleteUser(@PathVariable(value = "id") Long id);
 
@@ -171,7 +173,7 @@ public interface UserRestService extends RestService {
             @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @GetMapping(value = "/role/{id}/",
+    @GetMapping(value = "/role/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     RoleEto getRole(@PathVariable(value = "id") Long id);
 
@@ -185,7 +187,7 @@ public interface UserRestService extends RestService {
             @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @GetMapping(value = "/roles/",
+    @GetMapping(value = "/roles",
             produces = MediaType.APPLICATION_JSON_VALUE)
     List<RoleEto> getAllRoles();
 
@@ -201,7 +203,7 @@ public interface UserRestService extends RestService {
             @ApiResponse(code = 422, message = "Could not process entity"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @PostMapping(value = "/role/",
+    @PostMapping(value = "/role",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     RoleEto createRole(@Validated @RequestBody RoleTo roleTo);
@@ -218,7 +220,7 @@ public interface UserRestService extends RestService {
             @ApiResponse(code = 422, message = "Could not process entity"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @PutMapping(value = "/role/{id}/",
+    @PutMapping(value = "/role/{id}",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     RoleEto updateRole(@PathVariable(value = "id") Long id, @Validated @RequestBody RoleTo roleTo);
@@ -233,7 +235,7 @@ public interface UserRestService extends RestService {
             @ApiResponse(code = 404, message = "Entity not found"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @DeleteMapping(value = "/role/{id}/",
+    @DeleteMapping(value = "/role/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     void deleteRole(@PathVariable(value = "id") Long id);
 }

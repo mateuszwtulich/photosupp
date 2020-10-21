@@ -22,6 +22,18 @@ public class AddressEto extends AbstractApplicationEntityTransportObject {
     @NotNull
     private String postalCode;
 
+    public AddressEto() {
+    }
+
+    public AddressEto(Long id, String city, String street, String buildingNumber, String apartmentNumber, String postalCode) {
+        super(id);
+        this.city = city;
+        this.street = street;
+        this.buildingNumber = buildingNumber;
+        this.apartmentNumber = apartmentNumber;
+        this.postalCode = postalCode;
+    }
+
     public String getCity() {
         return city;
     }

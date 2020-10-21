@@ -17,6 +17,16 @@ public class PriceIndicatorEto {
     @NotNull
     private Integer finalAmount;
 
+    public PriceIndicatorEto() {
+    }
+
+    public PriceIndicatorEto(IndicatorEto indicatorEto, BookingEto bookingEto, Double indicatorPrice, Integer finalAmount) {
+        this.indicatorEto = indicatorEto;
+        this.bookingEto = bookingEto;
+        this.indicatorPrice = indicatorPrice;
+        this.finalAmount = finalAmount;
+    }
+
     public IndicatorEto getIndicatorEto() {
         return indicatorEto;
     }

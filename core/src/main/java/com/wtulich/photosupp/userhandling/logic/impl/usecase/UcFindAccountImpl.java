@@ -31,12 +31,11 @@ public class UcFindAccountImpl implements UcFindAccount {
     private AccountMapper accountMapper;
 
     @Override
-    public List<AccountEto> findAllAccounts() {
+    public Optional<List<AccountEto>> findAllAccounts() {
         LOG.debug(GET_ALL_ACCOUNTS_LOG);
-        Optional<List<AccountEntity>> accountsList = Optional.of(accountDao.findAll());
 
-        return accountsList.orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT)).stream()
+        return Optional.of(accountDao.findAll().stream()
                 .map(accountEntity -> accountMapper.toAccountEto(accountEntity))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 }

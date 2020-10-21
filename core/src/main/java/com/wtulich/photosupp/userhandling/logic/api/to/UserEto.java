@@ -19,6 +19,17 @@ public class UserEto extends AbstractApplicationEntityTransportObject {
     @NotNull
     private RoleEto roleEto;
 
+    public UserEto() {
+    }
+
+    public UserEto(Long id, String name, String surname, AccountEto accountEto, RoleEto roleEto) {
+        super(id);
+        this.name = name;
+        this.surname = surname;
+        this.accountEto = accountEto;
+        this.roleEto = roleEto;
+    }
+
     public String getName() {
         return name;
     }

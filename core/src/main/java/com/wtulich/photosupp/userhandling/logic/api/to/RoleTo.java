@@ -7,6 +7,15 @@ import java.util.Objects;
 
 public class RoleTo {
 
+    public RoleTo() {
+    }
+
+    public RoleTo(String name, String description, List<Long> permissionIds) {
+        this.name = name;
+        this.description = description;
+        this.permissionIds = permissionIds;
+    }
+
     @NotNull
     private String name;
 

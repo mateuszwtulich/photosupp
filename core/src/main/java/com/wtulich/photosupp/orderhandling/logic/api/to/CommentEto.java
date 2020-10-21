@@ -21,6 +21,17 @@ public class CommentEto extends AbstractApplicationEntityTransportObject {
     @NotNull
     private LocalDate createdAt;
 
+    public CommentEto() {
+    }
+
+    public CommentEto(Long id, String content, OrderEto orderEto, UserEto userEto, LocalDate createdAt) {
+        super(id);
+        this.content = content;
+        this.orderEto = orderEto;
+        this.userEto = userEto;
+        this.createdAt = createdAt;
+    }
+
     public String getContent() {
         return content;
     }

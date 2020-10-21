@@ -21,6 +21,18 @@ public class IndicatorEto extends AbstractApplicationEntityTransportObject {
     @NotNull
     private Double extraPrice;
 
+    public IndicatorEto() {
+    }
+
+    public IndicatorEto(Long id, String name, String description, Integer baseAmount, Integer multiplier, Double extraPrice) {
+        super(id);
+        this.name = name;
+        this.description = description;
+        this.baseAmount = baseAmount;
+        this.multiplier = multiplier;
+        this.extraPrice = extraPrice;
+    }
+
     public String getName() {
         return name;
     }

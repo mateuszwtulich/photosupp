@@ -50,8 +50,8 @@ public class UcManageRoleImpl implements UcManageRole {
     private RoleValidator roleValidator;
 
     @Override
-    public RoleEto createRole(RoleTo roleTo) {
-        verifyRole(roleTo);
+    public Optional<RoleEto> createRole(RoleTo roleTo) throws EntityAlreadyExistsException {
+        roleValidator.verifyIfRoleAlreadyExists(roleTo);
         LOG.debug(CREATE_ROLE_LOG, roleTo.getName());
 
         RoleEntity roleEntity = roleMapper.toRoleEntity(roleTo);
@@ -60,26 +60,17 @@ public class UcManageRoleImpl implements UcManageRole {
     }
 
     @Override
-    public RoleEto updateRole(RoleTo roleTo, Long id) {
+    public Optional<RoleEto> updateRole(RoleTo roleTo, Long id) throws EntityAlreadyExistsException {
 
         Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
 
         RoleEntity roleEntity = roleDao.findById(id).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Role with id " + id + " does not exist."));
+                new IllegalArgumentException("Role with id " + id + " does not exist."));
 
-        verifyRole(roleTo);
+        roleValidator.verifyIfRoleAlreadyExists(roleTo);
         LOG.debug(UPDATE_ROLE_LOG, id);
 
         return toRoleEto(mapRoleEntity(roleEntity, roleTo));
-    }
-
-    private void verifyRole(RoleTo roleTo){
-        try {
-            roleValidator.verifyIfRoleAlreadyExists(roleTo);
-        } catch (EntityAlreadyExistsException e) {
-            LOG.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
-        }
     }
 
     private RoleEntity mapRoleEntity(RoleEntity roleEntity, RoleTo roleTo){
@@ -89,16 +80,16 @@ public class UcManageRoleImpl implements UcManageRole {
         return roleEntity;
     }
 
-    private RoleEto toRoleEto(RoleEntity roleEntity){
+    private Optional<RoleEto> toRoleEto(RoleEntity roleEntity){
         RoleEto roleEto = roleMapper.toRoleEto(roleEntity);
         roleEto.setPermissionEtoList(roleEntity.getPermissions().stream()
                 .map(p -> permissionsMapper.toPermissionEto(p))
                 .collect(Collectors.toList()));
-        return roleEto;
+        return Optional.of(roleEto);
     }
 
     private List<PermissionEntity> getPermissionsByIds(List<Long> permissionIds){
         return Optional.of(permissionDao.findAllById(permissionIds))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, PERMISSION_DOES_NOT_EXIST));
+                .orElseThrow(() -> new IllegalArgumentException(PERMISSION_DOES_NOT_EXIST));
     }
 }

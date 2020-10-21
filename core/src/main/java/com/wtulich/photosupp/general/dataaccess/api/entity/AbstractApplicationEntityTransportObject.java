@@ -9,6 +9,13 @@ public abstract class AbstractApplicationEntityTransportObject {
     @NotNull
     private Long id;
 
+    public AbstractApplicationEntityTransportObject() {
+    }
+
+    public AbstractApplicationEntityTransportObject(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
