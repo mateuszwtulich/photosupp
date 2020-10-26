@@ -1,5 +1,6 @@
 package com.wtulich.photosupp.userhandling.logic.impl.usecase;
 
+import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.RoleDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.RoleEntity;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.PermissionsMapper;
@@ -8,9 +9,7 @@ import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
 import com.wtulich.photosupp.userhandling.logic.api.usecase.UcFindRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -38,14 +37,17 @@ public class UcFindRoleImpl implements UcFindRole {
     private PermissionsMapper permissionsMapper;
 
     @Override
-    public Optional<RoleEto> findRole(Long id) {
+    public Optional<RoleEto> findRole(Long id) throws EntityDoesNotExistException {
 
         Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
 
         LOG.debug(GET_ROLE_LOG, id);
-        RoleEntity roleEntity = roleDao.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("Role with id " + id + " does not exist."));
-        return Optional.of(toRoleEto(roleEntity));
+        Optional<RoleEntity> roleEntity = roleDao.findById(id);
+
+        if(roleEntity.isPresent()){
+            throw new EntityDoesNotExistException("Role with id " + id + " does not exist.");
+        }
+        return Optional.of(toRoleEto(roleEntity.get()));
     }
 
     @Override

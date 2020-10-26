@@ -1,5 +1,6 @@
 package com.wtulich.photosupp.userhandling.logic.impl.usecase;
 
+import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.AccountDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.RoleDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.UserDao;
@@ -75,7 +76,7 @@ public class UcManageUserImpl implements UcManageUser {
 
     @Override
     public Optional<UserEto> createUserAndAccountEntities(UserTo userTo, HttpServletRequest request, Errors errors)
-            throws AccountAlreadyExistsException, AddressException {
+            throws AccountAlreadyExistsException, AddressException, EntityDoesNotExistException {
         LOG.debug(CREATE_USER_LOG, userTo.getSurname());
         AccountEntity accountEntity = createAccountEntities(userTo.getAccountTo());
         sendMailOfAccountCreation(accountEntity, request, errors);
@@ -88,7 +89,7 @@ public class UcManageUserImpl implements UcManageUser {
     }
 
     @Override
-    public Optional<UserEto> updateUser(UserTo userTo, Long userId) {
+    public Optional<UserEto> updateUser(UserTo userTo, Long userId) throws EntityDoesNotExistException {
         LOG.debug(UPDATE_USER_LOG, userId);
         UserEntity userEntity = getUserById(userId);
 
@@ -100,7 +101,8 @@ public class UcManageUserImpl implements UcManageUser {
     }
 
     @Override
-    public Optional<AccountEto> updateUserAccount(AccountTo accountTo, Long userId) throws AccountAlreadyExistsException, AddressException {
+    public Optional<AccountEto> updateUserAccount(AccountTo accountTo, Long userId)
+            throws AccountAlreadyExistsException, AddressException, EntityDoesNotExistException {
         LOG.debug(UPDATE_ACCOUNT_LOG, userId);
         UserEntity userEntity = getUserById(userId);
 
@@ -158,18 +160,18 @@ public class UcManageUserImpl implements UcManageUser {
         return Optional.of(userEto);
     }
 
-    private UserEntity getUserById(Long userId){
+    private UserEntity getUserById(Long userId) throws EntityDoesNotExistException {
         Objects.requireNonNull(userId, ID_CANNOT_BE_NULL);
 
         return userDao.findById(userId).orElseThrow(() ->
-                new IllegalArgumentException("User with id " + userId + " does not exist."));
+                new EntityDoesNotExistException("User with id " + userId + " does not exist."));
     }
 
-    private RoleEntity getRoleById(Long roleId){
+    private RoleEntity getRoleById(Long roleId) throws EntityDoesNotExistException {
         Objects.requireNonNull(roleId, ID_CANNOT_BE_NULL);
 
         return roleDao.findById(roleId).orElseThrow(() ->
-                new IllegalArgumentException("Role with id " + roleId + " does not exist."));
+                new EntityDoesNotExistException("Role with id " + roleId + " does not exist."));
     }
 
     private String extractUsername(String email){

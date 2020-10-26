@@ -1,6 +1,7 @@
 package com.wtulich.photosupp.userhandling.logic.impl;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
+import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.userhandling.logic.api.UserHandling;
 import com.wtulich.photosupp.userhandling.logic.api.exception.AccountAlreadyExistsException;
 import com.wtulich.photosupp.userhandling.logic.api.to.AccountEto;
@@ -61,12 +62,12 @@ public class UserHandlingImpl implements UserHandling {
     private UcManageUser ucManageUser;
 
     @Override
-    public void deleteRole(Long id) {
+    public void deleteRole(Long id) throws EntityDoesNotExistException {
         ucDeleteRole.deleteRole(id);
     }
 
     @Override
-    public void deleteUserAndAllRelatedEntities(Long userId) {
+    public void deleteUserAndAllRelatedEntities(Long userId) throws EntityDoesNotExistException {
         ucDeleteUser.deleteUserAndAllRelatedEntities(userId);
     }
 
@@ -76,7 +77,7 @@ public class UserHandlingImpl implements UserHandling {
     }
 
     @Override
-    public Optional<RoleEto> findRole(Long id) {
+    public Optional<RoleEto> findRole(Long id) throws EntityDoesNotExistException {
         return ucFindRole.findRole(id);
     }
 
@@ -86,7 +87,7 @@ public class UserHandlingImpl implements UserHandling {
     }
 
     @Override
-    public Optional<UserEto> findUser(Long id) {
+    public Optional<UserEto> findUser(Long id) throws EntityDoesNotExistException {
         return ucFindUser.findUser(id);
     }
 
@@ -101,33 +102,34 @@ public class UserHandlingImpl implements UserHandling {
     }
 
     @Override
-    public Optional<RoleEto> createRole(RoleTo roleTo) throws EntityAlreadyExistsException {
+    public Optional<RoleEto> createRole(RoleTo roleTo) throws EntityAlreadyExistsException, EntityDoesNotExistException {
         return ucManageRole.createRole(roleTo);
     }
 
     @Override
-    public Optional<RoleEto> updateRole(RoleTo roleTo, Long id) throws EntityAlreadyExistsException {
+    public Optional<RoleEto> updateRole(RoleTo roleTo, Long id) throws EntityAlreadyExistsException, EntityDoesNotExistException {
         return ucManageRole.updateRole(roleTo, id);
     }
 
     @Override
     public Optional<UserEto> createUserAndAccountEntities(UserTo userTo, HttpServletRequest request, Errors errors)
-            throws AccountAlreadyExistsException, AddressException {
+            throws AccountAlreadyExistsException, AddressException, EntityDoesNotExistException {
         return ucManageUser.createUserAndAccountEntities(userTo, request, errors);
     }
 
     @Override
-    public Optional<UserEto> updateUser(UserTo userTo, Long userId) {
+    public Optional<UserEto> updateUser(UserTo userTo, Long userId) throws EntityDoesNotExistException {
         return ucManageUser.updateUser(userTo, userId);
     }
 
     @Override
-    public Optional<AccountEto> updateUserAccount(AccountTo accountTo, Long userId) throws AccountAlreadyExistsException, AddressException {
+    public Optional<AccountEto> updateUserAccount(AccountTo accountTo, Long userId)
+            throws AccountAlreadyExistsException, AddressException, EntityDoesNotExistException {
         return ucManageUser.updateUserAccount(accountTo, userId);
     }
 
     @Override
-    public Optional<RedirectView> confirmRegistration(String token) {
+    public Optional<RedirectView> confirmRegistration(String token) throws EntityDoesNotExistException {
         return ucManageRegistration.confirmRegistration(token);
     }
 }

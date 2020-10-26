@@ -1,5 +1,6 @@
 package com.wtulich.photosupp.userhandling.logic.impl.usecase;
 
+import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.RoleDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.RoleEntity;
 import com.wtulich.photosupp.userhandling.logic.api.usecase.UcDeleteRole;
@@ -23,9 +24,9 @@ public class UcDeleteRoleImpl implements UcDeleteRole {
     private RoleDao roleDao;
 
     @Override
-    public void deleteRole(Long id) {
+    public void deleteRole(Long id) throws EntityDoesNotExistException {
         RoleEntity roleEntity = roleDao.findById(id).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Role with id " + id + " does not exist."));
+                new EntityDoesNotExistException("Role with id " + id + " does not exist."));
         LOG.debug(DELETE_ROLE_LOG, roleEntity.getId());
 
         roleDao.deleteById(roleEntity.getId());

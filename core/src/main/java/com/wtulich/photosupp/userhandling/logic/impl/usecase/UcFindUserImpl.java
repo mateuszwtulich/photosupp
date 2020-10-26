@@ -1,5 +1,6 @@
 package com.wtulich.photosupp.userhandling.logic.impl.usecase;
 
+import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.UserDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.AccountMapper;
@@ -48,12 +49,13 @@ public class UcFindUserImpl implements UcFindUser {
     private PermissionsMapper permissionsMapper;
 
     @Override
-    public Optional<UserEto> findUser(Long id) {
+    public Optional<UserEto> findUser(Long id) throws EntityDoesNotExistException{
 
         Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
         LOG.debug(GET_USER_LOG, id);
 
-        return Optional.of(toUserEto(userDao.findById(id).get()));
+        return Optional.of(toUserEto(userDao.findById(id).orElseThrow(() ->
+                new EntityDoesNotExistException("User with id " + id + " does not exist."))));
     }
 
     @Override

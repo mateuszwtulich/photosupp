@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,7 +43,7 @@ public interface UserRestService extends RestService {
     })
     @GetMapping(value = "/user/{id}",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
-    UserEto getUser(@PathVariable(value = "id") Long id);
+    ResponseEntity<UserEto> getUser(@PathVariable(value = "id") Long id);
 
 
     @ApiOperation(value = "Get all users.",
@@ -101,19 +102,19 @@ public interface UserRestService extends RestService {
     @PostMapping(value = "/user",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    UserEto createUser(@Validated @RequestBody UserTo userTo, HttpServletRequest request, Errors errors);
+    ResponseEntity<UserEto> createUser(@Validated @RequestBody UserTo userTo, HttpServletRequest request, Errors errors);
 
 
     @ApiOperation(value = "Confirm registration.",
             tags = {"registration", "account"},
-            response = String.class)
+            response = RedirectView.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful request"),
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @GetMapping(value = "user/account/registrationConfirm")
-    RedirectView confirmRegistration(@RequestParam("token") String token);
+    @GetMapping(value = "user/account/registrationConfirm/{token}")
+    RedirectView confirmRegistration(@PathVariable(value = "token") String token);
 
 
     @ApiOperation(value = "Updates user",
@@ -130,7 +131,7 @@ public interface UserRestService extends RestService {
     @PutMapping(value = "/user/{id}",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    UserEto updateUser(@PathVariable(value = "id") Long id, @Validated @RequestBody  UserTo userTo);
+    ResponseEntity<UserEto> updateUser(@PathVariable(value = "id") Long id, @Validated @RequestBody  UserTo userTo);
 
 
     @ApiOperation(value = "Updates user account",
@@ -147,7 +148,7 @@ public interface UserRestService extends RestService {
     @PutMapping(value = "/user/{id}/account",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    AccountEto updateUserAccount(@PathVariable(value = "id") Long userId, @Validated @RequestBody AccountTo accountTo);
+    ResponseEntity<AccountEto> updateUserAccount(@PathVariable(value = "id") Long userId, @Validated @RequestBody AccountTo accountTo);
 
 
     @ApiOperation(value = "Deletes User",
@@ -161,7 +162,7 @@ public interface UserRestService extends RestService {
     })
     @DeleteMapping(value = "/user/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    void deleteUser(@PathVariable(value = "id") Long id);
+    ResponseEntity<?> deleteUser(@PathVariable(value = "id") Long id);
 
 
     @ApiOperation(value = "Get role by id.",
@@ -175,7 +176,7 @@ public interface UserRestService extends RestService {
     })
     @GetMapping(value = "/role/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    RoleEto getRole(@PathVariable(value = "id") Long id);
+    ResponseEntity<RoleEto> getRole(@PathVariable(value = "id") Long id);
 
 
     @ApiOperation(value = "Get all roles.",
@@ -206,7 +207,7 @@ public interface UserRestService extends RestService {
     @PostMapping(value = "/role",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    RoleEto createRole(@Validated @RequestBody RoleTo roleTo);
+    ResponseEntity<RoleEto> createRole(@Validated @RequestBody RoleTo roleTo);
 
 
     @ApiOperation(value = "Updates role",
@@ -223,7 +224,7 @@ public interface UserRestService extends RestService {
     @PutMapping(value = "/role/{id}",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    RoleEto updateRole(@PathVariable(value = "id") Long id, @Validated @RequestBody RoleTo roleTo);
+    ResponseEntity<RoleEto> updateRole(@PathVariable(value = "id") Long id, @Validated @RequestBody RoleTo roleTo);
 
 
     @ApiOperation(value = "Deletes Role",
@@ -237,5 +238,5 @@ public interface UserRestService extends RestService {
     })
     @DeleteMapping(value = "/role/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    void deleteRole(@PathVariable(value = "id") Long id);
+    ResponseEntity<?> deleteRole(@PathVariable(value = "id") Long id);
 }

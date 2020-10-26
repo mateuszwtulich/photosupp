@@ -1,6 +1,7 @@
 package com.wtulich.photosupp.userhandling.logic.impl.usecase;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
+import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.PermissionDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.RoleDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.PermissionEntity;
@@ -50,7 +51,7 @@ public class UcManageRoleImpl implements UcManageRole {
     private RoleValidator roleValidator;
 
     @Override
-    public Optional<RoleEto> createRole(RoleTo roleTo) throws EntityAlreadyExistsException {
+    public Optional<RoleEto> createRole(RoleTo roleTo) throws EntityAlreadyExistsException, EntityDoesNotExistException {
         roleValidator.verifyIfRoleAlreadyExists(roleTo);
         LOG.debug(CREATE_ROLE_LOG, roleTo.getName());
 
@@ -60,12 +61,12 @@ public class UcManageRoleImpl implements UcManageRole {
     }
 
     @Override
-    public Optional<RoleEto> updateRole(RoleTo roleTo, Long id) throws EntityAlreadyExistsException {
+    public Optional<RoleEto> updateRole(RoleTo roleTo, Long id) throws EntityAlreadyExistsException, EntityDoesNotExistException {
 
         Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
 
         RoleEntity roleEntity = roleDao.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("Role with id " + id + " does not exist."));
+                new EntityDoesNotExistException("Role with id " + id + " does not exist."));
 
         roleValidator.verifyIfRoleAlreadyExists(roleTo);
         LOG.debug(UPDATE_ROLE_LOG, id);
@@ -73,7 +74,7 @@ public class UcManageRoleImpl implements UcManageRole {
         return toRoleEto(mapRoleEntity(roleEntity, roleTo));
     }
 
-    private RoleEntity mapRoleEntity(RoleEntity roleEntity, RoleTo roleTo){
+    private RoleEntity mapRoleEntity(RoleEntity roleEntity, RoleTo roleTo) throws EntityDoesNotExistException {
         roleEntity.setName(roleTo.getName());
         roleEntity.setDescription(roleTo.getDescription());
         roleEntity.setPermissions(getPermissionsByIds(roleTo.getPermissionIds()));
@@ -88,8 +89,8 @@ public class UcManageRoleImpl implements UcManageRole {
         return Optional.of(roleEto);
     }
 
-    private List<PermissionEntity> getPermissionsByIds(List<Long> permissionIds){
+    private List<PermissionEntity> getPermissionsByIds(List<Long> permissionIds) throws EntityDoesNotExistException {
         return Optional.of(permissionDao.findAllById(permissionIds))
-                .orElseThrow(() -> new IllegalArgumentException(PERMISSION_DOES_NOT_EXIST));
+                .orElseThrow(() -> new EntityDoesNotExistException(PERMISSION_DOES_NOT_EXIST));
     }
 }

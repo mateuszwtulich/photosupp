@@ -1,14 +1,12 @@
 package com.wtulich.photosupp.userhandling.logic.impl.usecase;
 
-import com.wtulich.photosupp.userhandling.dataaccess.api.dao.AccountDao;
+import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.UserDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
 import com.wtulich.photosupp.userhandling.logic.api.usecase.UcDeleteUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -25,9 +23,9 @@ public class UcDeleteUserImpl implements UcDeleteUser {
     private UserDao userDao;
 
     @Override
-    public void deleteUserAndAllRelatedEntities(Long userId) {
+    public void deleteUserAndAllRelatedEntities(Long userId) throws EntityDoesNotExistException {
         UserEntity userEntity = userDao.findById(userId).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id " + userId + " does not exist."));
+                new EntityDoesNotExistException("User with id " + userId + " does not exist."));
 
         LOG.debug(DELETE_USER_LOG, userId);
         LOG.debug(DELETE_ACCOUNT_LOG, userEntity.getAccount().getId());
