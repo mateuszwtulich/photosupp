@@ -21,7 +21,7 @@ public class AccountValidator {
         }
     }
 
-    public void isValidEmailAddress(String email) throws AddressException {
+    public void verifyIfValidEmailAddress(String email) throws AddressException {
         InternetAddress emailAddr = new InternetAddress(email);
         emailAddr.validate();
     }

@@ -40,9 +40,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     }
 
     private VerificationTokenEntity createVerificationToken(AccountEntity accountEntity, String token) {
-        VerificationTokenEntity verificationTokenEntity = new VerificationTokenEntity();
-        verificationTokenEntity.setAccount(accountEntity);
-        verificationTokenEntity.setToken(token);
+        VerificationTokenEntity verificationTokenEntity = new VerificationTokenEntity(token, accountEntity);
         return verificationTokenDao.save(verificationTokenEntity);
     }
 

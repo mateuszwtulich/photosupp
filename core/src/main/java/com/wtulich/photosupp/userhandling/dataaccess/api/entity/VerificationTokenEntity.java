@@ -18,6 +18,14 @@ public class VerificationTokenEntity extends AbstractApplicationPersistenceEntit
     private static final long serialVersionUID = 1L;
     private static final int EXPIRATION = 60 * 24;
 
+    public VerificationTokenEntity() {
+    }
+
+    public VerificationTokenEntity(String token, AccountEntity account) {
+        this.token = token;
+        this.account = account;
+    }
+
     @NotNull
     @Column(name = "TOKEN", nullable = false)
     private String token;

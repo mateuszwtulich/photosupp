@@ -16,6 +16,14 @@ import java.util.Objects;
 public class PermissionEntity extends AbstractApplicationPersistenceEntity {
     private static final long serialVersionUID = 1L;
 
+    public PermissionEntity() {
+    }
+
+    public PermissionEntity(ApplicationPermissions name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
     @NotNull
     @Column(name = "NAME", nullable = false, unique = true)
     @Enumerated(EnumType.STRING)

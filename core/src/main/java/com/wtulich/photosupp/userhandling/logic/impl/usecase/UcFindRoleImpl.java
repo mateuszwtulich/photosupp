@@ -44,7 +44,7 @@ public class UcFindRoleImpl implements UcFindRole {
         LOG.debug(GET_ROLE_LOG, id);
         Optional<RoleEntity> roleEntity = roleDao.findById(id);
 
-        if(roleEntity.isPresent()){
+        if(!roleEntity.isPresent()){
             throw new EntityDoesNotExistException("Role with id " + id + " does not exist.");
         }
         return Optional.of(toRoleEto(roleEntity.get()));

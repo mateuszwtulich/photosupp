@@ -2,9 +2,11 @@ package com.wtulich.photosupp.userhandling.logic.impl.usecase;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
-import com.wtulich.photosupp.userhandling.dataaccess.api.dao.RoleDao;
+import com.wtulich.photosupp.userhandling.dataaccess.api.dao.UserDao;
+import com.wtulich.photosupp.userhandling.dataaccess.api.entity.AccountEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.PermissionEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.RoleEntity;
+import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,14 +26,16 @@ import static org.mockito.Mockito.when;
 @ExtendWith({SpringExtension.class})
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UcDeleteRoleTests {
+public class UcDeleteUserTests {
 
     @Autowired
-    private UcDeleteRoleImpl ucDeleteRole;
+    private UcDeleteUserImpl ucDeleteUser;
 
     @MockBean
-    private RoleDao roleDao;
+    private UserDao userDao;
 
+    private UserEntity userEntity;
+    private AccountEntity accountEntity;
     private RoleEntity roleEntity;
     private List<PermissionEntity> permissionEntities;
 
@@ -40,26 +44,28 @@ public class UcDeleteRoleTests {
         permissionEntities = new ArrayList<>();
         permissionEntities.add(new PermissionEntity(ApplicationPermissions.A_CRUD_SUPER, "DESC"));
         roleEntity = new RoleEntity("ADMIN", "DESC1", permissionEntities);
+        accountEntity = new AccountEntity("USERNAME", "PASS", "USERNAME@test.com", false);
+        userEntity = new UserEntity("NAME", "SURNAME", roleEntity, accountEntity);
     }
 
     @Test
     @DisplayName("Test deleteRole Success")
     void testDeleteRoleSuccess() {
         //Arrange
-        when(roleDao.findById(1L)).thenReturn(java.util.Optional.of(roleEntity));
+        when(userDao.findById(1L)).thenReturn(java.util.Optional.of(userEntity));
 
         //Act Assert
-        Assertions.assertDoesNotThrow(() -> ucDeleteRole.deleteRole(1L));
+        Assertions.assertDoesNotThrow(() -> ucDeleteUser.deleteUserAndAllRelatedEntities(1L));
     }
 
     @Test
     @DisplayName("Test deleteRole Failure")
     void testDeleteRoleFailure() {
         //Arrange
-        when(roleDao.findById(1L)).thenReturn(java.util.Optional.ofNullable(null));
+        when(userDao.findById(1L)).thenReturn(java.util.Optional.ofNullable(null));
 
         //Act Assert
         Assertions.assertThrows(EntityDoesNotExistException.class, () ->
-                ucDeleteRole.deleteRole(1L));
+                ucDeleteUser.deleteUserAndAllRelatedEntities(1L));
     }
 }

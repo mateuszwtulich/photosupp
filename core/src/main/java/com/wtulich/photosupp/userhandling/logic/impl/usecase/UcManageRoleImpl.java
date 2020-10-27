@@ -90,7 +90,11 @@ public class UcManageRoleImpl implements UcManageRole {
     }
 
     private List<PermissionEntity> getPermissionsByIds(List<Long> permissionIds) throws EntityDoesNotExistException {
-        return Optional.of(permissionDao.findAllById(permissionIds))
-                .orElseThrow(() -> new EntityDoesNotExistException(PERMISSION_DOES_NOT_EXIST));
+         List<PermissionEntity> permissionEntities = permissionDao.findAllById(permissionIds);
+
+         if(permissionEntities.size() == 0){
+             throw new EntityDoesNotExistException(PERMISSION_DOES_NOT_EXIST);
+         }
+         return permissionEntities;
     }
 }

@@ -16,6 +16,16 @@ import java.util.Objects;
 public class AccountEntity extends AbstractApplicationPersistenceEntity {
     private static final long serialVersionUID = 1L;
 
+    public AccountEntity() {
+    }
+
+    public AccountEntity(String username, String password, String email, boolean isActivated) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.isActivated = isActivated;
+    }
+
     @NotNull
     @Column(name = "USERNAME", nullable = false, unique = true)
     private String username;

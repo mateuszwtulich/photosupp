@@ -22,6 +22,15 @@ import static javax.persistence.FetchType.EAGER;
 public class RoleEntity extends AbstractApplicationPersistenceEntity {
     private static final long serialVersionUID = 1L;
 
+    public RoleEntity() {
+    }
+
+    public RoleEntity(String name, String description, List<PermissionEntity> permissions) {
+        this.name = name;
+        this.description = description;
+        this.permissions = permissions;
+    }
+
     @NotNull
     @Column(name = "NAME", nullable = false, unique = true)
     private String name;

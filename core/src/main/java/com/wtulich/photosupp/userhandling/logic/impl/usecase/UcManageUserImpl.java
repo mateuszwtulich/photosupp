@@ -127,7 +127,7 @@ public class UcManageUserImpl implements UcManageUser {
 
     private void verifyAccount(AccountTo accountTo) throws AccountAlreadyExistsException, AddressException {
             accountValidator.verifyIfAccountAlreadyExists(accountTo);
-            accountValidator.isValidEmailAddress(accountTo.getEmail());
+            accountValidator.verifyIfValidEmailAddress(accountTo.getEmail());
     }
 
     private void sendMailOfAccountCreation(AccountEntity accountEntity, HttpServletRequest request, Errors errors) {

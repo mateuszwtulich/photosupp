@@ -21,6 +21,16 @@ import java.util.Objects;
 public class UserEntity extends AbstractApplicationPersistenceEntity {
     private static final long serialVersionUID = 1L;
 
+    public UserEntity() {
+    }
+
+    public UserEntity(String name, String surname, RoleEntity role, AccountEntity account) {
+        this.name = name;
+        this.surname = surname;
+        this.role = role;
+        this.account = account;
+    }
+
     @NotNull
     @Column(name = "NAME", nullable = false)
     private String name;
