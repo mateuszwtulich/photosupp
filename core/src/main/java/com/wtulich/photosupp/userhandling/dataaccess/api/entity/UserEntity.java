@@ -45,7 +45,7 @@ public class UserEntity extends AbstractApplicationPersistenceEntity {
     private RoleEntity role;
 
     @NotNull
-    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "ACCOUNT_ID", nullable = false, referencedColumnName = "id", unique = true)
     private AccountEntity account;
 

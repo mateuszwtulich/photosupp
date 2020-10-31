@@ -4,6 +4,7 @@ import com.wtulich.photosupp.userhandling.dataaccess.api.dao.VerificationTokenDa
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.AccountEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.VerificationTokenEntity;
 import com.wtulich.photosupp.userhandling.logic.impl.events.OnRegistrationCompleteEvent;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.SimpleMailMessage;

@@ -62,6 +62,6 @@ public class VerificationTokenEntity extends AbstractApplicationPersistenceEntit
 
     @Override
     public int hashCode() {
-        return Objects.hash(token, account);
+        return Objects.hash(token);
     }
 }

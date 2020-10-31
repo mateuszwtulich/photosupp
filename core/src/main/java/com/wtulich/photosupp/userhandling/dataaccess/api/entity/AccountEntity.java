@@ -111,6 +111,6 @@ public class AccountEntity extends AbstractApplicationPersistenceEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, password, email, isActivated, user, verificationToken);
+        return Objects.hash(username, password, email, isActivated, verificationToken);
     }
 }
