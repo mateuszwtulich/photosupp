@@ -2,7 +2,9 @@ package com.wtulich.photosupp.userhandling.logic.impl.usecase;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.RoleDao;
+import com.wtulich.photosupp.userhandling.dataaccess.api.dao.UserDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.RoleEntity;
+import com.wtulich.photosupp.userhandling.logic.api.exception.RoleHasAssignedUsersException;
 import com.wtulich.photosupp.userhandling.logic.api.usecase.UcDeleteRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +25,20 @@ public class UcDeleteRoleImpl implements UcDeleteRole {
     @Inject
     private RoleDao roleDao;
 
+    @Inject
+    private UserDao userDao;
+
     @Override
-    public void deleteRole(Long id) throws EntityDoesNotExistException {
+    public void deleteRole(Long id) throws EntityDoesNotExistException, RoleHasAssignedUsersException {
         RoleEntity roleEntity = roleDao.findById(id).orElseThrow(() ->
                 new EntityDoesNotExistException("Role with id " + id + " does not exist."));
-        LOG.debug(DELETE_ROLE_LOG, roleEntity.getId());
 
-        roleDao.deleteById(roleEntity.getId());
+        if(userDao.findAllByRole_Id(id).isEmpty()){
+            LOG.debug(DELETE_ROLE_LOG, roleEntity.getId());
+
+            roleDao.deleteById(roleEntity.getId());
+        } else {
+            throw new RoleHasAssignedUsersException("Role with id " + id + " has assigned users.");
+        }
     }
 }

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface UserDao extends JpaRepository<UserEntity, Long> {
 
-    Optional<List<UserEntity>> findAllByRole_Id(Long roleId);
+    List<UserEntity> findAllByRole_Id(Long roleId);
 }

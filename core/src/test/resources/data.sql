@@ -74,11 +74,11 @@ INSERT INTO public.role_permissions(
 
 INSERT INTO public.account(
     id, username, password, email, is_activated)
-    VALUES (1, 'User1', 'passw0rd', 'user1@test.com', false);
+    VALUES (1, 'user1', 'passw0rd', 'user1@test.com', false);
 
 INSERT INTO public.account(
     id, username, password, email, is_activated)
-    VALUES (2, 'User2', 'passw0rd', 'user2@test.com', true);
+    VALUES (2, 'user2', 'passw0rd', 'user2@test.com', true);
 
 INSERT INTO public.VERIFICATION_TOKEN(
     id, token, account_id)

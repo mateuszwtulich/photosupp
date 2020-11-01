@@ -73,7 +73,7 @@ public class UcFindUserImpl implements UcFindUser {
         Objects.requireNonNull(roleId, ID_CANNOT_BE_NULL);
         LOG.debug(GET_USERS_ROLE_LOG, roleId);
 
-        return Optional.of(userDao.findAllByRole_Id(roleId).get().stream()
+        return Optional.of(userDao.findAllByRole_Id(roleId).stream()
                 .map(this::toUserEto).collect(Collectors.toList()));
     }
 

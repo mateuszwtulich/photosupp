@@ -30,7 +30,7 @@ public class UserDaoTests {
     @Test
     void findByRole_Id_OK_HAS_ANY() {
         //Arrange
-        AccountEntity accountEntity = new AccountEntity("User1", "passw0rd", "user1@test.com", false);
+        AccountEntity accountEntity = new AccountEntity("user1", "passw0rd", "user1@test.com", false);
         accountEntity.setId(1L);
 
         PermissionEntity permissionEntity = new PermissionEntity(ApplicationPermissions.AUTH_USER, "Standard user with no special permissions.");
@@ -46,7 +46,7 @@ public class UserDaoTests {
         userEntity.setId(1L);
 
         //Act
-        List<UserEntity> userEntityList = userDao.findAllByRole_Id(2L).get();
+        List<UserEntity> userEntityList = userDao.findAllByRole_Id(2L);
 
         // Assert
         assertThat(userEntityList).hasSize(1);

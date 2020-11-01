@@ -1,13 +1,8 @@
-package com.wtulich.photosupp.userhandling.service.impl.ui;
+package com.wtulich.photosupp.userhandling.integrationTests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
-import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
-import com.wtulich.photosupp.userhandling.logic.api.exception.AccountAlreadyExistsException;
-import com.wtulich.photosupp.userhandling.logic.api.exception.RoleHasAssignedUsersException;
 import com.wtulich.photosupp.userhandling.logic.api.to.*;
-import com.wtulich.photosupp.userhandling.logic.impl.UserHandlingImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,30 +10,28 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.servlet.view.RedirectView;
 
-import javax.mail.internet.AddressException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith({SpringExtension.class})
-@SpringBootTest
+@SpringBootTest()
 @AutoConfigureMockMvc
-public class UserRestServiceTests {
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+public class UserRestServiceIntegrationTests {
+
     private static String GET_USER_BY_ID_URL = "/user/v1/user/{id}";
     private static String GET_ALL_USERS_URL = "/user/v1/users";
     private static String GET_USERS_BY_ROLE_URL = "/user/v1/users/role/{id}";
@@ -51,16 +44,16 @@ public class UserRestServiceTests {
     private static String USER_URL = "/user/v1/user";
     private static String ACCOUNT_REGISTRATION_URL = "/user/v1/user/account/registrationConfirm/{token}";
 
-    @MockBean
-    private UserHandlingImpl userHandling;
-
     @Autowired
     private MockMvc mockMvc;
 
     private ObjectMapper objectMapper;
     private RoleEto roleEto;
-    private AccountEto accountEto;
+    private AccountEto accountEto1;
+    private AccountEto accountEto2;
+    private AccountEto accountCreated;
     private UserEto userEto;
+    private UserEto userCreated;
     private List<PermissionEto> permissionEtoList;
     private RoleTo roleTo;
     private AccountTo accountTo;
@@ -69,27 +62,28 @@ public class UserRestServiceTests {
 
     @BeforeEach
     void setUp() {
+        //Arrange
         objectMapper = new ObjectMapper();
 
         permissionEtoList = new ArrayList<>();
-        permissionEtoList.add(new PermissionEto(1L, ApplicationPermissions.A_CRUD_SUPER, "DESC1"));
-        roleEto = new RoleEto(1L, "ADMIN", "DESC1", permissionEtoList);
-        accountEto = new AccountEto(1L, "TEST", "PASS", "TEST@test.com", false);
-        userEto = new UserEto(1L, "NAME1", "SURNAME1", accountEto, roleEto);
+        permissionEtoList.add(new PermissionEto(6L, ApplicationPermissions.AUTH_USER, "Standard user with no special permissions."));
+        roleEto = new RoleEto(2L, "USER", "Standard user with no special permissions", permissionEtoList);
+        accountEto1 = new AccountEto(1L, "user1", "passw0rd", "user1@test.com", false);
+        accountEto2 = new AccountEto(2L, "user2", "passw0rd", "user2@test.com", true);
+        userEto = new UserEto(1L, "NAME", "SURNAME", accountEto1, roleEto);
 
         permissionsIds = new ArrayList<>();
         permissionsIds.add(1L);
-        roleTo = new RoleTo("ADMIN", "DESC1", permissionsIds);
+        roleTo = new RoleTo("ADMIN2", "DESC1", permissionsIds);
         accountTo = new AccountTo("PASS", "TEST@test.com");
-        userTo = new UserTo("NAME1", "SURNAME1", accountTo, 1L);
+        userTo = new UserTo("NAME1", "SURNAME1", accountTo, 2L);
+        accountCreated = new AccountEto(3L, "TEST", "PASS", "TEST@test.com", false);
+        userCreated = new UserEto(2L, "NAME1", "SURNAME1", accountCreated, roleEto);
     }
 
     @Test
     @DisplayName("GET /user/v1/user/1 - Found")
     void testGetUserByIdFound() throws Exception {
-        //Arrange
-        when(userHandling.findUser(userEto.getId())).thenReturn(Optional.of(userEto));
-
         //Act
         MvcResult result = mockMvc.perform(get(GET_USER_BY_ID_URL, userEto.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -106,29 +100,11 @@ public class UserRestServiceTests {
     @Test
     @DisplayName("GET /user/v1/user/1 - No content")
     void testGetUserByIdNoContent() throws Exception {
-        //Arrange
-        when(userHandling.findUser(userEto.getId()))
-                .thenThrow(EntityDoesNotExistException.class);
-
         //Act
-        mockMvc.perform(get(GET_USER_BY_ID_URL, userEto.getId()))
+        mockMvc.perform(get(GET_USER_BY_ID_URL, 4L))
 
                 //Assert
                 .andExpect(status().isNoContent());
-    }
-
-    @Test
-    @DisplayName("GET /user/v1/user/1 - ISE")
-    void testGetUserByIdISE() throws Exception {
-        //Arrange
-        when(userHandling.findUser(userEto.getId()))
-                .thenReturn(Optional.empty());
-
-        //Act
-        mockMvc.perform(get(GET_USER_BY_ID_URL, userEto.getId()))
-
-                //Assert
-                .andExpect(status().isInternalServerError());
     }
 
     @Test
@@ -137,7 +113,6 @@ public class UserRestServiceTests {
         //Arrange
         ArrayList<UserEto> users = new ArrayList<>();
         users.add(userEto);
-        when(userHandling.findAllUsers()).thenReturn(Optional.of(users));
 
         //Act
         MvcResult result = mockMvc.perform(get(GET_ALL_USERS_URL)
@@ -153,27 +128,11 @@ public class UserRestServiceTests {
     }
 
     @Test
-    @DisplayName("GET /user/v1/users - No content")
-    void testGetAllUsersNoContent() throws Exception {
-        //Arrange
-        when(userHandling.findAllUsers())
-                .thenReturn(Optional.of(new ArrayList<>()));
-
-
-        //Act
-        mockMvc.perform(get(GET_ALL_USERS_URL))
-
-                //Assert
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
     @DisplayName("GET /user/v1/users/role/{id} - Found")
     void testGetUsersByRoleFound() throws Exception {
         //Arrange
         ArrayList<UserEto> users = new ArrayList<>();
         users.add(userEto);
-        when(userHandling.findAllUsersByRoleId(roleEto.getId())).thenReturn(Optional.of(users));
 
         //Act
         MvcResult result = mockMvc.perform(get(GET_USERS_BY_ROLE_URL, roleEto.getId())
@@ -191,26 +150,19 @@ public class UserRestServiceTests {
     @Test
     @DisplayName("GET /user/v1/users/role/{id} - No content")
     void testGetUsersByRoleNoContent() throws Exception {
-        //Arrange
-        when(userHandling.findAllUsersByRoleId(roleEto.getId()))
-                .thenReturn(Optional.of(new ArrayList<>()));
-
         //Act
-        MvcResult result = mockMvc.perform(get(GET_USERS_BY_ROLE_URL, roleEto.getId()))
+        MvcResult result = mockMvc.perform(get(GET_USERS_BY_ROLE_URL, 0L))
 
                 //Assert
                 .andExpect(status().isNoContent())
                 .andReturn();
 
-        assertThat(result.getResponse().getErrorMessage()).isEqualTo("Users with role id " + roleEto.getId() + " do not exist.");
+        assertThat(result.getResponse().getErrorMessage()).isEqualTo("Users with role id " + 0L + " do not exist.");
     }
 
     @Test
     @DisplayName("GET /user/v1/role/1 - Found")
     void testGetRoleByIdFound() throws Exception {
-        //Arrange
-        when(userHandling.findRole(roleEto.getId())).thenReturn(Optional.of(roleEto));
-
         //Act
         MvcResult result = mockMvc.perform(get(GET_ROLE_BY_ID_URL, roleEto.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -227,39 +179,16 @@ public class UserRestServiceTests {
     @Test
     @DisplayName("GET /user/v1/role/1 - No content")
     void testGetRoleByIdNoContent() throws Exception {
-        //Arrange
-        when(userHandling.findRole(roleEto.getId()))
-                .thenThrow(EntityDoesNotExistException.class);
-
         //Act
-        mockMvc.perform(get(GET_ROLE_BY_ID_URL, roleEto.getId()))
+        mockMvc.perform(get(GET_ROLE_BY_ID_URL, 10L))
 
                 //Assert
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    @DisplayName("GET /user/v1/role/1 - ISE")
-    void testGetRoleByIdISE() throws Exception {
-        //Arrange
-        when(userHandling.findRole(roleEto.getId()))
-                .thenReturn(Optional.empty());
-
-        //Act
-        mockMvc.perform(get(GET_ROLE_BY_ID_URL, roleEto.getId()))
-
-                //Assert
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
     @DisplayName("GET /user/v1/roles - Found")
     void testGetAllRolesFound() throws Exception {
-        //Arrange
-        ArrayList<RoleEto> roles = new ArrayList<>();
-        roles.add(roleEto);
-        when(userHandling.findAllRoles()).thenReturn(Optional.of(roles));
-
         //Act
         MvcResult result = mockMvc.perform(get(GET_ALL_ROLES_URL)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -269,24 +198,12 @@ public class UserRestServiceTests {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), RoleEto[].class))
-                .isEqualTo(roles.toArray());
-    }
 
-    @Test
-    @DisplayName("GET /user/v1/roles - No content")
-    void testGetAllRolesNoContent() throws Exception {
-        //Arrange
-        when(userHandling.findAllRoles()).thenReturn(Optional.of(new ArrayList<>()));
+        List<RoleEto> roleEtos = Arrays.stream(objectMapper.readValue(result.getResponse().getContentAsString(), RoleEto[].class))
+                .collect(Collectors.toList());
 
-        //Act
-        MvcResult result = mockMvc.perform(get(GET_ALL_ROLES_URL))
-
-                //Assert
-                .andExpect(status().isNoContent())
-                .andReturn();
-
-        assertThat(result.getResponse().getErrorMessage()).isEqualTo("Roles do not exist.");
+        assertThat(roleEtos).hasSize(3);
+        assertThat(roleEtos.get(2)).isEqualToComparingFieldByField(roleEto);
     }
 
     @Test
@@ -294,8 +211,8 @@ public class UserRestServiceTests {
     void testGetAllAccountsFound() throws Exception {
         //Arrange
         ArrayList<AccountEto> accounts = new ArrayList<>();
-        accounts.add(accountEto);
-        when(userHandling.findAllAccounts()).thenReturn(Optional.of(accounts));
+        accounts.add(accountEto1);
+        accounts.add(accountEto2);
 
         //Act
         MvcResult result = mockMvc.perform(get(GET_ALL_ACCOUNTS_URL)
@@ -311,86 +228,56 @@ public class UserRestServiceTests {
     }
 
     @Test
-    @DisplayName("GET /user/v1/users/accounts - No content")
-    void testGetAllAccountsNoContent() throws Exception {
-        //Arrange
-        when(userHandling.findAllAccounts()).thenReturn(Optional.of(new ArrayList<>()));
-
+    @DisplayName("POST /user/v1/user - Created")
+    void testCreateUserOk() throws Exception {
         //Act
-        MvcResult result = mockMvc.perform(get(GET_ALL_ACCOUNTS_URL))
+        MvcResult result = mockMvc.perform(post(USER_URL)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(userTo)))
 
                 //Assert
-                .andExpect(status().isNoContent())
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        assertThat(result.getResponse().getErrorMessage()).isEqualTo("Accounts do not exist.");
+        assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), UserEto.class))
+                .isEqualToComparingFieldByField(userCreated);
     }
 
     @Test
-    @DisplayName("DELETE /user/v1/role/{id} - OK")
-    void testDeleteRoleOk() throws Exception {
-        //Act
-        mockMvc.perform(delete(ROLE_ID_URL, roleEto.getId()))
-
-                //Assert
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("DELETE /user/v1/role/{id} - Not Found")
-    void testDeleteRoleNotFound() throws Exception {
+    @DisplayName("POST /user/v1/user - Not Found")
+    void testCreateUserNotFound() throws Exception {
         //Arrange
-        doThrow(EntityDoesNotExistException.class).when(userHandling).deleteRole(roleEto.getId());
+        userTo.setRoleId(8L);
 
         //Act
-        mockMvc.perform(delete(ROLE_ID_URL, roleEto.getId()))
+        mockMvc.perform(post(USER_URL)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(userTo)))
 
                 //Assert
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @DisplayName("DELETE /user/v1/role/{id} - Has Users")
-    void testDeleteRoleHasUsers() throws Exception {
+    @DisplayName("POST /user/v1/user - Unprocessable Entity")
+    void testCreateUserUnprocessableEntity() throws Exception {
         //Arrange
-        doThrow(RoleHasAssignedUsersException.class).when(userHandling).deleteRole(roleEto.getId());
+        accountTo.setEmail("user1@test.com");
 
         //Act
-        mockMvc.perform(delete(ROLE_ID_URL, roleEto.getId()))
+        mockMvc.perform(post(USER_URL)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(userTo)))
 
                 //Assert
-                .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    @DisplayName("DELETE /user/v1/user/{id} - OK")
-    void testDeleteUserOk() throws Exception {
-        //Act
-        mockMvc.perform(delete(USER_ID_URL, userEto.getId()))
-
-                //Assert
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("DELETE /user/v1/user/{id} - Not Found")
-    void testDeleteUserNotFound() throws Exception {
-        //Arrange
-        doThrow(EntityDoesNotExistException.class).when(userHandling).deleteUserAndAllRelatedEntities(userEto.getId());
-
-        //Act
-        mockMvc.perform(delete(USER_ID_URL, userEto.getId()))
-
-                //Assert
-                .andExpect(status().isNotFound());
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
     }
 
     @Test
     @DisplayName("POST /user/v1/role - Ok")
     void testCreateRoleOk() throws Exception {
-        //Arrange
-        when(userHandling.createRole(roleTo)).thenReturn(Optional.of(roleEto));
-
         //Act
         MvcResult result = mockMvc.perform(post(ROLE_URL)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -409,7 +296,8 @@ public class UserRestServiceTests {
     @DisplayName("POST /user/v1/role - Not Found")
     void testCreateRoleNotFound() throws Exception {
         //Arrange
-        when(userHandling.createRole(roleTo)).thenThrow(EntityDoesNotExistException.class);
+        roleTo.getPermissionIds().clear();
+        roleTo.getPermissionIds().add(12L);
 
         //Act
         mockMvc.perform(post(ROLE_URL)
@@ -425,79 +313,12 @@ public class UserRestServiceTests {
     @DisplayName("POST /user/v1/role - Unprocessable Entity")
     void testCreateRoleUnprocessableEntity() throws Exception {
         //Arrange
-        when(userHandling.createRole(roleTo)).thenThrow(EntityAlreadyExistsException.class);
+        roleTo.setName("ADMIN");
 
         //Act
         mockMvc.perform(post(ROLE_URL)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(roleTo)))
-
-                //Assert
-                .andExpect(status().isUnprocessableEntity())
-                .andReturn();
-    }
-
-    @Test
-    @DisplayName("POST /user/v1/role - ISE")
-    void testCreateRoleISE() throws Exception {
-        //Arrange
-        when(userHandling.createRole(roleTo)).thenReturn(Optional.empty());
-
-        //Act
-        mockMvc.perform(post(ROLE_URL)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(roleTo)))
-
-                //Assert
-                .andExpect(status().isInternalServerError())
-                .andReturn();
-    }
-
-    @Test
-    @DisplayName("POST /user/v1/user - Created")
-    void testCreateUserOk() throws Exception {
-        //Arrange
-        when(userHandling.createUserAndAccountEntities(any(), any(), any())).thenReturn(Optional.of(userEto));
-
-        //Act
-        MvcResult result = mockMvc.perform(post(USER_URL)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(userTo)))
-
-                //Assert
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-
-        assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), UserEto.class))
-                .isEqualToComparingFieldByField(userEto);
-    }
-
-    @Test
-    @DisplayName("POST /user/v1/user - Not Found")
-    void testCreateUserNotFound() throws Exception {
-        //Arrange
-        when(userHandling.createUserAndAccountEntities(any(), any(), any())).thenThrow(EntityDoesNotExistException.class);
-
-        //Act
-        mockMvc.perform(post(USER_URL)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(userTo)))
-
-                //Assert
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @DisplayName("POST /user/v1/user - Unprocessable Entity")
-    void testCreateUserUnprocessableEntity() throws Exception {
-        //Arrange
-        when(userHandling.createUserAndAccountEntities(any(), any(), any())).thenThrow(AccountAlreadyExistsException.class);
-
-        //Act
-        mockMvc.perform(post(USER_URL)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(userTo)))
 
                 //Assert
                 .andExpect(status().isUnprocessableEntity())
@@ -508,7 +329,7 @@ public class UserRestServiceTests {
     @DisplayName("POST /user/v1/user - Unprocessable Entity2")
     void testCreateUserUnprocessableEntity2() throws Exception {
         //Arrange
-        when(userHandling.createUserAndAccountEntities(any(), any(), any())).thenThrow(AddressException.class);
+        accountTo.setEmail("asadas");
 
         //Act
         mockMvc.perform(post(USER_URL)
@@ -521,27 +342,58 @@ public class UserRestServiceTests {
     }
 
     @Test
-    @DisplayName("POST /user/v1/user - ISE")
-    void testCreateUserISE() throws Exception {
-        //Arrange
-        when(userHandling.createUserAndAccountEntities(any(), any(), any())).thenReturn(Optional.empty());
-
+    @DisplayName("DELETE /user/v1/role/{id} - OK")
+    void testDeleteRoleOk() throws Exception {
         //Act
-        mockMvc.perform(post(USER_URL)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(userTo)))
+        mockMvc.perform(delete(ROLE_ID_URL, 0L))
 
                 //Assert
-                .andExpect(status().isInternalServerError())
-                .andReturn();
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("DELETE /user/v1/role/{id} - Has Users")
+    void testDeleteRoleHasUsers() throws Exception {
+        //Act
+        mockMvc.perform(delete(ROLE_ID_URL, roleEto.getId()))
+
+                //Assert
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @DisplayName("DELETE /user/v1/role/{id} - Not Found")
+    void testDeleteRoleNotFound() throws Exception {
+        //Act
+        mockMvc.perform(delete(ROLE_ID_URL, 4L))
+
+                //Assert
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("DELETE /user/v1/user/{id} - OK")
+    void testDeleteUserOk() throws Exception {
+        //Act
+        mockMvc.perform(delete(USER_ID_URL, userEto.getId()))
+
+                //Assert
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("DELETE /user/v1/user/{id} - Not Found")
+    void testDeleteUserNotFound() throws Exception {
+        //Act
+        mockMvc.perform(delete(USER_ID_URL, 3L))
+
+                //Assert
+                .andExpect(status().isNotFound());
     }
 
     @Test
     @DisplayName("PUT /user/v1/role/{id} - OK")
     void testUpdateRoleOk() throws Exception {
-        //Arrange
-        when(userHandling.updateRole(roleTo, roleEto.getId())).thenReturn(Optional.of(roleEto));
-
         //Act
         MvcResult result = mockMvc.perform(put(ROLE_ID_URL, roleEto.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -559,11 +411,8 @@ public class UserRestServiceTests {
     @Test
     @DisplayName("PUT /user/v1/role/{id} - Not Found")
     void testUpdateRoleNotFound() throws Exception {
-        //Arrange
-        when(userHandling.updateRole(roleTo, roleEto.getId())).thenThrow(EntityDoesNotExistException.class);
-
         //Act
-        mockMvc.perform(put(ROLE_ID_URL, roleEto.getId())
+        mockMvc.perform(put(ROLE_ID_URL, 5L)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(roleTo)))
 
@@ -575,9 +424,6 @@ public class UserRestServiceTests {
     @Test
     @DisplayName("PUT /user/v1/role/{id} - Unprocessable Entity")
     void testUpdateRoleUnprocessableEntity() throws Exception {
-        //Arrange
-        when(userHandling.updateRole(roleTo, roleEto.getId())).thenThrow(EntityAlreadyExistsException.class);
-
         //Act
         mockMvc.perform(put(ROLE_ID_URL, roleEto.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -589,26 +435,10 @@ public class UserRestServiceTests {
     }
 
     @Test
-    @DisplayName("PUT /user/v1/role/{id} - ISE")
-    void testUpdateRoleISE() throws Exception {
-        //Arrange
-        when(userHandling.updateRole(roleTo, roleEto.getId())).thenReturn(Optional.empty());
-
-        //Act
-        mockMvc.perform(put(ROLE_ID_URL, roleEto.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(roleTo)))
-
-                //Assert
-                .andExpect(status().isInternalServerError())
-                .andReturn();
-    }
-
-    @Test
     @DisplayName("PUT /user/v1/user/{id} - OK")
     void testUpdateUserOk() throws Exception {
-        //Arrange
-        when(userHandling.updateUser(userTo, userEto.getId())).thenReturn(Optional.of(userEto));
+        userCreated.setAccountEto(accountEto1);
+        userCreated.setId(1L);
 
         //Act
         MvcResult result = mockMvc.perform(put(USER_ID_URL, userEto.getId())
@@ -621,17 +451,14 @@ public class UserRestServiceTests {
                 .andReturn();
 
         assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), UserEto.class))
-                .isEqualToComparingFieldByField(userEto);
+                .isEqualToComparingFieldByField(userCreated);
     }
 
     @Test
     @DisplayName("PUT /user/v1/user/{id} - Not Found")
     void testUpdateUserNotFound() throws Exception {
-        //Arrange
-        when(userHandling.updateUser(userTo, userEto.getId())).thenThrow(EntityDoesNotExistException.class);
-
         //Act
-        mockMvc.perform(put(USER_ID_URL, userEto.getId())
+        mockMvc.perform(put(USER_ID_URL, 5L)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(userTo)))
 
@@ -641,26 +468,10 @@ public class UserRestServiceTests {
     }
 
     @Test
-    @DisplayName("PUT /user/v1/user/{id} - ISE")
-    void testUpdateUserISE() throws Exception {
-        //Arrange
-        when(userHandling.updateUser(userTo, userEto.getId())).thenReturn(Optional.empty());
-
-        //Act
-        mockMvc.perform(put(USER_ID_URL, userEto.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(userTo)))
-
-                //Assert
-                .andExpect(status().isInternalServerError())
-                .andReturn();
-    }
-
-    @Test
     @DisplayName("PUT /user/v1/user/{id}/account - OK")
     void testUpdateUserAccountOk() throws Exception {
         //Arrange
-        when(userHandling.updateUserAccount(accountTo, userEto.getId())).thenReturn(Optional.of(accountEto));
+        accountCreated.setId(1L);
 
         //Act
         MvcResult result = mockMvc.perform(put(USER_ID_URL + "/account", userEto.getId())
@@ -673,17 +484,14 @@ public class UserRestServiceTests {
                 .andReturn();
 
         assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), AccountEto.class))
-                .isEqualToComparingFieldByField(accountEto);
+                .isEqualToComparingFieldByField(accountCreated);
     }
 
     @Test
     @DisplayName("PUT /user/v1/user/{id}/account - Not Found")
     void testUpdateUserAccountNotFound() throws Exception {
-        //Arrange
-        when(userHandling.updateUserAccount(accountTo, userEto.getId())).thenThrow(EntityDoesNotExistException.class);
-
         //Act
-        mockMvc.perform(put(USER_ID_URL + "/account", userEto.getId())
+        mockMvc.perform(put(USER_ID_URL + "/account", 5L)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(accountTo)))
 
@@ -696,7 +504,7 @@ public class UserRestServiceTests {
     @DisplayName("PUT /user/v1/user/{id}/account - Unprocessable Entity")
     void testUpdateUserAccountUnprocessableEntity() throws Exception {
         //Arrange
-        when(userHandling.updateUserAccount(accountTo, userEto.getId())).thenThrow(AccountAlreadyExistsException.class);
+        accountTo.setEmail("user2@test.com");
 
         //Act
         mockMvc.perform(put(USER_ID_URL + "/account", userEto.getId())
@@ -712,7 +520,7 @@ public class UserRestServiceTests {
     @DisplayName("PUT /user/v1/user/{id}/account - Unprocessable Entity")
     void testUpdateUserAccountUnprocessableEntity2() throws Exception {
         //Arrange
-        when(userHandling.updateUserAccount(accountTo, userEto.getId())).thenThrow(AddressException.class);
+        accountTo.setEmail("invalid");
 
         //Act
         mockMvc.perform(put(USER_ID_URL + "/account", userEto.getId())
@@ -725,28 +533,10 @@ public class UserRestServiceTests {
     }
 
     @Test
-    @DisplayName("PUT /user/v1/user/{id}/account - ISE")
-    void testUpdateUserAccountISE() throws Exception {
-        //Arrange
-        when(userHandling.updateUserAccount(accountTo, userEto.getId())).thenReturn(Optional.empty());
-
-        //Act
-        mockMvc.perform(put(USER_ID_URL + "/account", userEto.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(accountTo)))
-
-                //Assert
-                .andExpect(status().isInternalServerError())
-                .andReturn();
-    }
-
-    @Test
     @DisplayName("GET /user/v1/user/account/registrationConfirm/{token} - Redirection")
     void testConfirmRegistrationRedirection() throws Exception {
         //Arrange
-        RedirectView redirectView = new RedirectView("sth");
         String token = "token";
-        when(userHandling.confirmRegistration(token)).thenReturn(Optional.of(redirectView));
 
         //Act
         mockMvc.perform(get(ACCOUNT_REGISTRATION_URL, token)
@@ -760,8 +550,7 @@ public class UserRestServiceTests {
     @DisplayName("GET /user/v1/user/account/registrationConfirm/{token} - Not Found")
     void testConfirmRegistrationNotFound() throws Exception {
         //Arrange
-        String token = "token";
-        when(userHandling.confirmRegistration(token)).thenThrow(EntityDoesNotExistException.class);
+        String token = "sth";
 
         //Act
         mockMvc.perform(get(ACCOUNT_REGISTRATION_URL, token)
@@ -769,20 +558,5 @@ public class UserRestServiceTests {
 
                 //Assert
                 .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @DisplayName("GET /user/v1/user/account/registrationConfirm/{token} - ISE")
-    void testConfirmRegistrationISE() throws Exception {
-        //Arrange
-        String token = "sth";
-        when(userHandling.confirmRegistration(token)).thenReturn(Optional.empty());
-
-        //Act
-        mockMvc.perform(get(ACCOUNT_REGISTRATION_URL, token)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                //Assert
-                .andExpect(status().isInternalServerError());
     }
 }

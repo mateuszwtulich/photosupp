@@ -49,13 +49,10 @@ public class RoleDaoTests {
     @Test
     void existsByPermissions_FALSE() {
         //Arrange
-        PermissionEntity permissionEntity1 = new PermissionEntity(ApplicationPermissions.AUTH_USER, "Standard user with no special permissions.");
-        permissionEntity1.setId(6L);
         PermissionEntity permissionEntity2 = new PermissionEntity(ApplicationPermissions.AUTH_USER, "User has possibility to use CRUD operations on ORDERS.");
         permissionEntity2.setId(8L);
 
         List<PermissionEntity> permissionEntityList = new ArrayList<>();
-        permissionEntityList.add(permissionEntity1);
         permissionEntityList.add(permissionEntity2);
 
         //Act Assert

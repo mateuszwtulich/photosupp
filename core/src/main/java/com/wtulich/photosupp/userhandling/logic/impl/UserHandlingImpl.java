@@ -4,6 +4,7 @@ import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsExce
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.userhandling.logic.api.UserHandling;
 import com.wtulich.photosupp.userhandling.logic.api.exception.AccountAlreadyExistsException;
+import com.wtulich.photosupp.userhandling.logic.api.exception.RoleHasAssignedUsersException;
 import com.wtulich.photosupp.userhandling.logic.api.to.AccountEto;
 import com.wtulich.photosupp.userhandling.logic.api.to.AccountTo;
 import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
@@ -62,7 +63,7 @@ public class UserHandlingImpl implements UserHandling {
     private UcManageUser ucManageUser;
 
     @Override
-    public void deleteRole(Long id) throws EntityDoesNotExistException {
+    public void deleteRole(Long id) throws EntityDoesNotExistException, RoleHasAssignedUsersException {
         ucDeleteRole.deleteRole(id);
     }
 

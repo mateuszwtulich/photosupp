@@ -3,6 +3,7 @@ package com.wtulich.photosupp.userhandling.service.impl.ui;
 import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.userhandling.logic.api.exception.AccountAlreadyExistsException;
+import com.wtulich.photosupp.userhandling.logic.api.exception.RoleHasAssignedUsersException;
 import com.wtulich.photosupp.userhandling.logic.api.to.AccountEto;
 import com.wtulich.photosupp.userhandling.logic.api.to.AccountTo;
 import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
@@ -52,20 +53,32 @@ public class UserRestServiceImpl implements UserRestService {
 
     @Override
     public List<UserEto> getAllUsers() {
-        return userHandling.findAllUsers().orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NO_CONTENT, USERS_NOT_EXIST));
+        return userHandling.findAllUsers().map( userEtos -> {
+            if(userEtos.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, USERS_NOT_EXIST);
+            }
+            return userEtos;
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Override
     public List<AccountEto> getAllAccounts() {
-        return userHandling.findAllAccounts().orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NO_CONTENT, ACCOUNTS_NOT_EXIST));
+        return userHandling.findAllAccounts().map( accountEtos -> {
+            if(accountEtos.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, ACCOUNTS_NOT_EXIST);
+            }
+            return accountEtos;
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Override
     public List<UserEto> getAllUsersByRoleId(Long roleId) {
-        return userHandling.findAllUsersByRoleId(roleId).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NO_CONTENT, "Users with role id" + roleId + " do not exist."));
+        return userHandling.findAllUsersByRoleId(roleId).map( userEtos -> {
+            if(userEtos.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Users with role id " + roleId + " do not exist.");
+            }
+            return userEtos;
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Override
@@ -142,8 +155,12 @@ public class UserRestServiceImpl implements UserRestService {
 
     @Override
     public List<RoleEto> getAllRoles() {
-        return userHandling.findAllRoles().orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NO_CONTENT, ROLES_NOT_EXIST));
+        return userHandling.findAllRoles().map(roleEtos -> {
+            if (roleEtos.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, ROLES_NOT_EXIST);
+            }
+            return roleEtos;
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Override
@@ -181,6 +198,8 @@ public class UserRestServiceImpl implements UserRestService {
             return ResponseEntity.ok().build();
         } catch (EntityDoesNotExistException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (RoleHasAssignedUsersException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         }
     }
 }

@@ -25,7 +25,7 @@ public class VerificationTokenDaoTests {
     @Test
     void findByToken_OK() {
         //Arrange
-        AccountEntity accountEntity = new AccountEntity("User1", "passw0rd", "user1@test.com", false);
+        AccountEntity accountEntity = new AccountEntity("user1", "passw0rd", "user1@test.com", false);
         accountEntity.setId(1L);
         VerificationTokenEntity verificationTokenEntity = new VerificationTokenEntity("token", accountEntity);
         verificationTokenEntity.setId(1L);

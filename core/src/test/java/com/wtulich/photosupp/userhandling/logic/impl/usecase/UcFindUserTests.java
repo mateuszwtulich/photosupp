@@ -154,7 +154,7 @@ public class UcFindUserTests {
     @DisplayName("Test findUserByRoleId Success")
     void testFindUserByRoleIdSuccess() throws EntityDoesNotExistException {
         //Arrange
-        when(userDao.findAllByRole_Id(roleEntity.getId())).thenReturn(Optional.of(userEntityList));
+        when(userDao.findAllByRole_Id(roleEntity.getId())).thenReturn(userEntityList);
 
         //Act
         Optional<List<UserEto>> result = ucFindUser.findAllUsersByRoleId(roleEntity.getId());
@@ -168,7 +168,7 @@ public class UcFindUserTests {
     @DisplayName("Test findUserByRoleId Failure")
     void testFindUserByRoleIdFailure() {
         //Arrange
-        when(userDao.findAllByRole_Id(roleEntity.getId())).thenReturn(Optional.of(new ArrayList<>()));
+        when(userDao.findAllByRole_Id(roleEntity.getId())).thenReturn(new ArrayList<>());
 
         //Act
         Optional<List<UserEto>> result = ucFindUser.findAllUsersByRoleId(roleEntity.getId());
