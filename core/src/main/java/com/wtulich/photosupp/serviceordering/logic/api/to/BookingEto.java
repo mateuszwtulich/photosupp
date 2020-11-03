@@ -2,6 +2,7 @@ package com.wtulich.photosupp.serviceordering.logic.api.to;
 
 import com.sun.istack.NotNull;
 import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationEntityTransportObject;
+import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,6 +19,9 @@ public class BookingEto extends AbstractApplicationEntityTransportObject {
     private ServiceEto serviceEto;
 
     private AddressEto addressEto;
+
+    @NotNull
+    private UserEto userEto;
 
     @NotNull
     private boolean isConfirmed;
@@ -38,13 +42,15 @@ public class BookingEto extends AbstractApplicationEntityTransportObject {
     public BookingEto() {
     }
 
-    public BookingEto(Long id, String name, String description, ServiceEto serviceEto, AddressEto addressEto, boolean isConfirmed,
-                      Double predictedPrice, String start, String end, String modificationDate, List<PriceIndicatorEto> priceIndicatorEtoList) {
+    public BookingEto(Long id, String name, String description, ServiceEto serviceEto, AddressEto addressEto,
+                      UserEto userEto, boolean isConfirmed, Double predictedPrice, String start, String end,
+                      String modificationDate, List<PriceIndicatorEto> priceIndicatorEtoList) {
         super(id);
         this.name = name;
         this.description = description;
         this.serviceEto = serviceEto;
         this.addressEto = addressEto;
+        this.userEto = userEto;
         this.isConfirmed = isConfirmed;
         this.predictedPrice = predictedPrice;
         this.start = start;
@@ -131,6 +137,14 @@ public class BookingEto extends AbstractApplicationEntityTransportObject {
 
     public void setPriceIndicatorEtoList(List<PriceIndicatorEto> priceIndicatorEtoList) {
         this.priceIndicatorEtoList = priceIndicatorEtoList;
+    }
+
+    public UserEto getUserEto() {
+        return userEto;
+    }
+
+    public void setUserEto(UserEto userEto) {
+        this.userEto = userEto;
     }
 
     @Override

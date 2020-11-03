@@ -3,8 +3,14 @@ package com.wtulich.photosupp.serviceordering.service.impl.ui;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
+import com.wtulich.photosupp.general.logic.api.exception.EntityHasAssignedEntitiesException;
+import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
 import com.wtulich.photosupp.serviceordering.logic.api.to.*;
 import com.wtulich.photosupp.serviceordering.logic.impl.ServiceOrderingImpl;
+import com.wtulich.photosupp.userhandling.logic.api.to.AccountEto;
+import com.wtulich.photosupp.userhandling.logic.api.to.PermissionEto;
+import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
+import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -76,25 +82,31 @@ public class ServiceRestServiceTest {
 
         addressEto = new AddressEto(1L, "Wroclaw", "Wroblewskiego", "27", null, "51-627");
         serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
-        indicatorEto = new IndicatorEto(1L, "Podroz sluzbowa", "Paliwo, amortyzacja", 40, 10);
+        indicatorEto = new IndicatorEto(1L, "Podroz sluzbowa", "Paliwo, amortyzacja", 40);
 
-        PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorEto, bookingEto, 400);
-        priceIndicatorEtoList = new ArrayList<>();
-        priceIndicatorEtoList.add(priceIndicatorEto);
-        bookingEto = new BookingEto(1L, "Film dla TestCompany", "Film produktowy z dojazdem", serviceEto, addressEto, false, 900D,
+        List<PermissionEto> permissionEtoList = new ArrayList<>();
+        permissionEtoList.add(new PermissionEto(1L, ApplicationPermissions.A_CRUD_SUPER, "DESC1"));
+        RoleEto roleEto = new RoleEto(1L, "ADMIN", "DESC1", permissionEtoList);
+        AccountEto accountEto = new AccountEto(1L, "TEST", "PASS", "TEST@test.com", false);
+        UserEto userEto = new UserEto(1L, "NAME1", "SURNAME1", accountEto, roleEto);
+
+        bookingEto = new BookingEto(1L, "Film dla TestCompany", "Film produktowy z dojazdem", serviceEto, addressEto, userEto, false, 900D,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)),
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
                 priceIndicatorEtoList);
+        PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorEto, bookingEto, 400, 10);
+        priceIndicatorEtoList = new ArrayList<>();
+        priceIndicatorEtoList.add(priceIndicatorEto);
 
         addressTo = new AddressTo("Wrocław", "Wróblewskiego", "27", null, "51-627");
         serviceTo = new ServiceTo("Film produktowy", "Film produktów na białym tle i odpowiednim oświetleniu", 500D);
-        indicatorTo = new IndicatorTo("Podróż służbowa", "Paliwo, amortyzacja", 40, 10);
+        indicatorTo = new IndicatorTo("Podróż służbowa", "Paliwo, amortyzacja", 40);
 
-        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, 1L);
+        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, 1L, 10);
         priceIndicatorToList = new ArrayList<>();
         priceIndicatorToList.add(priceIndicatorTo);
-        bookingTo = new BookingTo("Film dla TestCompany", "Film produktowy z dojazdem", 1L, addressTo,
+        bookingTo = new BookingTo("Film dla TestCompany", "Film produktowy z dojazdem", 1L, 1L, addressTo,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)),
                 priceIndicatorToList);
@@ -350,6 +362,20 @@ public class ServiceRestServiceTest {
     }
 
     @Test
+    @DisplayName("DELETE /service/v1/indicator/1 - Unprocessable Entity")
+    void testDeleteIndicatorUnprocessableEntity() throws Exception {
+        //Arrange
+        doThrow(EntityHasAssignedEntitiesException.class).when(serviceOrdering).deleteIndicator(indicatorEto.getId());
+
+        //Act
+        mockMvc.perform(delete(INDICATOR_ID_URL, indicatorEto.getId()))
+
+                //Assert
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+
+    @Test
     @DisplayName("DELETE /service/v1/service/1 - OK")
     void testDeleteServiceOk() throws Exception {
         //Act
@@ -357,6 +383,19 @@ public class ServiceRestServiceTest {
 
                 //Assert
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("DELETE /service/v1/role/1 - Unprocessable Entity")
+    void testDeleteServiceUnprocessableEntity() throws Exception {
+        //Arrange
+        doThrow(EntityHasAssignedEntitiesException.class).when(serviceOrdering).deleteService(serviceEto.getId());
+
+        //Act
+        mockMvc.perform(delete(SERVICE_ID_URL, serviceEto.getId()))
+
+                //Assert
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -504,6 +543,7 @@ public class ServiceRestServiceTest {
     @DisplayName("POST /service/v1/booking - Created")
     void testCreateBookingOk() throws Exception {
         //Arrange
+        bookingTo.setUserId(1L);
         when(serviceOrdering.createBooking(bookingTo)).thenReturn(Optional.of(bookingEto));
 
         //Act
@@ -524,6 +564,7 @@ public class ServiceRestServiceTest {
     @DisplayName("POST /service/v1/booking - Not Found")
     void testCreateBookingNotFound() throws Exception {
         //Arrange
+        bookingTo.setUserId(1L);
         when(serviceOrdering.createBooking(bookingTo)).thenThrow(EntityDoesNotExistException.class);
 
         //Act
@@ -540,6 +581,7 @@ public class ServiceRestServiceTest {
     @DisplayName("POST /service/v1/booking - Unprocessable Entity")
     void testCreateBookingUnprocessableEntity() throws Exception {
         //Arrange
+        bookingTo.setUserId(1L);
         when(serviceOrdering.createBooking(bookingTo)).thenThrow(EntityAlreadyExistsException.class);
 
         //Act
@@ -556,6 +598,7 @@ public class ServiceRestServiceTest {
     @DisplayName("POST /service/v1/booking - ISE")
     void testCreateBookingISE() throws Exception {
         //Arrange
+        bookingTo.setUserId(1L);
         when(serviceOrdering.createBooking(bookingTo)).thenReturn(Optional.empty());
 
         //Act
@@ -708,6 +751,7 @@ public class ServiceRestServiceTest {
     @DisplayName("PUT /service/v1/booking/1 - OK")
     void testUpdateBookingOk() throws Exception {
         //Arrange
+        bookingTo.setUserId(1L);
         when(serviceOrdering.updateBooking(bookingTo, bookingEto.getId())).thenReturn(Optional.of(bookingEto));
 
         //Act
@@ -728,6 +772,7 @@ public class ServiceRestServiceTest {
     @DisplayName("PUT /service/v1/booking/1 - Not Found")
     void testUpdateBookingNotFound() throws Exception {
         //Arrange
+        bookingTo.setUserId(1L);
         when(serviceOrdering.updateBooking(bookingTo, bookingEto.getId())).thenThrow(EntityDoesNotExistException.class);
 
         //Act
@@ -744,6 +789,7 @@ public class ServiceRestServiceTest {
     @DisplayName("PUT /service/v1/booking/1 - Unprocessable Entity")
     void testUpdateBookingUnprocessableEntity() throws Exception {
         //Arrange
+        bookingTo.setUserId(1L);
         when(serviceOrdering.updateBooking(bookingTo, bookingEto.getId())).thenThrow(EntityAlreadyExistsException.class);
 
         //Act
@@ -760,6 +806,7 @@ public class ServiceRestServiceTest {
     @DisplayName("PUT /service/v1/booking/1 - ISE")
     void testUpdateBookingISE() throws Exception {
         //Arrange
+        bookingTo.setUserId(1L);
         when(serviceOrdering.updateBooking(bookingTo, bookingEto.getId())).thenReturn(Optional.empty());
 
         //Act

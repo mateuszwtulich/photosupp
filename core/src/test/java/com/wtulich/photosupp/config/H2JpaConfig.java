@@ -1,5 +1,10 @@
 package com.wtulich.photosupp.config;
 
+import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.AddressDao;
+import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.BookingDao;
+import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.IndicatorDao;
+import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.ServiceDao;
+import com.wtulich.photosupp.serviceordering.logic.api.mapper.PriceIndicator;
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.*;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -14,7 +19,12 @@ import org.springframework.test.context.ContextConfiguration;
         PermissionDao.class,
         RoleDao.class,
         UserDao.class,
-        VerificationTokenDao.class
+        VerificationTokenDao.class,
+        IndicatorDao.class,
+        BookingDao.class,
+        AddressDao.class,
+        PriceIndicator.class,
+        ServiceDao.class
 })
 @PropertySource("classpath:application.properties")
 @EntityScan(basePackages = {

@@ -50,7 +50,7 @@ public class UserDaoTest {
 
         // Assert
         assertThat(userEntityList).hasSize(2);
-        assertThat(userEntity).isEqualToIgnoringGivenFields(userEntityList.get(0), "account", "role", "orderList");
+        assertThat(userEntity).isEqualToIgnoringGivenFields(userEntityList.get(0), "account", "role", "orderList", "bookingList");
     }
 
     @Test

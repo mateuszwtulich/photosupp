@@ -64,6 +64,23 @@ public class BookingEntity extends AbstractApplicationPersistenceEntity {
     @OneToMany(mappedBy = "booking", fetch = FetchType.LAZY, targetEntity = PriceIndicatorEntity.class)
     private List<PriceIndicatorEntity> priceIndicatorList;
 
+    public BookingEntity() {
+    }
+
+    public BookingEntity(String name, String description,  Double predictedPrice, AddressEntity address, UserEntity user,
+                         ServiceEntity service, boolean isConfirmed, LocalDate start, LocalDate end, LocalDate modificationDate) {
+        this.name = name;
+        this.description = description;
+        this.start = start;
+        this.end = end;
+        this.predictedPrice = predictedPrice;
+        this.modificationDate = modificationDate;
+        this.isConfirmed = isConfirmed;
+        this.address = address;
+        this.user = user;
+        this.service = service;
+    }
+
     public String getName() {
         return name;
     }

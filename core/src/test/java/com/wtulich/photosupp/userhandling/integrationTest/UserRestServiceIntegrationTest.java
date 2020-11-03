@@ -1,4 +1,4 @@
-package com.wtulich.photosupp.userhandling.integrationTests;
+package com.wtulich.photosupp.userhandling.integrationTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;

@@ -16,6 +16,9 @@ public class BookingTo {
     @NotNull
     private Long serviceId;
 
+    @NotNull
+    private Long userId;
+
     private AddressTo addressTo;
 
     @NotNull
@@ -29,7 +32,7 @@ public class BookingTo {
     public BookingTo() {
     }
 
-    public BookingTo(String name, String description, Long serviceId, AddressTo addressTo,
+    public BookingTo(String name, String description, Long serviceId, Long userId, AddressTo addressTo,
                      String start, String end, List<PriceIndicatorTo> priceIndicatorToList) {
         this.name = name;
         this.description = description;
@@ -64,6 +67,14 @@ public class BookingTo {
         this.serviceId = serviceId;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     public AddressTo getAddressTo() {
         return addressTo;
     }
@@ -96,6 +107,7 @@ public class BookingTo {
         this.priceIndicatorToList = priceIndicatorToList;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -104,14 +116,15 @@ public class BookingTo {
         return name.equals(bookingTo.name) &&
                 Objects.equals(description, bookingTo.description) &&
                 serviceId.equals(bookingTo.serviceId) &&
+                userId.equals(bookingTo.userId) &&
                 addressTo.equals(bookingTo.addressTo) &&
                 start.equals(bookingTo.start) &&
                 end.equals(bookingTo.end) &&
-                Objects.equals(priceIndicatorToList, bookingTo.priceIndicatorToList);
+                priceIndicatorToList.equals(bookingTo.priceIndicatorToList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, serviceId, addressTo, start, end, priceIndicatorToList);
+        return Objects.hash(name, description, serviceId, userId, addressTo, start, end, priceIndicatorToList);
     }
 }

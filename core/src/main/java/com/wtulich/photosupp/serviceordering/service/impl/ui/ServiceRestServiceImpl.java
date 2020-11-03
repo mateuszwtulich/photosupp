@@ -2,6 +2,7 @@ package com.wtulich.photosupp.serviceordering.service.impl.ui;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
+import com.wtulich.photosupp.general.logic.api.exception.EntityHasAssignedEntitiesException;
 import com.wtulich.photosupp.serviceordering.logic.api.to.*;
 import com.wtulich.photosupp.serviceordering.logic.impl.ServiceOrderingImpl;
 import com.wtulich.photosupp.serviceordering.service.api.ui.ServiceRestService;
@@ -185,6 +186,8 @@ public class ServiceRestServiceImpl implements ServiceRestService {
             return ResponseEntity.ok().build();
         } catch (EntityDoesNotExistException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (EntityHasAssignedEntitiesException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         }
     }
 
@@ -195,6 +198,8 @@ public class ServiceRestServiceImpl implements ServiceRestService {
             return ResponseEntity.ok().build();
         } catch (EntityDoesNotExistException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (EntityHasAssignedEntitiesException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         }
     }
 

@@ -6,7 +6,7 @@ import com.wtulich.photosupp.serviceordering.logic.api.to.IndicatorTo;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface IIndicatorMapper {
+public interface IndicatorMapper {
     IndicatorEto toIndicatorEto(IndicatorEntity indicatorEntity);
 
     IndicatorEntity toIndicatorEntity(IndicatorTo indicatorTo);

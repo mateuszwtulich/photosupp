@@ -91,3 +91,15 @@ INSERT INTO public.photosupp_user(
 INSERT INTO public.photosupp_user(
     id, name, surname, role_id, account_id)
     VALUES (2, 'NAME2', 'SURNAME2', 2, 2);
+
+INSERT INTO public.indicator(
+    id, name, description, base_amount)
+    VALUES (1, 'PODROZ SLUZBOWA', '100KM', 50);
+
+INSERT INTO public.service(
+    id, name, description, base_price)
+    VALUES (1, 'FILM', 'PRODUKTOWY', 1000);
+
+INSERT INTO public.service(
+    id, name, description, base_price)
+    VALUES (2, 'FOTOGRAFIA', 'PRODUKTOWA', 1500);

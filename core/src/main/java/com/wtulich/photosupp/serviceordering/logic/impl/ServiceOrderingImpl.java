@@ -2,6 +2,7 @@ package com.wtulich.photosupp.serviceordering.logic.impl;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
+import com.wtulich.photosupp.general.logic.api.exception.EntityHasAssignedEntitiesException;
 import com.wtulich.photosupp.serviceordering.logic.api.ServiceOrdering;
 import com.wtulich.photosupp.serviceordering.logic.api.to.*;
 import com.wtulich.photosupp.serviceordering.logic.api.usecase.*;
@@ -60,12 +61,12 @@ public class ServiceOrderingImpl implements ServiceOrdering {
     }
 
     @Override
-    public void deleteIndicator(Long id) throws EntityDoesNotExistException {
+    public void deleteIndicator(Long id) throws EntityDoesNotExistException, EntityHasAssignedEntitiesException {
         ucDeleteIndicator.deleteIndicator(id);
     }
 
     @Override
-    public void deleteService(Long id) throws EntityDoesNotExistException {
+    public void deleteService(Long id) throws EntityDoesNotExistException, EntityHasAssignedEntitiesException {
         ucDeleteService.deleteService(id);
     }
 

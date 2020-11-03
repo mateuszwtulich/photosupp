@@ -15,18 +15,14 @@ public class IndicatorEto extends AbstractApplicationEntityTransportObject {
     @NotNull
     private Integer baseAmount;
 
-    @NotNull
-    private Integer multiplier;
-
     public IndicatorEto() {
     }
 
-    public IndicatorEto(Long id, String name, String description, Integer baseAmount, Integer multiplier) {
+    public IndicatorEto(Long id, String name, String description, Integer baseAmount) {
         super(id);
         this.name = name;
         this.description = description;
         this.baseAmount = baseAmount;
-        this.multiplier = multiplier;
     }
 
     public String getName() {
@@ -53,13 +49,7 @@ public class IndicatorEto extends AbstractApplicationEntityTransportObject {
         this.baseAmount = baseAmount;
     }
 
-    public Integer getMultiplier() {
-        return multiplier;
-    }
 
-    public void setMultiplier(Integer multiplier) {
-        this.multiplier = multiplier;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -68,12 +58,11 @@ public class IndicatorEto extends AbstractApplicationEntityTransportObject {
         IndicatorEto that = (IndicatorEto) o;
         return  name.equals(that.name) &&
                 Objects.equals(description, that.description) &&
-                baseAmount.equals(that.baseAmount) &&
-                multiplier.equals(that.multiplier);
+                baseAmount.equals(that.baseAmount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, baseAmount, multiplier);
+        return Objects.hash(name, description, baseAmount);
     }
 }

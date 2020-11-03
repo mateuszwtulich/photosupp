@@ -3,6 +3,7 @@ package com.wtulich.photosupp.userhandling.dataaccess.api.entity;
 import com.sun.istack.NotNull;
 import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationPersistenceEntity;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.OrderEntity;
+import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.BookingEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -52,6 +53,9 @@ public class UserEntity extends AbstractApplicationPersistenceEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, targetEntity = OrderEntity.class, orphanRemoval = true)
     private List<OrderEntity> orderList;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, targetEntity = BookingEntity.class, orphanRemoval = true)
+    private List<BookingEntity> bookingList;
+
 
     public String getName() {
         return name;
@@ -83,6 +87,22 @@ public class UserEntity extends AbstractApplicationPersistenceEntity {
 
     public void setAccount(AccountEntity account) {
         this.account = account;
+    }
+
+    public List<OrderEntity> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<OrderEntity> orderList) {
+        this.orderList = orderList;
+    }
+
+    public List<BookingEntity> getBookingList() {
+        return bookingList;
+    }
+
+    public void setBookingList(List<BookingEntity> bookingList) {
+        this.bookingList = bookingList;
     }
 
     @Override

@@ -11,12 +11,16 @@ public class PriceIndicatorTo {
 
     private Long bookingId;
 
+    @NotNull
+    private Integer multiplier;
+
     public PriceIndicatorTo() {
     }
 
-    public PriceIndicatorTo(Long indicatorId, Long bookingId) {
+    public PriceIndicatorTo(Long indicatorId, Long bookingId, Integer multiplier) {
         this.indicatorId = indicatorId;
         this.bookingId = bookingId;
+        this.multiplier = multiplier;
     }
 
     public Long getIndicatorId() {
@@ -35,17 +39,26 @@ public class PriceIndicatorTo {
         this.bookingId = bookingId;
     }
 
+    public Integer getMultiplier() {
+        return multiplier;
+    }
+
+    public void setMultiplier(Integer multiplier) {
+        this.multiplier = multiplier;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PriceIndicatorTo)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         PriceIndicatorTo that = (PriceIndicatorTo) o;
         return indicatorId.equals(that.indicatorId) &&
-                Objects.equals(bookingId, that.bookingId);
+                bookingId.equals(that.bookingId) &&
+                multiplier.equals(that.multiplier);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(indicatorId, bookingId);
+        return Objects.hash(indicatorId, bookingId, multiplier);
     }
 }

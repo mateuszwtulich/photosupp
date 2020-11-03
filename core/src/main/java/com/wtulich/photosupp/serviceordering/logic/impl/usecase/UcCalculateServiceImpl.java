@@ -4,9 +4,13 @@ import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistExcep
 import com.wtulich.photosupp.serviceordering.logic.api.to.CalculateCto;
 import com.wtulich.photosupp.serviceordering.logic.api.to.CalculateTo;
 import com.wtulich.photosupp.serviceordering.logic.api.usecase.UcCalculateService;
+import org.springframework.validation.annotation.Validated;
 
+import javax.inject.Named;
 import java.util.Optional;
 
+@Validated
+@Named
 public class UcCalculateServiceImpl implements UcCalculateService {
 
     @Override

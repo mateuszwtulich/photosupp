@@ -24,13 +24,15 @@ public class IndicatorEntity extends AbstractApplicationPersistenceEntity {
     @Column(name = "BASE_AMOUNT", nullable = false)
     private Integer baseAmount;
 
-    @NotNull
-    @Column(name = "MULTIPLIER", nullable = false)
-    private Integer multiplier;
 
-    @NotNull
-    @Column(name = "EXTRA_PRICE", nullable = false)
-    private Double extraPrice;
+    public IndicatorEntity() {
+    }
+
+    public IndicatorEntity(String name, String description, Integer baseAmount) {
+        this.name = name;
+        this.description = description;
+        this.baseAmount = baseAmount;
+    }
 
     public String getName() {
         return name;
@@ -56,22 +58,6 @@ public class IndicatorEntity extends AbstractApplicationPersistenceEntity {
         this.baseAmount = baseAmount;
     }
 
-    public Integer getMultiplier() {
-        return multiplier;
-    }
-
-    public void setMultiplier(Integer multiplier) {
-        this.multiplier = multiplier;
-    }
-
-    public Double getExtraPrice() {
-        return extraPrice;
-    }
-
-    public void setExtraPrice(Double extraPrice) {
-        this.extraPrice = extraPrice;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -79,13 +65,11 @@ public class IndicatorEntity extends AbstractApplicationPersistenceEntity {
         IndicatorEntity that = (IndicatorEntity) o;
         return name.equals(that.name) &&
                 Objects.equals(description, that.description) &&
-                baseAmount.equals(that.baseAmount) &&
-                multiplier.equals(that.multiplier) &&
-                extraPrice.equals(that.extraPrice);
+                baseAmount.equals(that.baseAmount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, baseAmount, multiplier, extraPrice);
+        return Objects.hash(name, description, baseAmount);
     }
 }

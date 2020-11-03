@@ -6,7 +6,7 @@ import com.wtulich.photosupp.serviceordering.logic.api.to.PriceIndicatorTo;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface IPriceIndicator {
+public interface PriceIndicator {
     PriceIndicatorEntity toPriceIndicatorEntity(PriceIndicatorTo priceIndicatorTo);
 
     PriceIndicatorEto toPriceIndicatorEto(PriceIndicatorEntity priceIndicatorEntity);

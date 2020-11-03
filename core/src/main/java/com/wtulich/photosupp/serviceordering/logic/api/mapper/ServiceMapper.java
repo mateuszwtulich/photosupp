@@ -6,7 +6,7 @@ import com.wtulich.photosupp.serviceordering.logic.api.to.ServiceTo;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface IServiceMapper {
+public interface ServiceMapper {
 
     ServiceEto toServiceEto(ServiceEntity serviceEntity);
 

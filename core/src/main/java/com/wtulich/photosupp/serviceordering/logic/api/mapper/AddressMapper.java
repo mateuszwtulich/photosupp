@@ -7,7 +7,7 @@ import net.bytebuddy.implementation.bind.annotation.Default;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface IAddressMapper {
+public interface AddressMapper {
     AddressEto toAddressEto(AddressEntity addressEntity);
 
     AddressEntity toAddressEntity(AddressTo addressTo);

@@ -24,6 +24,15 @@ public class ServiceEntity extends AbstractApplicationPersistenceEntity {
     @Column(name = "BASE_PRICE", nullable = false)
     private Double basePrice;
 
+    public ServiceEntity() {
+    }
+
+    public ServiceEntity(String name, String description, Double basePrice) {
+        this.name = name;
+        this.description = description;
+        this.basePrice = basePrice;
+    }
+
     public String getName() {
         return name;
     }

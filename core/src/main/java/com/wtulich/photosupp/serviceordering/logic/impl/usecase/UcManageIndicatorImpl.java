@@ -4,9 +4,13 @@ import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistExcep
 import com.wtulich.photosupp.serviceordering.logic.api.to.IndicatorEto;
 import com.wtulich.photosupp.serviceordering.logic.api.to.IndicatorTo;
 import com.wtulich.photosupp.serviceordering.logic.api.usecase.UcManageIndicator;
+import org.springframework.validation.annotation.Validated;
 
+import javax.inject.Named;
 import java.util.Optional;
 
+@Validated
+@Named
 public class UcManageIndicatorImpl implements UcManageIndicator {
     @Override
     public Optional<IndicatorEto> createIndicator(IndicatorTo indicatorTo) {

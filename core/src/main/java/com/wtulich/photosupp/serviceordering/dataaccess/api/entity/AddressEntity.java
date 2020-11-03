@@ -32,6 +32,17 @@ public class AddressEntity extends AbstractApplicationPersistenceEntity {
     @Column(name = "POSTAL_CODE", nullable = false)
     private String postalCode;
 
+    public AddressEntity(String city, String street, String buildingNumber, String apartmentNumber, String postalCode) {
+        this.city = city;
+        this.street = street;
+        this.buildingNumber = buildingNumber;
+        this.apartmentNumber = apartmentNumber;
+        this.postalCode = postalCode;
+    }
+
+    public AddressEntity() {
+    }
+
     public String getCity() {
         return city;
     }

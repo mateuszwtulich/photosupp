@@ -151,7 +151,6 @@ public class UcManageRoleTest {
         //Arrange
         when(roleDao.findById(roleEntity.getId())).thenReturn(Optional.ofNullable(null));
         when(permissionDao.findAllById(permissionsIds)).thenReturn(new ArrayList<>());
-        when(roleDao.save(roleEntity)).thenReturn(roleEntity);
 
         //Act Assert
         Assertions.assertThrows(EntityDoesNotExistException.class, () ->
