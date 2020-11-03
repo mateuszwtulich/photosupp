@@ -16,7 +16,6 @@ public class AddressEto extends AbstractApplicationEntityTransportObject {
     @NotNull
     private String buildingNumber;
 
-    @NotNull
     private String apartmentNumber;
 
     @NotNull
@@ -82,12 +81,11 @@ public class AddressEto extends AbstractApplicationEntityTransportObject {
         return city.equals(that.city) &&
                 street.equals(that.street) &&
                 buildingNumber.equals(that.buildingNumber) &&
-                apartmentNumber.equals(that.apartmentNumber) &&
                 postalCode.equals(that.postalCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(city, street, buildingNumber, apartmentNumber, postalCode);
+        return Objects.hash(city, street, buildingNumber, postalCode);
     }
 }

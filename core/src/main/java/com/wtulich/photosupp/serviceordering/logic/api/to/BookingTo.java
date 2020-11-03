@@ -16,20 +16,29 @@ public class BookingTo {
     @NotNull
     private Long serviceId;
 
-    private Long addressId;
+    private AddressTo addressTo;
 
     @NotNull
-    private boolean isConfirmed;
-
-    private Double predictedPrice;
+    private String start;
 
     @NotNull
-    private LocalDate start;
-
-    @NotNull
-    private LocalDate end;
+    private String end;
 
     private List<PriceIndicatorTo> priceIndicatorToList;
+
+    public BookingTo() {
+    }
+
+    public BookingTo(String name, String description, Long serviceId, AddressTo addressTo,
+                     String start, String end, List<PriceIndicatorTo> priceIndicatorToList) {
+        this.name = name;
+        this.description = description;
+        this.serviceId = serviceId;
+        this.addressTo = addressTo;
+        this.start = start;
+        this.end = end;
+        this.priceIndicatorToList = priceIndicatorToList;
+    }
 
     public String getName() {
         return name;
@@ -55,43 +64,27 @@ public class BookingTo {
         this.serviceId = serviceId;
     }
 
-    public Long getAddressId() {
-        return addressId;
+    public AddressTo getAddressTo() {
+        return addressTo;
     }
 
-    public void setAddressId(Long addressId) {
-        this.addressId = addressId;
+    public void setAddressTo(AddressTo addressTo) {
+        this.addressTo = addressTo;
     }
 
-    public boolean isConfirmed() {
-        return isConfirmed;
-    }
-
-    public void setConfirmed(boolean confirmed) {
-        isConfirmed = confirmed;
-    }
-
-    public Double getPredictedPrice() {
-        return predictedPrice;
-    }
-
-    public void setPredictedPrice(Double predictedPrice) {
-        this.predictedPrice = predictedPrice;
-    }
-
-    public LocalDate getStart() {
+    public String getStart() {
         return start;
     }
 
-    public void setStart(LocalDate start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public LocalDate getEnd() {
+    public String getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDate end) {
+    public void setEnd(String end) {
         this.end = end;
     }
 
@@ -106,14 +99,12 @@ public class BookingTo {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BookingTo)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         BookingTo bookingTo = (BookingTo) o;
-        return isConfirmed == bookingTo.isConfirmed &&
-                name.equals(bookingTo.name) &&
+        return name.equals(bookingTo.name) &&
                 Objects.equals(description, bookingTo.description) &&
                 serviceId.equals(bookingTo.serviceId) &&
-                Objects.equals(addressId, bookingTo.addressId) &&
-                Objects.equals(predictedPrice, bookingTo.predictedPrice) &&
+                addressTo.equals(bookingTo.addressTo) &&
                 start.equals(bookingTo.start) &&
                 end.equals(bookingTo.end) &&
                 Objects.equals(priceIndicatorToList, bookingTo.priceIndicatorToList);
@@ -121,6 +112,6 @@ public class BookingTo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, serviceId, addressId, isConfirmed, predictedPrice, start, end, priceIndicatorToList);
+        return Objects.hash(name, description, serviceId, addressTo, start, end, priceIndicatorToList);
     }
 }

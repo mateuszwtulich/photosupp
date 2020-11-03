@@ -18,13 +18,26 @@ public class CalculateCto {
     private Double predictedPrice;
 
     @NotNull
-    private LocalDate start;
+    private String start;
 
     @NotNull
-    private LocalDate end;
+    private String end;
 
     @NotNull
     private List<PriceIndicatorEto> priceIndicatorEtoList;
+
+    public CalculateCto() {
+    }
+
+    public CalculateCto(ServiceEto serviceEto, AddressEto addressEto, Double predictedPrice, String start,
+                        String end, List<PriceIndicatorEto> priceIndicatorEtoList) {
+        this.serviceEto = serviceEto;
+        this.addressEto = addressEto;
+        this.predictedPrice = predictedPrice;
+        this.start = start;
+        this.end = end;
+        this.priceIndicatorEtoList = priceIndicatorEtoList;
+    }
 
     public ServiceEto getServiceEto() {
         return serviceEto;
@@ -50,19 +63,19 @@ public class CalculateCto {
         this.predictedPrice = predictedPrice;
     }
 
-    public LocalDate getStart() {
+    public String getStart() {
         return start;
     }
 
-    public void setStart(LocalDate start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public LocalDate getEnd() {
+    public String getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDate end) {
+    public void setEnd(String end) {
         this.end = end;
     }
 

@@ -14,6 +14,15 @@ public class ServiceTo {
     @NotNull
     private Double basePrice;
 
+    public ServiceTo() {
+    }
+
+    public ServiceTo(String name, String description, Double basePrice) {
+        this.name = name;
+        this.description = description;
+        this.basePrice = basePrice;
+    }
+
     public String getName() {
         return name;
     }

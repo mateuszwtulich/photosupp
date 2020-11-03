@@ -25,13 +25,13 @@ public class BookingEtoWithOrderId extends AbstractApplicationEntityTransportObj
     private Double predictedPrice;
 
     @NotNull
-    private LocalDate start;
+    private String start;
 
     @NotNull
-    private LocalDate end;
+    private String end;
 
     @NotNull
-    private LocalDate modificationDate;
+    private String modificationDate;
 
     private List<PriceIndicatorEto> priceIndicatorEtoList;
 
@@ -42,8 +42,8 @@ public class BookingEtoWithOrderId extends AbstractApplicationEntityTransportObj
     }
 
     public BookingEtoWithOrderId(Long id, String name, String description, ServiceEto serviceEto, AddressEto addressEto,
-                                 boolean isConfirmed, Double predictedPrice, LocalDate start, LocalDate end,
-                                 LocalDate modificationDate, List<PriceIndicatorEto> priceIndicatorEtoList, Long orderId) {
+                                 boolean isConfirmed, Double predictedPrice, String start, String end,
+                                 String modificationDate, List<PriceIndicatorEto> priceIndicatorEtoList, Long orderId) {
         super(id);
         this.name = name;
         this.description = description;
@@ -106,27 +106,27 @@ public class BookingEtoWithOrderId extends AbstractApplicationEntityTransportObj
         this.predictedPrice = predictedPrice;
     }
 
-    public LocalDate getStart() {
+    public String getStart() {
         return start;
     }
 
-    public void setStart(LocalDate start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public LocalDate getEnd() {
+    public String getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDate end) {
+    public void setEnd(String end) {
         this.end = end;
     }
 
-    public LocalDate getModificationDate() {
+    public String getModificationDate() {
         return modificationDate;
     }
 
-    public void setModificationDate(LocalDate modificationDate) {
+    public void setModificationDate(String modificationDate) {
         this.modificationDate = modificationDate;
     }
 

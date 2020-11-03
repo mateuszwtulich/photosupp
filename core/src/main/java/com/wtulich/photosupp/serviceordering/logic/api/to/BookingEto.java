@@ -25,13 +25,13 @@ public class BookingEto extends AbstractApplicationEntityTransportObject {
     private Double predictedPrice;
 
     @NotNull
-    private LocalDate start;
+    private String start;
 
     @NotNull
-    private LocalDate end;
+    private String end;
 
     @NotNull
-    private LocalDate modificationDate;
+    private String modificationDate;
 
     private List<PriceIndicatorEto> priceIndicatorEtoList;
 
@@ -39,7 +39,7 @@ public class BookingEto extends AbstractApplicationEntityTransportObject {
     }
 
     public BookingEto(Long id, String name, String description, ServiceEto serviceEto, AddressEto addressEto, boolean isConfirmed,
-                      Double predictedPrice, LocalDate start, LocalDate end, LocalDate modificationDate, List<PriceIndicatorEto> priceIndicatorEtoList) {
+                      Double predictedPrice, String start, String end, String modificationDate, List<PriceIndicatorEto> priceIndicatorEtoList) {
         super(id);
         this.name = name;
         this.description = description;
@@ -101,27 +101,27 @@ public class BookingEto extends AbstractApplicationEntityTransportObject {
         this.predictedPrice = predictedPrice;
     }
 
-    public LocalDate getStart() {
+    public String getStart() {
         return start;
     }
 
-    public void setStart(LocalDate start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public LocalDate getEnd() {
+    public String getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDate end) {
+    public void setEnd(String end) {
         this.end = end;
     }
 
-    public LocalDate getModificationDate() {
+    public String getModificationDate() {
         return modificationDate;
     }
 
-    public void setModificationDate(LocalDate modificationDate) {
+    public void setModificationDate(String modificationDate) {
         this.modificationDate = modificationDate;
     }
 

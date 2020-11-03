@@ -20,9 +20,9 @@ INSERT INTO public.permission(
     id, description, name)
     VALUES (6, 'Standard user with no special permissions.', 'AUTH_USER');
 
-INSERT INTO public.role(
-	id, description, name)
-	VALUES (0, 'Administrator with all permissions', 'ADMIN');
+-- INSERT INTO public.role(
+-- 	id, description, name)
+-- 	VALUES (0, 'Administrator with all permissions', 'ADMIN');
 INSERT INTO public.role(
 	id, description, name)
 	VALUES (1, 'Manager with all permissions in order management', 'MANAGER');
@@ -30,28 +30,28 @@ INSERT INTO public.role(
 	id, description, name)
 	VALUES (2, 'Standard user with no special permissions', 'USER');
 
-INSERT INTO public.role_permissions(
-	permission_id, role_id)
-	VALUES (0, 0);
-INSERT INTO public.role_permissions(
-	permission_id, role_id)
-	VALUES (1, 0);
-INSERT INTO public.role_permissions(
-	permission_id, role_id)
-	VALUES (2, 0);
-INSERT INTO public.role_permissions(
-	permission_id, role_id)
-	VALUES (3, 0);
-INSERT INTO public.role_permissions(
-	permission_id, role_id)
-	VALUES (4, 0);
-INSERT INTO public.role_permissions(
-	permission_id, role_id)
-	VALUES (5, 0);
-INSERT INTO public.role_permissions(
-	permission_id, role_id)
-	VALUES (6, 0);
-
+-- INSERT INTO public.role_permissions(
+-- 	permission_id, role_id)
+-- 	VALUES (0, 0);
+-- INSERT INTO public.role_permissions(
+-- 	permission_id, role_id)
+-- 	VALUES (1, 0);
+-- INSERT INTO public.role_permissions(
+-- 	permission_id, role_id)
+-- 	VALUES (2, 0);
+-- INSERT INTO public.role_permissions(
+-- 	permission_id, role_id)
+-- 	VALUES (3, 0);
+-- INSERT INTO public.role_permissions(
+-- 	permission_id, role_id)
+-- 	VALUES (4, 0);
+-- INSERT INTO public.role_permissions(
+-- 	permission_id, role_id)
+-- 	VALUES (5, 0);
+-- INSERT INTO public.role_permissions(
+-- 	permission_id, role_id)
+-- 	VALUES (6, 0);
+--
 INSERT INTO public.role_permissions(
 	permission_id, role_id)
 	VALUES (1, 1);
@@ -87,3 +87,7 @@ INSERT INTO public.VERIFICATION_TOKEN(
 INSERT INTO public.photosupp_user(
     id, name, surname, role_id, account_id)
     VALUES (1, 'NAME', 'SURNAME', 2, 1);
+
+INSERT INTO public.photosupp_user(
+    id, name, surname, role_id, account_id)
+    VALUES (2, 'NAME2', 'SURNAME2', 2, 2);

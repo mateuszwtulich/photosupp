@@ -106,7 +106,10 @@ public class UcManageUserImpl implements UcManageUser {
         LOG.debug(UPDATE_ACCOUNT_LOG, userId);
         UserEntity userEntity = getUserById(userId);
 
-        verifyAccount(accountTo);
+        if(!userEntity.getAccount().getEmail().equals(accountTo.getEmail())){
+            verifyAccount(accountTo);
+        }
+
         AccountEntity accountEntity = userEntity.getAccount();
         accountEntity.setPassword(accountTo.getPassword());
         accountEntity.setEmail(accountTo.getEmail());

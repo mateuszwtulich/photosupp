@@ -52,7 +52,7 @@ public class UcManageRoleImpl implements UcManageRole {
 
     @Override
     public Optional<RoleEto> createRole(RoleTo roleTo) throws EntityAlreadyExistsException, EntityDoesNotExistException {
-        roleValidator.verifyIfRoleAlreadyExists(roleTo);
+        roleValidator.verifyIfRoleNameAlreadyExists(roleTo.getName());
         LOG.debug(CREATE_ROLE_LOG, roleTo.getName());
 
         RoleEntity roleEntity = roleMapper.toRoleEntity(roleTo);
@@ -68,7 +68,9 @@ public class UcManageRoleImpl implements UcManageRole {
         RoleEntity roleEntity = roleDao.findById(id).orElseThrow(() ->
                 new EntityDoesNotExistException("Role with id " + id + " does not exist."));
 
-        roleValidator.verifyIfRoleAlreadyExists(roleTo);
+        if(!roleEntity.getName().equals(roleTo.getName())){
+            roleValidator.verifyIfRoleNameAlreadyExists(roleTo.getName());
+        }
         LOG.debug(UPDATE_ROLE_LOG, id);
 
         return toRoleEto(mapRoleEntity(roleEntity, roleTo));

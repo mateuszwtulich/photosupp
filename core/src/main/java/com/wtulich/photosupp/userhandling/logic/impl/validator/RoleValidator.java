@@ -19,21 +19,9 @@ public class RoleValidator {
     @Inject
     private PermissionDao permissionDao;
 
-    public void verifyIfRoleAlreadyExists(RoleTo roleTo) throws EntityAlreadyExistsException {
-        List<PermissionEntity> permissionList = permissionDao.findAllById(roleTo.getPermissionIds());
-        verifyIfRoleNameAlreadyExists(roleTo.getName());
-        verifyIfRolePermissionsAlreadyExists(permissionList);
-    }
-
-    private void verifyIfRoleNameAlreadyExists(String name) throws EntityAlreadyExistsException {
+    public void verifyIfRoleNameAlreadyExists(String name) throws EntityAlreadyExistsException {
         if (roleDao.existsByName(name)) {
             throw new EntityAlreadyExistsException("Role with name " + name + " already exists");
-        }
-    }
-
-    private void verifyIfRolePermissionsAlreadyExists(List<PermissionEntity> permissions) throws EntityAlreadyExistsException {
-        if (roleDao.existsByPermissionsIn(permissions)) {
-            throw new EntityAlreadyExistsException("Role with those permissions already exists");
         }
     }
 }

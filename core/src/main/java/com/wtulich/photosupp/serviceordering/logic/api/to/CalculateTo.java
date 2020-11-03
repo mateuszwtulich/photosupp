@@ -12,16 +12,27 @@ public class CalculateTo {
     private Long serviceId;
 
     @NotNull
-    private Long addressId;
+    private AddressTo addressTo;
 
     @NotNull
-    private LocalDate start;
+    private String start;
 
     @NotNull
-    private LocalDate end;
+    private String end;
 
     @NotNull
     private List<PriceIndicatorTo> priceIndicatorToList;
+
+    public CalculateTo() {
+    }
+
+    public CalculateTo(Long serviceId, AddressTo addressTo, String start, String end, List<PriceIndicatorTo> priceIndicatorToList) {
+        this.serviceId = serviceId;
+        this.addressTo = addressTo;
+        this.start = start;
+        this.end = end;
+        this.priceIndicatorToList = priceIndicatorToList;
+    }
 
     public Long getServiceId() {
         return serviceId;
@@ -31,27 +42,27 @@ public class CalculateTo {
         this.serviceId = serviceId;
     }
 
-    public Long getAddressId() {
-        return addressId;
+    public AddressTo getAddressTo() {
+        return addressTo;
     }
 
-    public void setAddressId(Long addressId) {
-        this.addressId = addressId;
+    public void setAddressTo(AddressTo addressTo) {
+        this.addressTo = addressTo;
     }
 
-    public LocalDate getStart() {
+    public String getStart() {
         return start;
     }
 
-    public void setStart(LocalDate start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public LocalDate getEnd() {
+    public String getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDate end) {
+    public void setEnd(String end) {
         this.end = end;
     }
 
@@ -69,7 +80,7 @@ public class CalculateTo {
         if (!(o instanceof CalculateTo)) return false;
         CalculateTo that = (CalculateTo) o;
         return serviceId.equals(that.serviceId) &&
-                addressId.equals(that.addressId) &&
+                addressTo.equals(that.addressTo) &&
                 start.equals(that.start) &&
                 end.equals(that.end) &&
                 priceIndicatorToList.equals(that.priceIndicatorToList);
@@ -77,6 +88,6 @@ public class CalculateTo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(serviceId, addressId, start, end, priceIndicatorToList);
+        return Objects.hash(serviceId, addressTo, start, end, priceIndicatorToList);
     }
 }

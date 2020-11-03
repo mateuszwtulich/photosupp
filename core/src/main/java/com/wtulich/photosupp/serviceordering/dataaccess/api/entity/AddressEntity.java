@@ -25,7 +25,6 @@ public class AddressEntity extends AbstractApplicationPersistenceEntity {
     @Column(name = "BUILDING_NUMBER", nullable = false)
     private String buildingNumber;
 
-    @NotNull
     @Column(name = "APARTMENT_NUMBER", nullable = false)
     private String apartmentNumber;
 
@@ -76,17 +75,18 @@ public class AddressEntity extends AbstractApplicationPersistenceEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AddressEntity)) return false;
-        AddressEntity address = (AddressEntity) o;
-        return city.equals(address.city) &&
-                street.equals(address.street) &&
-                buildingNumber.equals(address.buildingNumber) &&
-                Objects.equals(apartmentNumber, address.apartmentNumber) &&
-                postalCode.equals(address.postalCode);
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        AddressEntity that = (AddressEntity) o;
+        return city.equals(that.city) &&
+                street.equals(that.street) &&
+                buildingNumber.equals(that.buildingNumber) &&
+                Objects.equals(apartmentNumber, that.apartmentNumber) &&
+                postalCode.equals(that.postalCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(city, street, buildingNumber, apartmentNumber, postalCode);
+        return Objects.hash(super.hashCode(), city, street, buildingNumber, apartmentNumber, postalCode);
     }
 }

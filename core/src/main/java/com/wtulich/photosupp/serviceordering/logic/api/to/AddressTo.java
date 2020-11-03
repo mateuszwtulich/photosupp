@@ -15,11 +15,21 @@ public class AddressTo {
     @NotNull
     private String buildingNumber;
 
-    @NotNull
     private String apartmentNumber;
 
     @NotNull
     private String postalCode;
+
+    public AddressTo() {
+    }
+
+    public AddressTo(String city, String street, String buildingNumber, String apartmentNumber, String postalCode) {
+        this.city = city;
+        this.street = street;
+        this.buildingNumber = buildingNumber;
+        this.apartmentNumber = apartmentNumber;
+        this.postalCode = postalCode;
+    }
 
     public String getCity() {
         return city;
@@ -69,12 +79,11 @@ public class AddressTo {
         return city.equals(addressTo.city) &&
                 street.equals(addressTo.street) &&
                 buildingNumber.equals(addressTo.buildingNumber) &&
-                apartmentNumber.equals(addressTo.apartmentNumber) &&
                 postalCode.equals(addressTo.postalCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(city, street, buildingNumber, apartmentNumber, postalCode);
+        return Objects.hash(city, street, buildingNumber, postalCode);
     }
 }

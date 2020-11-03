@@ -12,19 +12,15 @@ public class PriceIndicatorEto {
     private BookingEto bookingEto;
 
     @NotNull
-    private Double indicatorPrice;
-
-    @NotNull
-    private Integer finalAmount;
+    private Integer indicatorPrice;
 
     public PriceIndicatorEto() {
     }
 
-    public PriceIndicatorEto(IndicatorEto indicatorEto, BookingEto bookingEto, Double indicatorPrice, Integer finalAmount) {
+    public PriceIndicatorEto(IndicatorEto indicatorEto, BookingEto bookingEto, Integer indicatorPrice) {
         this.indicatorEto = indicatorEto;
         this.bookingEto = bookingEto;
         this.indicatorPrice = indicatorPrice;
-        this.finalAmount = finalAmount;
     }
 
     public IndicatorEto getIndicatorEto() {
@@ -43,20 +39,12 @@ public class PriceIndicatorEto {
         this.bookingEto = bookingEto;
     }
 
-    public Double getIndicatorPrice() {
+    public Integer getIndicatorPrice() {
         return indicatorPrice;
     }
 
-    public void setIndicatorPrice(Double indicatorPrice) {
+    public void setIndicatorPrice(Integer indicatorPrice) {
         this.indicatorPrice = indicatorPrice;
-    }
-
-    public Integer getFinalAmount() {
-        return finalAmount;
-    }
-
-    public void setFinalAmount(Integer finalAmount) {
-        this.finalAmount = finalAmount;
     }
 
     @Override
@@ -66,12 +54,11 @@ public class PriceIndicatorEto {
         PriceIndicatorEto that = (PriceIndicatorEto) o;
         return indicatorEto.equals(that.indicatorEto) &&
                 Objects.equals(bookingEto, that.bookingEto) &&
-                indicatorPrice.equals(that.indicatorPrice) &&
-                finalAmount.equals(that.finalAmount);
+                indicatorPrice.equals(that.indicatorPrice);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(indicatorEto, bookingEto, indicatorPrice, finalAmount);
+        return Objects.hash(indicatorEto, bookingEto, indicatorPrice);
     }
 }

@@ -30,11 +30,7 @@ public class PriceIndicatorEntity {
 
     @NotNull
     @Column(name = "INDICATOR_PRICE", nullable = false)
-    private Double indicatorPrice;
-
-    @NotNull
-    @Column(name = "FINAL_AMOUNT")
-    private Integer finalAmount;
+    private Integer indicatorPrice;
 
     public PriceIndicatorKey getId() {
         return id;
@@ -60,20 +56,12 @@ public class PriceIndicatorEntity {
         this.booking = booking;
     }
 
-    public Double getIndicatorPrice() {
+    public Integer getIndicatorPrice() {
         return indicatorPrice;
     }
 
-    public void setIndicatorPrice(Double indicatorPrice) {
+    public void setIndicatorPrice(Integer indicatorPrice) {
         this.indicatorPrice = indicatorPrice;
-    }
-
-    public Integer getFinalAmount() {
-        return finalAmount;
-    }
-
-    public void setFinalAmount(Integer finalAmount) {
-        this.finalAmount = finalAmount;
     }
 
     @Override
@@ -84,12 +72,11 @@ public class PriceIndicatorEntity {
         return id.equals(that.id) &&
                 indicator.equals(that.indicator) &&
                 booking.equals(that.booking) &&
-                indicatorPrice.equals(that.indicatorPrice) &&
-                finalAmount.equals(that.finalAmount);
+                indicatorPrice.equals(that.indicatorPrice);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, indicator, booking, indicatorPrice, finalAmount);
+        return Objects.hash(id, indicator, booking, indicatorPrice);
     }
 }
