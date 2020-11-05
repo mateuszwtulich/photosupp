@@ -68,7 +68,7 @@ public class UcCalculateServiceTest {
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)),
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
                 priceIndicatorEtoList);
-        PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorEto, bookingEto, 400, 10);
+        PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorEto, bookingEto.getId(), 400, 10);
         priceIndicatorEtoList.add(priceIndicatorEto);
 
         calculateCto = new CalculateCto(serviceEto, addressEto, 900D,

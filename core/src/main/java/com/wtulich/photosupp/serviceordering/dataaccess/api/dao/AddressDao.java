@@ -6,4 +6,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AddressDao extends JpaRepository<AddressEntity, Long> {
+
+    boolean existsByCityAndStreetAndBuildingNumberAndApartmentNumberAndPostalCode
+            (String city, String street, String buildingNumber, String apartmentNumber, String postalCode);
+    AddressEntity findByCityAndStreetAndBuildingNumberAndApartmentNumberAndPostalCode
+            (String city, String street, String buildingNumber, String apartmentNumber, String postalCode);
 }

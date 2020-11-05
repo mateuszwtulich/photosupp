@@ -3,9 +3,8 @@ package com.wtulich.photosupp.serviceordering.dataaccess.api.entity;
 import com.sun.istack.NotNull;
 import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationPersistenceEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,6 +22,9 @@ public class ServiceEntity extends AbstractApplicationPersistenceEntity {
     @NotNull
     @Column(name = "BASE_PRICE", nullable = false)
     private Double basePrice;
+
+    @OneToMany(mappedBy = "service", fetch = FetchType.LAZY, targetEntity = BookingEntity.class, orphanRemoval = true)
+    private List<BookingEntity> bookingList;
 
     public ServiceEntity() {
     }
@@ -55,6 +57,14 @@ public class ServiceEntity extends AbstractApplicationPersistenceEntity {
 
     public void setBasePrice(Double basePrice) {
         this.basePrice = basePrice;
+    }
+
+    public List<BookingEntity> getBookingList() {
+        return bookingList;
+    }
+
+    public void setBookingList(List<BookingEntity> bookingList) {
+        this.bookingList = bookingList;
     }
 
     @Override

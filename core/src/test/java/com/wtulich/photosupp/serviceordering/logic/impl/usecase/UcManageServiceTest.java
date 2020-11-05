@@ -67,10 +67,11 @@ public class UcManageServiceTest {
     @BeforeEach
     void setUp() {
         serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
+        serviceEntity.setId(1L);
 
         serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
 
-        serviceTo = new ServiceTo("Film produktowy", "Film produktów na białym tle i odpowiednim oświetleniu", 500D);
+        serviceTo = new ServiceTo("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
     }
 
     @Test
@@ -103,6 +104,8 @@ public class UcManageServiceTest {
     @DisplayName("Test updateService Success")
     void testUpdateServiceSuccess() throws EntityDoesNotExistException, EntityAlreadyExistsException {
         //Arrange
+        serviceTo.setName("Nowy");
+        serviceEto.setName("Nowy");
         when(serviceDao.findById(serviceEntity.getId())).thenReturn(Optional.of(serviceEntity));
 
         //Act

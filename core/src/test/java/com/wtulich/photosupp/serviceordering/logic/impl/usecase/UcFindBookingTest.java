@@ -68,9 +68,12 @@ public class UcFindBookingTest {
         bookingEntity = new BookingEntity("Film dla TestCompany", "Film produktowy z dojazdem", 900D,
                 addressEntity, new UserEntity(), serviceEntity, false, getCurrentDate(LocalDate.now(),0),
                 getCurrentDate(LocalDate.now(),1), getCurrentDate(LocalDate.now(),0));
+        bookingEntity.setId(1L);
+
         PriceIndicatorEntity priceIndicatorEntity = new PriceIndicatorEntity(indicatorEntity, bookingEntity, 400, 10);
         List<PriceIndicatorEntity> priceIndicatorEntities = new ArrayList<>();
         priceIndicatorEntities.add(priceIndicatorEntity);
+        bookingEntity.setPriceIndicatorList(priceIndicatorEntities);
 
         bookingEntities = new ArrayList<>();
         bookingEntities.add(bookingEntity);
@@ -88,7 +91,7 @@ public class UcFindBookingTest {
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
                 null);
 
-        PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorMapper.toIndicatorEto(indicatorEntity), bookingEto, 400, 10);
+        PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorMapper.toIndicatorEto(indicatorEntity), bookingEto.getId(), 400, 10);
         List<PriceIndicatorEto> priceIndicatorEtoList = new ArrayList<>();
         priceIndicatorEtoList.add(priceIndicatorEto);
 
@@ -117,7 +120,7 @@ public class UcFindBookingTest {
         // Assert
         Assertions.assertTrue(result.isPresent());
         assertThat(result.get()).hasSize(bookingEtoList.size());
-        assertThat(bookingEtoList.get(0)).isEqualToComparingFieldByField(result.get().get(0));
+        assertThat(bookingEtoList.get(0)).isEqualTo(result.get().get(0));
     }
 
     @Test
@@ -145,7 +148,7 @@ public class UcFindBookingTest {
 
         // Assert
         Assertions.assertTrue(result.isPresent());
-        assertThat(bookingEto).isEqualToComparingFieldByField(result.get());
+        assertThat(result.get()).isEqualTo(bookingEto);
     }
 
     @Test

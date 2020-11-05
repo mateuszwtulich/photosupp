@@ -62,7 +62,7 @@ public class UcFindServiceTest {
         // Assert
         Assertions.assertTrue(result.isPresent());
         assertThat(result.get()).hasSize(serviceEtoList.size());
-        assertThat(serviceEtoList.get(0)).isEqualToComparingFieldByField(result.get().get(0));
+        assertThat(serviceEtoList.get(0)).isEqualTo(result.get().get(0));
     }
 
     @Test

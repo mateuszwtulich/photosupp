@@ -1,7 +1,6 @@
 package com.wtulich.photosupp.serviceordering.dataaccess.api;
 
 import com.wtulich.photosupp.config.H2JpaConfig;
-import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.IndicatorDao;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.ServiceDao;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,12 +19,12 @@ public class ServiceDaoTest {
     @Test
     void existsByName_TRUE() {
         //Act Assert
-        Assertions.assertEquals(true, serviceDao.existsByName("FILM"));
+        Assertions.assertEquals(true, serviceDao.existsByName("Film produktowy"));
     }
 
     @Test
     void existsByName_FALSE() {
         //Act Assert
-        Assertions.assertEquals(false, serviceDao.existsByName("FILM!"));
+        Assertions.assertEquals(false, serviceDao.existsByName("Film produktowy!"));
     }
 }

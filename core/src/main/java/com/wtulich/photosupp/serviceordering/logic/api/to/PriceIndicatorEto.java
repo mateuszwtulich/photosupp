@@ -9,7 +9,7 @@ public class PriceIndicatorEto {
     @NotNull
     private IndicatorEto indicatorEto;
 
-    private BookingEto bookingEto;
+    private Long bookingId;
 
     @NotNull
     private Integer indicatorPrice;
@@ -20,9 +20,9 @@ public class PriceIndicatorEto {
     public PriceIndicatorEto() {
     }
 
-    public PriceIndicatorEto(IndicatorEto indicatorEto, BookingEto bookingEto, Integer indicatorPrice, Integer multiplier) {
+    public PriceIndicatorEto(IndicatorEto indicatorEto, Long bookingId, Integer indicatorPrice, Integer multiplier) {
         this.indicatorEto = indicatorEto;
-        this.bookingEto = bookingEto;
+        this.bookingId = bookingId;
         this.indicatorPrice = indicatorPrice;
         this.multiplier = multiplier;
     }
@@ -35,12 +35,12 @@ public class PriceIndicatorEto {
         this.indicatorEto = indicatorEto;
     }
 
-    public BookingEto getBookingEto() {
-        return bookingEto;
+    public Long getBookingId() {
+        return bookingId;
     }
 
-    public void setBookingEto(BookingEto bookingEto) {
-        this.bookingEto = bookingEto;
+    public void setBookingId(Long bookingId) {
+        this.bookingId = bookingId;
     }
 
     public Integer getIndicatorPrice() {
@@ -65,13 +65,13 @@ public class PriceIndicatorEto {
         if (o == null || getClass() != o.getClass()) return false;
         PriceIndicatorEto that = (PriceIndicatorEto) o;
         return indicatorEto.equals(that.indicatorEto) &&
-                Objects.equals(bookingEto, that.bookingEto) &&
+                Objects.equals(bookingId, that.bookingId) &&
                 indicatorPrice.equals(that.indicatorPrice) &&
                 multiplier.equals(that.multiplier);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(indicatorEto, bookingEto, indicatorPrice, multiplier);
+        return Objects.hash(indicatorEto, bookingId, indicatorPrice, multiplier);
     }
 }

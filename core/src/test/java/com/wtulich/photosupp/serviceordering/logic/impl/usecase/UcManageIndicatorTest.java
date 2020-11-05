@@ -45,6 +45,7 @@ public class UcManageIndicatorTest {
     @BeforeEach
     void setUp() {
         indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", 40);
+        indicatorEntity.setId(1L);
 
         indicatorEto = new IndicatorEto(1L, "Podroz sluzbowa", "Paliwo, amortyzacja", 40);
 
@@ -81,6 +82,8 @@ public class UcManageIndicatorTest {
     @DisplayName("Test updateIndicator Success")
     void testUpdateIndicatorSuccess() throws EntityDoesNotExistException, EntityAlreadyExistsException {
         //Arrange
+        indicatorTo.setName("Nowy");
+        indicatorEto.setName("Nowy");
         when(indicatorDao.findById(indicatorEntity.getId())).thenReturn(Optional.of(indicatorEntity));
 
         //Act

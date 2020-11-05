@@ -3,9 +3,8 @@ package com.wtulich.photosupp.serviceordering.dataaccess.api.entity;
 import com.sun.istack.NotNull;
 import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationPersistenceEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,6 +22,9 @@ public class IndicatorEntity extends AbstractApplicationPersistenceEntity {
     @NotNull
     @Column(name = "BASE_AMOUNT", nullable = false)
     private Integer baseAmount;
+
+    @OneToMany(mappedBy = "indicator", fetch = FetchType.LAZY, targetEntity = PriceIndicatorEntity.class, orphanRemoval = true)
+    private List<PriceIndicatorEntity> priceIndicatorEntityList;
 
 
     public IndicatorEntity() {
@@ -56,6 +58,14 @@ public class IndicatorEntity extends AbstractApplicationPersistenceEntity {
 
     public void setBaseAmount(Integer baseAmount) {
         this.baseAmount = baseAmount;
+    }
+
+    public List<PriceIndicatorEntity> getPriceIndicatorEntityList() {
+        return priceIndicatorEntityList;
+    }
+
+    public void setPriceIndicatorEntityList(List<PriceIndicatorEntity> priceIndicatorEntityList) {
+        this.priceIndicatorEntityList = priceIndicatorEntityList;
     }
 
     @Override

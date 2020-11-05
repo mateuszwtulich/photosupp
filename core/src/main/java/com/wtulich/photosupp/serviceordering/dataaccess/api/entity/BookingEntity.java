@@ -36,7 +36,7 @@ public class BookingEntity extends AbstractApplicationPersistenceEntity {
     @Column(name = "END_DATE", nullable = false)
     private LocalDate end;
 
-    @Column(name = "FINAL_PRICE", nullable = false)
+    @Column(name = "FINAL_PRICE")
     private Double predictedPrice;
 
     @NotNull
@@ -61,7 +61,7 @@ public class BookingEntity extends AbstractApplicationPersistenceEntity {
     @JoinColumn(name = "SERVICE_ID", referencedColumnName = "id", nullable = false)
     private ServiceEntity service;
 
-    @OneToMany(mappedBy = "booking", fetch = FetchType.LAZY, targetEntity = PriceIndicatorEntity.class)
+    @OneToMany(mappedBy = "booking", fetch = FetchType.LAZY, targetEntity = PriceIndicatorEntity.class, orphanRemoval = true)
     private List<PriceIndicatorEntity> priceIndicatorList;
 
     public BookingEntity() {

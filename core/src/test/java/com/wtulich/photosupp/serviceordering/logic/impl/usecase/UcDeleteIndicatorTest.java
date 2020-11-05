@@ -18,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,16 +43,18 @@ public class UcDeleteIndicatorTest {
     @BeforeEach
     void setUp() {
         indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", 40);
+        indicatorEntity.setId(1L);
     }
 
     @Test
     @DisplayName("Test deleteIndicator Success")
     void testDeleteIndicatorSuccess() {
         //Arrange
-        when(indicatorDao.findById(1L)).thenReturn(Optional.of(indicatorEntity));
+        when(indicatorDao.findById(indicatorEntity.getId())).thenReturn(Optional.of(indicatorEntity));
+        when(priceIndicatorDao.findAllByIndicator_Id(indicatorEntity.getId())).thenReturn(Collections.emptyList());
 
         //Act Assert
-        Assertions.assertDoesNotThrow(() -> ucDeleteIndicator.deleteIndicator(1L));
+        Assertions.assertDoesNotThrow(() -> ucDeleteIndicator.deleteIndicator(indicatorEntity.getId()));
     }
 
 
@@ -59,11 +62,11 @@ public class UcDeleteIndicatorTest {
     @DisplayName("Test deleteIndicator Failure")
     void testDeleteIndicatorFailure() {
         //Arrange
-        when(indicatorDao.findById(1L)).thenReturn(java.util.Optional.ofNullable(null));
+        when(indicatorDao.findById(indicatorEntity.getId())).thenReturn(java.util.Optional.ofNullable(null));
 
         //Act Assert
         Assertions.assertThrows(EntityDoesNotExistException.class, () ->
-                ucDeleteIndicator.deleteIndicator(1L));
+                ucDeleteIndicator.deleteIndicator(indicatorEntity.getId()));
     }
 
     @Test
@@ -72,11 +75,11 @@ public class UcDeleteIndicatorTest {
         //Arrange
         List<PriceIndicatorEntity> priceIndicatorEntityList = new ArrayList<>();
         priceIndicatorEntityList.add(new PriceIndicatorEntity());
-        when(indicatorDao.findById(1L)).thenReturn(Optional.of(indicatorEntity));
-        when(priceIndicatorDao.findAllByIndicator_Id(1L)).thenReturn(priceIndicatorEntityList);
+        when(indicatorDao.findById(indicatorEntity.getId())).thenReturn(Optional.of(indicatorEntity));
+        when(priceIndicatorDao.findAllByIndicator_Id(indicatorEntity.getId())).thenReturn(priceIndicatorEntityList);
 
         //Act Assert
         Assertions.assertThrows(EntityHasAssignedEntitiesException.class, () ->
-                ucDeleteIndicator.deleteIndicator(1L));
+                ucDeleteIndicator.deleteIndicator(indicatorEntity.getId()));
     }
 }

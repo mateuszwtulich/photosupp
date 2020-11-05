@@ -1,14 +1,9 @@
 package com.wtulich.photosupp.serviceordering.dataaccess.api.entity;
 
 import com.sun.istack.NotNull;
+import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Table(name = "PRICE_INDICATOR")
@@ -33,6 +28,7 @@ public class PriceIndicatorEntity {
     private Integer indicatorPrice;
 
     @NotNull
+    @Column(name = "MULTIPLIER", nullable = false)
     private Integer multiplier;
 
     public PriceIndicatorEntity() {

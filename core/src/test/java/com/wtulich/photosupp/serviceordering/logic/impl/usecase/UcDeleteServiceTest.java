@@ -18,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,16 +43,18 @@ public class UcDeleteServiceTest {
     @BeforeEach
     void setUp() {
         serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
+        serviceEntity.setId(1L);
     }
 
     @Test
     @DisplayName("Test deleteService Success")
     void testDeleteServiceSuccess() {
         //Arrange
-        when(serviceDao.findById(1L)).thenReturn(Optional.of(serviceEntity));
+        when(serviceDao.findById(serviceEntity.getId())).thenReturn(Optional.of(serviceEntity));
+        when(bookingDao.findAllByService_Id(serviceEntity.getId())).thenReturn(Collections.emptyList());
 
         //Act Assert
-        Assertions.assertDoesNotThrow(() -> ucDeleteService.deleteService(1L));
+        Assertions.assertDoesNotThrow(() -> ucDeleteService.deleteService(serviceEntity.getId()));
     }
 
 
@@ -59,11 +62,11 @@ public class UcDeleteServiceTest {
     @DisplayName("Test deleteService Failure")
     void testDeleteIndicatorFailure() {
         //Arrange
-        when(serviceDao.findById(1L)).thenReturn(java.util.Optional.ofNullable(null));
+        when(serviceDao.findById(serviceEntity.getId())).thenReturn(java.util.Optional.ofNullable(null));
 
         //Act Assert
         Assertions.assertThrows(EntityDoesNotExistException.class, () ->
-                ucDeleteService.deleteService(1L));
+                ucDeleteService.deleteService(serviceEntity.getId()));
     }
 
     @Test
@@ -72,11 +75,11 @@ public class UcDeleteServiceTest {
         //Arrange
         List<BookingEntity> bookingEntities = new ArrayList<>();
         bookingEntities.add(new BookingEntity());
-        when(serviceDao.findById(1L)).thenReturn(Optional.of(serviceEntity));
-        when(bookingDao.findAllByService_Id(1L)).thenReturn(bookingEntities);
+        when(serviceDao.findById(serviceEntity.getId())).thenReturn(Optional.of(serviceEntity));
+        when(bookingDao.findAllByService_Id(serviceEntity.getId())).thenReturn(bookingEntities);
 
         //Act Assert
         Assertions.assertThrows(EntityHasAssignedEntitiesException.class, () ->
-                ucDeleteService.deleteService(1L));
+                ucDeleteService.deleteService(serviceEntity.getId()));
     }
 }

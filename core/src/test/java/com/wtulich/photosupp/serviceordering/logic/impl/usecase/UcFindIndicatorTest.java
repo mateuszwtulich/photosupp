@@ -62,7 +62,7 @@ public class UcFindIndicatorTest {
         // Assert
         Assertions.assertTrue(result.isPresent());
         assertThat(result.get()).hasSize(indicatorEtoList.size());
-        assertThat(indicatorEtoList.get(0)).isEqualToComparingFieldByField(result.get().get(0));
+        assertThat(indicatorEtoList.get(0)).isEqualTo(result.get().get(0));
     }
 
     @Test
