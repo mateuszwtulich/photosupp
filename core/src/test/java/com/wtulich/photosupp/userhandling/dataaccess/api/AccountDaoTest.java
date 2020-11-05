@@ -19,12 +19,12 @@ public class AccountDaoTest {
     @Test
     void existsByEmail_TRUE() {
         //Act Assert
-        Assertions.assertEquals(true, accountDao.existsByEmail("user1@test.com"));
+        Assertions.assertTrue(accountDao.existsByEmail("user1@test.com"));
     }
 
     @Test
     void existsByEmail_FALSE() {
         //Act Assert
-        Assertions.assertEquals(false, accountDao.existsByEmail("user3@test.com"));
+        Assertions.assertFalse(accountDao.existsByEmail("user3@test.com"));
     }
 }

@@ -12,9 +12,6 @@ public class CalculateCto {
     private ServiceEto serviceEto;
 
     @NotNull
-    private AddressEto addressEto;
-
-    @NotNull
     private Double predictedPrice;
 
     @NotNull
@@ -29,10 +26,9 @@ public class CalculateCto {
     public CalculateCto() {
     }
 
-    public CalculateCto(ServiceEto serviceEto, AddressEto addressEto, Double predictedPrice, String start,
+    public CalculateCto(ServiceEto serviceEto, Double predictedPrice, String start,
                         String end, List<PriceIndicatorEto> priceIndicatorEtoList) {
         this.serviceEto = serviceEto;
-        this.addressEto = addressEto;
         this.predictedPrice = predictedPrice;
         this.start = start;
         this.end = end;
@@ -45,14 +41,6 @@ public class CalculateCto {
 
     public void setServiceEto(ServiceEto serviceEto) {
         this.serviceEto = serviceEto;
-    }
-
-    public AddressEto getAddressEto() {
-        return addressEto;
-    }
-
-    public void setAddressEto(AddressEto addressEto) {
-        this.addressEto = addressEto;
     }
 
     public Double getPredictedPrice() {
@@ -93,7 +81,6 @@ public class CalculateCto {
         if (!(o instanceof CalculateCto)) return false;
         CalculateCto that = (CalculateCto) o;
         return serviceEto.equals(that.serviceEto) &&
-                addressEto.equals(that.addressEto) &&
                 predictedPrice.equals(that.predictedPrice) &&
                 start.equals(that.start) &&
                 end.equals(that.end) &&
@@ -102,6 +89,6 @@ public class CalculateCto {
 
     @Override
     public int hashCode() {
-        return Objects.hash(serviceEto, addressEto, predictedPrice, start, end, priceIndicatorEtoList);
+        return Objects.hash(serviceEto, predictedPrice, start, end, priceIndicatorEtoList);
     }
 }

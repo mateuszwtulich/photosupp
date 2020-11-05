@@ -1,16 +1,13 @@
 package com.wtulich.photosupp.serviceordering.logic.impl.usecase;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
-import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
+import com.wtulich.photosupp.general.logic.api.exception.UnprocessableEntityException;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.IndicatorDao;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.ServiceDao;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.IndicatorEntity;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.ServiceEntity;
 import com.wtulich.photosupp.serviceordering.logic.api.to.*;
-import com.wtulich.photosupp.userhandling.logic.api.to.AccountEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.PermissionEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
+import com.wtulich.photosupp.serviceordering.logic.impl.validator.BookingValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +26,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({SpringExtension.class})
@@ -45,6 +44,9 @@ public class UcCalculateServiceTest {
     @MockBean
     private IndicatorDao indicatorDao;
 
+    @MockBean
+    private BookingValidator bookingValidator;
+
     private CalculateCto calculateCto;
     private CalculateTo calculateTo;
     private ServiceEntity serviceEntity;
@@ -52,36 +54,23 @@ public class UcCalculateServiceTest {
 
     @BeforeEach
     void setUp() {
-        AddressEto addressEto = new AddressEto(1L, "Wroclaw", "Wroblewskiego", "27", null, "51-627");
         ServiceEto serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
         IndicatorEto indicatorEto = new IndicatorEto(1L, "Podroz sluzbowa", "Paliwo, amortyzacja", 40);
         List<PriceIndicatorEto> priceIndicatorEtoList = new ArrayList<>();
 
-        List<PermissionEto> permissionEtoList = new ArrayList<>();
-        permissionEtoList.add(new PermissionEto(1L, ApplicationPermissions.A_CRUD_SUPER, "DESC1"));
-        RoleEto roleEto = new RoleEto(1L, "ADMIN", "DESC1", permissionEtoList);
-        AccountEto accountEto = new AccountEto(1L, "TEST", "PASS", "TEST@test.com", false);
-        UserEto userEto = new UserEto(1L, "NAME1", "SURNAME1", accountEto, roleEto);
-
-        BookingEto bookingEto = new BookingEto(1L, "Film dla TestCompany", "Film produktowy z dojazdem", serviceEto, addressEto, userEto, false, 900D,
-                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
-                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)),
-                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
-                priceIndicatorEtoList);
-        PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorEto, bookingEto.getId(), 400, 10);
+        PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorEto, null, 400, 10);
         priceIndicatorEtoList.add(priceIndicatorEto);
 
-        calculateCto = new CalculateCto(serviceEto, addressEto, 900D,
+        calculateCto = new CalculateCto(serviceEto, 1400D,
                 DateTimeFormatter.ofPattern("yyyy-MM-dd").format(getCurrentDate(LocalDate.now(), 0)),
                 DateTimeFormatter.ofPattern("yyyy-MM-dd").format(getCurrentDate(LocalDate.now(), 1)),
                 priceIndicatorEtoList);
 
-        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, 1L, 10);
+        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, null, 10);
         List<PriceIndicatorTo> priceIndicatorToList = new ArrayList<>();
         priceIndicatorToList.add(priceIndicatorTo);
-        AddressTo addressTo = new AddressTo("Wrocław", "Wróblewskiego", "27", null, "51-627");
 
-        calculateTo = new CalculateTo(1L, addressTo,
+        calculateTo = new CalculateTo(1L,
                 DateTimeFormatter.ofPattern("yyyy-MM-dd").format(getCurrentDate(LocalDate.now(), 0)),
                 DateTimeFormatter.ofPattern("yyyy-MM-dd").format(getCurrentDate(LocalDate.now(), 1)),
                 priceIndicatorToList);
@@ -100,7 +89,7 @@ public class UcCalculateServiceTest {
 
     @Test
     @DisplayName("Test calculateService Success")
-    void testCalculateServiceSuccess() throws EntityDoesNotExistException {
+    void testCalculateServiceSuccess() throws EntityDoesNotExistException, UnprocessableEntityException {
         //Arrange
         when(serviceDao.findById(calculateTo.getServiceId())).thenReturn(Optional.of(serviceEntity));
         when(indicatorDao.findById(1L)).thenReturn(Optional.of(indicatorEntity));
@@ -133,6 +122,21 @@ public class UcCalculateServiceTest {
 
         //Act Assert
         Assertions.assertThrows(EntityDoesNotExistException.class, () ->
+                ucCalculateService.calculateService(calculateTo));
+    }
+
+    @Test
+    @DisplayName("Test calculateService UnprocessableEntityException")
+    void testCalculateServiceUnprocessableEntityException() throws UnprocessableEntityException {
+        //Arrange
+        when(serviceDao.findById(calculateTo.getServiceId())).thenReturn(Optional.of(serviceEntity));
+        when(indicatorDao.findById(1L)).thenReturn(Optional.of(indicatorEntity));
+
+        doThrow(UnprocessableEntityException.class)
+                .when(bookingValidator).verifyIfDatesAreValid(any(), any());
+
+        //Act Assert
+        Assertions.assertThrows(UnprocessableEntityException.class, () ->
                 ucCalculateService.calculateService(calculateTo));
     }
 }

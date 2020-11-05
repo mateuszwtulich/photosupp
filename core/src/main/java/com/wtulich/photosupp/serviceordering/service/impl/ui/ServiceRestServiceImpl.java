@@ -3,6 +3,7 @@ package com.wtulich.photosupp.serviceordering.service.impl.ui;
 import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.general.logic.api.exception.EntityHasAssignedEntitiesException;
+import com.wtulich.photosupp.general.logic.api.exception.UnprocessableEntityException;
 import com.wtulich.photosupp.serviceordering.logic.api.to.*;
 import com.wtulich.photosupp.serviceordering.logic.impl.ServiceOrderingImpl;
 import com.wtulich.photosupp.serviceordering.service.api.ui.ServiceRestService;
@@ -96,7 +97,7 @@ public class ServiceRestServiceImpl implements ServiceRestService {
                     .created(new URI(BASE_URL + "/booking"))
                     .body(serviceOrdering.createBooking(bookingTo).orElseThrow(() ->
                             new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)));
-        } catch (EntityAlreadyExistsException | URISyntaxException e) {
+        } catch (EntityAlreadyExistsException | URISyntaxException | UnprocessableEntityException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         } catch (EntityDoesNotExistException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -136,7 +137,7 @@ public class ServiceRestServiceImpl implements ServiceRestService {
                             new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)));
         } catch (EntityDoesNotExistException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (EntityAlreadyExistsException e) {
+        } catch (EntityAlreadyExistsException | UnprocessableEntityException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         }
     }
@@ -211,6 +212,8 @@ public class ServiceRestServiceImpl implements ServiceRestService {
                             new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)));
         } catch (EntityDoesNotExistException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (UnprocessableEntityException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         }
     }
 }

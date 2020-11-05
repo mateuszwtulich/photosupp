@@ -9,6 +9,9 @@ import com.wtulich.photosupp.serviceordering.logic.api.mapper.IndicatorMapper;
 import com.wtulich.photosupp.serviceordering.logic.api.mapper.ServiceMapper;
 import com.wtulich.photosupp.serviceordering.logic.api.to.BookingEto;
 import com.wtulich.photosupp.serviceordering.logic.api.to.PriceIndicatorEto;
+import com.wtulich.photosupp.userhandling.dataaccess.api.entity.AccountEntity;
+import com.wtulich.photosupp.userhandling.dataaccess.api.entity.PermissionEntity;
+import com.wtulich.photosupp.userhandling.dataaccess.api.entity.RoleEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
 import com.wtulich.photosupp.userhandling.logic.api.to.AccountEto;
 import com.wtulich.photosupp.userhandling.logic.api.to.PermissionEto;
@@ -65,8 +68,21 @@ public class UcFindBookingTest {
         ServiceEntity serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
         IndicatorEntity indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", 40);
 
+        PermissionEntity permissionEntity = new PermissionEntity(ApplicationPermissions.A_CRUD_SUPER, "DESC1");
+        permissionEntity.setId(1L);
+        List<PermissionEntity> permissionEntities = new ArrayList<>();
+        permissionEntities.add(permissionEntity);
+
+        RoleEntity roleEntity = new RoleEntity("ADMIN", "DESC1", permissionEntities);
+        roleEntity.setId(1L);
+
+        AccountEntity accountEntity = new AccountEntity("TEST", "PASS", "TEST@test.com", false);
+        accountEntity.setId(1L);
+        UserEntity userEntity = new UserEntity("NAME1", "SURNAME1", roleEntity, accountEntity);
+        userEntity.setId(1L);
+
         bookingEntity = new BookingEntity("Film dla TestCompany", "Film produktowy z dojazdem", 900D,
-                addressEntity, new UserEntity(), serviceEntity, false, getCurrentDate(LocalDate.now(),0),
+                addressEntity, userEntity, serviceEntity, false, getCurrentDate(LocalDate.now(),0),
                 getCurrentDate(LocalDate.now(),1), getCurrentDate(LocalDate.now(),0));
         bookingEntity.setId(1L);
 

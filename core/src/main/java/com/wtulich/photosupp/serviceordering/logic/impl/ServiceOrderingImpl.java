@@ -3,6 +3,7 @@ package com.wtulich.photosupp.serviceordering.logic.impl;
 import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.general.logic.api.exception.EntityHasAssignedEntitiesException;
+import com.wtulich.photosupp.general.logic.api.exception.UnprocessableEntityException;
 import com.wtulich.photosupp.serviceordering.logic.api.ServiceOrdering;
 import com.wtulich.photosupp.serviceordering.logic.api.to.*;
 import com.wtulich.photosupp.serviceordering.logic.api.usecase.*;
@@ -51,7 +52,7 @@ public class ServiceOrderingImpl implements ServiceOrdering {
     private UcManageService ucManageService;
 
     @Override
-    public Optional<CalculateCto> calculateService(CalculateTo calculateTo) throws EntityDoesNotExistException {
+    public Optional<CalculateCto> calculateService(CalculateTo calculateTo) throws EntityDoesNotExistException, UnprocessableEntityException {
         return ucCalculateService.calculateService(calculateTo);
     }
 
@@ -102,13 +103,13 @@ public class ServiceOrderingImpl implements ServiceOrdering {
 
     @Override
     public Optional<BookingEto> createBooking(BookingTo bookingTo) throws EntityAlreadyExistsException,
-            EntityDoesNotExistException {
+            EntityDoesNotExistException, UnprocessableEntityException {
         return ucManageBooking.createBooking(bookingTo);
     }
 
     @Override
     public Optional<BookingEto> updateBooking(BookingTo bookingTo, Long id) throws EntityDoesNotExistException,
-            EntityAlreadyExistsException {
+            EntityAlreadyExistsException, UnprocessableEntityException {
         return ucManageBooking.updateBooking(bookingTo, id);
     }
 

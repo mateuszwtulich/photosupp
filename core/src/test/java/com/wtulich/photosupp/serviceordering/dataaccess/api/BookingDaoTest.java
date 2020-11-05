@@ -31,13 +31,13 @@ public class BookingDaoTest {
     @Test
     void existsByName_TRUE() {
         //Act Assert
-        Assertions.assertEquals(true, bookingDao.existsByName("Film dla TestCompany"));
+        Assertions.assertTrue(bookingDao.existsByName("Film dla TestCompany"));
     }
 
     @Test
     void existsByName_FALSE() {
         //Act Assert
-        Assertions.assertEquals(false, bookingDao.existsByName("Film dla TestCompany!"));
+        Assertions.assertFalse(bookingDao.existsByName("Film dla TestCompany!"));
     }
 
     @Test
@@ -65,7 +65,7 @@ public class BookingDaoTest {
         IndicatorEntity indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", 40);
         indicatorEntity.setId(1L);
 
-        BookingEntity bookingEntity = new BookingEntity("Film dla TestCompany", "Film produktowy z dojazdem", 900D,
+        BookingEntity bookingEntity = new BookingEntity("Film dla TestCompany", "Film produktowy z dojazdem", 1400D,
                 addressEntity, userEntity, serviceEntity, false, LocalDate.now(), LocalDate.now(), LocalDate.now());
         bookingEntity.setId(1L);
 
@@ -114,7 +114,7 @@ public class BookingDaoTest {
         IndicatorEntity indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", 40);
         indicatorEntity.setId(1L);
 
-        BookingEntity bookingEntity = new BookingEntity("Film dla TestCompany", "Film produktowy z dojazdem", 900D,
+        BookingEntity bookingEntity = new BookingEntity("Film dla TestCompany", "Film produktowy z dojazdem", 1400D,
                 addressEntity, userEntity, serviceEntity, false, LocalDate.now(), LocalDate.now(), LocalDate.now());
         bookingEntity.setId(1L);
 

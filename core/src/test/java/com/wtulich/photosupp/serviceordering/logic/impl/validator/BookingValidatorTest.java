@@ -1,6 +1,7 @@
 package com.wtulich.photosupp.serviceordering.logic.impl.validator;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
+import com.wtulich.photosupp.general.logic.api.exception.UnprocessableEntityException;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.BookingDao;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.AddressEntity;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.BookingEntity;
@@ -132,4 +133,23 @@ public class BookingValidatorTest {
         //Act Assert
         Assertions.assertDoesNotThrow(() ->  bookingValidator.verifyIfBookingAlreadyCreatedAtThatDate(bookingTo));
     }
+
+    @Test
+    @DisplayName("Test verifyIfDatesAreValid Success")
+    void verifyIfDatesAreValidSuccess() {
+        //Act Assert
+        Assertions.assertDoesNotThrow(() ->
+                bookingValidator.
+                        verifyIfDatesAreValid(getCurrentDate(LocalDate.now(),0), getCurrentDate(LocalDate.now(),0)));
+    }
+
+    @Test
+    @DisplayName("Test verifyIfDatesAreValid Failure")
+    void verifyIfDatesAreValidFailure() {
+        //Act Assert
+        Assertions.assertThrows(UnprocessableEntityException.class, () ->
+                bookingValidator.
+                        verifyIfDatesAreValid(getCurrentDate(LocalDate.now(),1), getCurrentDate(LocalDate.now(),0)));
+    }
+
 }

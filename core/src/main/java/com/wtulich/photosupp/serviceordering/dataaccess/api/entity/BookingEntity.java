@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -62,7 +63,7 @@ public class BookingEntity extends AbstractApplicationPersistenceEntity {
     private ServiceEntity service;
 
     @OneToMany(mappedBy = "booking", fetch = FetchType.LAZY, targetEntity = PriceIndicatorEntity.class, orphanRemoval = true)
-    private List<PriceIndicatorEntity> priceIndicatorList;
+    private List<PriceIndicatorEntity> priceIndicatorList = new ArrayList<>();
 
     public BookingEntity() {
     }
@@ -165,8 +166,8 @@ public class BookingEntity extends AbstractApplicationPersistenceEntity {
         return priceIndicatorList;
     }
 
-    public void setPriceIndicatorList(List<PriceIndicatorEntity> priceIndicatorList) {
-        this.priceIndicatorList = priceIndicatorList;
+    public void setPriceIndicatorList(List<PriceIndicatorEntity> priceIndicators) {
+        this.priceIndicatorList = priceIndicators;
     }
 
     @Override
@@ -184,12 +185,11 @@ public class BookingEntity extends AbstractApplicationPersistenceEntity {
                 modificationDate.equals(that.modificationDate) &&
                 Objects.equals(address, that.address) &&
                 user.equals(that.user) &&
-                service.equals(that.service) &&
-                Objects.equals(priceIndicatorList, that.priceIndicatorList);
+                service.equals(that.service);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, description, start, end, predictedPrice, modificationDate, isConfirmed, address, user, service, priceIndicatorList);
+        return Objects.hash(super.hashCode(), name, description, start, end, predictedPrice, modificationDate, isConfirmed, address, user, service);
     }
 }

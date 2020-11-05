@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.general.logic.api.exception.EntityHasAssignedEntitiesException;
+import com.wtulich.photosupp.general.logic.api.exception.UnprocessableEntityException;
 import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
 import com.wtulich.photosupp.serviceordering.logic.api.to.*;
 import com.wtulich.photosupp.serviceordering.logic.impl.ServiceOrderingImpl;
@@ -823,12 +824,12 @@ public class ServiceRestServiceTest {
     @DisplayName("POST /service/v1/service/calculate - OK")
     void testCalculateServiceOk() throws Exception {
         //Arrange
-        calculateCto = new CalculateCto(serviceEto, addressEto, 900D,
+        calculateCto = new CalculateCto(serviceEto, 900D,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)),
                 priceIndicatorEtoList);
 
-        calculateTo = new CalculateTo(1L, addressTo,
+        calculateTo = new CalculateTo(1L,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)),
                 priceIndicatorToList);
@@ -850,10 +851,31 @@ public class ServiceRestServiceTest {
     }
 
     @Test
+    @DisplayName("POST /service/v1/service/calculate - Unprocessable Entity")
+    void testCalculateServiceUnprocessableEntity() throws Exception {
+        //Arrange
+        calculateTo = new CalculateTo(1L,
+                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
+                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)),
+                priceIndicatorToList);
+
+        when(serviceOrdering.calculateService(calculateTo)).thenThrow(UnprocessableEntityException.class);
+
+        //Act
+        mockMvc.perform(post(CALCULATE_SERVICE_URL)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(calculateTo)))
+
+                //Assert
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+    }
+
+    @Test
     @DisplayName("POST /service/v1/service/calculate - Not Found")
     void testCalculateServiceNotFound() throws Exception {
         //Arrange
-        calculateTo = new CalculateTo(1L, addressTo,
+        calculateTo = new CalculateTo(1L,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)),
                 priceIndicatorToList);
@@ -874,7 +896,7 @@ public class ServiceRestServiceTest {
     @DisplayName("POST /service/v1/service/calculate  - ISE")
     void testCalculateServiceISE() throws Exception {
         //Arrange
-        calculateTo = new CalculateTo(1L, addressTo,
+        calculateTo = new CalculateTo(1L,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)),
                 priceIndicatorToList);

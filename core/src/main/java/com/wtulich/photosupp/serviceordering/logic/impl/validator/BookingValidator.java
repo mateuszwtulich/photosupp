@@ -1,12 +1,14 @@
 package com.wtulich.photosupp.serviceordering.logic.impl.validator;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
+import com.wtulich.photosupp.general.logic.api.exception.UnprocessableEntityException;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.BookingDao;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.BookingEntity;
 import com.wtulich.photosupp.serviceordering.logic.api.to.BookingTo;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -29,6 +31,12 @@ public class BookingValidator {
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( bookingEntity.getStart()).compareTo(bookingTo.getStart()) <= 1 &&
                         DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( bookingEntity.getEnd()).compareTo(bookingTo.getEnd()) >= -1)) {
             throw new EntityAlreadyExistsException("Booking of that user already exists in this period of time.");
+        }
+    }
+
+    public void verifyIfDatesAreValid(LocalDate start, LocalDate end) throws UnprocessableEntityException {
+        if(start.isAfter(end)){
+            throw new UnprocessableEntityException("Start date was greater than end date.");
         }
     }
 }

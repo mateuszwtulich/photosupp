@@ -19,12 +19,12 @@ public class IndicatorDaoTest {
     @Test
     void existsByName_TRUE() {
         //Act Assert
-        Assertions.assertEquals(true, indicatorDao.existsByName("Podroz sluzbowa"));
+        Assertions.assertTrue(indicatorDao.existsByName("Podroz sluzbowa"));
     }
 
     @Test
     void existsByName_FALSE() {
         //Act Assert
-        Assertions.assertEquals(false, indicatorDao.existsByName("Podroz sluzbowa!"));
+        Assertions.assertFalse(indicatorDao.existsByName("Podroz sluzbowa!"));
     }
 }

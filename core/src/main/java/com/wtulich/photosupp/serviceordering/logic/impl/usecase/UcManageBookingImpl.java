@@ -2,6 +2,7 @@ package com.wtulich.photosupp.serviceordering.logic.impl.usecase;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
+import com.wtulich.photosupp.general.logic.api.exception.UnprocessableEntityException;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.*;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.*;
 import com.wtulich.photosupp.serviceordering.logic.api.mapper.*;
@@ -9,21 +10,14 @@ import com.wtulich.photosupp.serviceordering.logic.api.to.*;
 import com.wtulich.photosupp.serviceordering.logic.api.usecase.UcManageBooking;
 import com.wtulich.photosupp.serviceordering.logic.impl.validator.AddressValidator;
 import com.wtulich.photosupp.serviceordering.logic.impl.validator.BookingValidator;
-import com.wtulich.photosupp.userhandling.dataaccess.api.dao.PermissionDao;
-import com.wtulich.photosupp.userhandling.dataaccess.api.dao.RoleDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.UserDao;
-import com.wtulich.photosupp.userhandling.dataaccess.api.entity.PermissionEntity;
-import com.wtulich.photosupp.userhandling.dataaccess.api.entity.RoleEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.AccountMapper;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.PermissionsMapper;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.RoleMapper;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.UserMapper;
 import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.RoleTo;
 import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
-import com.wtulich.photosupp.userhandling.logic.impl.usecase.UcManageRoleImpl;
-import com.wtulich.photosupp.userhandling.logic.impl.validator.RoleValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
@@ -32,10 +26,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Validated
@@ -99,9 +90,11 @@ public class UcManageBookingImpl implements UcManageBooking {
 
 
     @Override
-    public Optional<BookingEto> createBooking(BookingTo bookingTo) throws EntityAlreadyExistsException, EntityDoesNotExistException {
+    public Optional<BookingEto> createBooking(BookingTo bookingTo) throws EntityAlreadyExistsException, EntityDoesNotExistException, UnprocessableEntityException {
         bookingValidator.verifyIfBookingNameAlreadyExists(bookingTo.getName());
         bookingValidator.verifyIfBookingAlreadyCreatedAtThatDate(bookingTo);
+        bookingValidator.verifyIfDatesAreValid(LocalDate.parse(bookingTo.getStart()), LocalDate.parse(bookingTo.getEnd()));
+
         LOG.debug(CREATE_BOOKING_LOG, bookingTo.getName());
 
         BookingEntity bookingEntity = bookingDao.save(toBookingEntity(bookingTo));
@@ -110,19 +103,14 @@ public class UcManageBookingImpl implements UcManageBooking {
             bookingEntity.setPriceIndicatorList(createPriceIndicatorList(bookingTo.getPriceIndicatorToList(), bookingEntity));
         }
 
-        bookingEntity.setPredictedPrice
-                (calculatePredictedPrice
-                        (bookingEntity.getPriceIndicatorList(), bookingEntity.getService()));
-
-        bookingEntity.setConfirmed(false);
-        bookingEntity.setModificationDate(LocalDate.now());
+        bookingEntity.setPredictedPrice(calculatePredictedPrice(bookingEntity));
 
         return toBookingEto(bookingEntity);
     }
 
     @Override
     public Optional<BookingEto> updateBooking(BookingTo bookingTo, Long id)
-            throws EntityDoesNotExistException, EntityAlreadyExistsException {
+            throws EntityDoesNotExistException, EntityAlreadyExistsException, UnprocessableEntityException {
 
         Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
 
@@ -136,6 +124,9 @@ public class UcManageBookingImpl implements UcManageBooking {
 
     private BookingEntity toBookingEntity(BookingTo bookingTo) throws EntityDoesNotExistException {
         BookingEntity bookingEntity = bookingMapper.toBookingEntity(bookingTo);
+
+        bookingEntity.setConfirmed(false);
+        bookingEntity.setModificationDate(LocalDate.now());
 
         bookingEntity.setService(getServiceById(bookingTo.getServiceId()));
         bookingEntity.setUser(getUserById(bookingTo.getUserId()));
@@ -216,8 +207,13 @@ public class UcManageBookingImpl implements UcManageBooking {
 
         priceIndicatorEntity.setBooking(bookingEntity);
         priceIndicatorEntity.setIndicator(indicatorEntity);
-        priceIndicatorEntity.setMultiplier(priceIndicatorEntity.getMultiplier());
+        priceIndicatorEntity.setMultiplier(priceIndicatorTo.getMultiplier());
         priceIndicatorEntity.setIndicatorPrice(indicatorEntity.getBaseAmount() * priceIndicatorTo.getMultiplier());
+
+        PriceIndicatorKey priceIndicatorKey = new PriceIndicatorKey();
+        priceIndicatorKey.setBookingId(bookingEntity.getId());
+        priceIndicatorKey.setIndicatorId(indicatorEntity.getId());
+        priceIndicatorEntity.setId(priceIndicatorKey);
 
         return priceIndicatorEntity;
     }
@@ -228,7 +224,7 @@ public class UcManageBookingImpl implements UcManageBooking {
     }
 
     private BookingEntity mapBookingEntity(BookingEntity bookingEntity, BookingTo bookingTo)
-            throws EntityDoesNotExistException, EntityAlreadyExistsException {
+            throws EntityDoesNotExistException, EntityAlreadyExistsException, UnprocessableEntityException {
 
         if(!bookingEntity.getName().equals(bookingTo.getName())){
             bookingValidator.verifyIfBookingNameAlreadyExists(bookingEntity.getName());
@@ -239,6 +235,8 @@ public class UcManageBookingImpl implements UcManageBooking {
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format(bookingEntity.getEnd()).equals(bookingTo.getEnd()))) {
 
             bookingValidator.verifyIfBookingAlreadyCreatedAtThatDate(bookingTo);
+            bookingValidator.verifyIfDatesAreValid(LocalDate.parse(bookingTo.getStart()), LocalDate.parse(bookingTo.getEnd()));
+
             bookingEntity.setStart( LocalDate.parse(bookingTo.getStart()) );
             bookingEntity.setEnd( LocalDate.parse(bookingTo.getEnd()) );
         }
@@ -250,29 +248,18 @@ public class UcManageBookingImpl implements UcManageBooking {
         }
 
         AddressEntity addressEntityTest = addressMapper.toAddressEntity(bookingTo.getAddressTo());
-        addressEntityTest.setId(bookingEntity.getAddress().getId());
 
-        if(!bookingEntity.getAddress().equals(addressEntityTest)) {
-            bookingEntity.setAddress(updateAddress(bookingEntity.getAddress(), bookingTo.getAddressTo()));
-
-        } else if ( bookingTo.getAddressTo() == null ){
+        if( bookingTo.getAddressTo() == null ) {
             bookingEntity.setAddress(null);
+        }  else {
+            addressEntityTest.setId(bookingEntity.getAddress().getId());
+            if(!bookingEntity.getAddress().equals(addressEntityTest)) {
+                bookingEntity.setAddress(updateAddress(bookingEntity.getAddress(), bookingTo.getAddressTo()));
+
+            }
         }
 
-        if( bookingTo.getPriceIndicatorToList() != null ){
-
-            bookingEntity.getPriceIndicatorList().stream()
-                    .forEach(priceIndicatorEntity -> priceIndicatorDao.delete(priceIndicatorEntity));
-
-            bookingEntity.setPriceIndicatorList(createPriceIndicatorList(bookingTo.getPriceIndicatorToList(), bookingEntity));
-
-        } else {
-            bookingEntity.setPriceIndicatorList(null);
-        }
-
-        bookingEntity.setPredictedPrice
-                (calculatePredictedPrice
-                        (bookingEntity.getPriceIndicatorList(), bookingEntity.getService()));
+        bookingEntity.setPredictedPrice(calculatePredictedPrice(bookingEntity));
 
         bookingEntity.setModificationDate( LocalDate.now() );
 
@@ -297,11 +284,15 @@ public class UcManageBookingImpl implements UcManageBooking {
         return addressEntity;
     }
 
-    private Double calculatePredictedPrice(List<PriceIndicatorEntity> priceIndicatorEntityList, ServiceEntity serviceEntity){
-        Double predictedPrice = serviceEntity.getBasePrice();
+    private Double calculatePredictedPrice(BookingEntity bookingEntity){
+        Double predictedPrice = bookingEntity.getService().getBasePrice();
 
-        if (priceIndicatorEntityList != null){
-            for (PriceIndicatorEntity priceIndicator : priceIndicatorEntityList) {
+        Integer days = 1 + bookingEntity.getEnd().getDayOfYear() - bookingEntity.getStart().getDayOfYear();
+
+        predictedPrice = predictedPrice * days;
+
+        if (bookingEntity.getPriceIndicatorList() != null){
+            for (PriceIndicatorEntity priceIndicator : bookingEntity.getPriceIndicatorList()) {
                 predictedPrice += priceIndicator.getIndicatorPrice();
             }
         }

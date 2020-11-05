@@ -2,10 +2,12 @@ package com.wtulich.photosupp.serviceordering.logic.impl.usecase;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
+import com.wtulich.photosupp.general.logic.api.exception.UnprocessableEntityException;
 import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.*;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.*;
 import com.wtulich.photosupp.serviceordering.logic.api.to.*;
+import com.wtulich.photosupp.serviceordering.logic.impl.validator.AddressValidator;
 import com.wtulich.photosupp.serviceordering.logic.impl.validator.BookingValidator;
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.UserDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.AccountEntity;
@@ -30,6 +32,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,11 +70,15 @@ public class UcManageBookingTest {
     @MockBean
     private BookingValidator bookingValidator;
 
+    @MockBean
+    private AddressValidator addressValidator;
+
     private BookingEntity bookingEntity;
     private BookingEto bookingEto;
     private BookingTo bookingTo;
     private ServiceEntity serviceEntity;
     private AddressEntity addressEntity;
+    private AddressEntity addressEntity2;
     private IndicatorEntity indicatorEntity;
     private PriceIndicatorEntity priceIndicatorEntity;
     private UserEntity userEntity;
@@ -90,7 +97,7 @@ public class UcManageBookingTest {
         UserEto userEto = new UserEto(1L, "NAME1", "SURNAME1", accountEto, roleEto);
 
         List<PriceIndicatorEto> priceIndicatorEtoList = new ArrayList<>();
-        bookingEto = new BookingEto(1L, "Film dla TestCompany", "Film produktowy z dojazdem", serviceEto, addressEto, userEto, false, 900D,
+        bookingEto = new BookingEto(1L, "Film dla TestCompany", "Film produktowy z dojazdem", serviceEto, addressEto, userEto, false, 1400D,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)),
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
@@ -113,6 +120,9 @@ public class UcManageBookingTest {
         addressEntity =  new AddressEntity("Wroclaw", "Wroblewskiego", "27", null, "51-627");
         addressEntity.setId(1L);
 
+        addressEntity2 =  new AddressEntity("Poznan", "Wroblewskiego", "27", null, "51-627");
+        addressEntity2.setId(1L);
+
         serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
         serviceEntity.setId(1L);
 
@@ -132,7 +142,7 @@ public class UcManageBookingTest {
         userEntity = new UserEntity("NAME1", "SURNAME1", roleEntity, accountEntity);
         userEntity.setId(1L);
 
-        bookingEntity = new BookingEntity("Film dla TestCompany", "Film produktowy z dojazdem", 900D,
+        bookingEntity = new BookingEntity("Film dla TestCompany", "Film produktowy z dojazdem", 1400D,
                 addressEntity, userEntity, serviceEntity, false, getCurrentDate(LocalDate.now(),0),
                 getCurrentDate(LocalDate.now(),1), getCurrentDate(LocalDate.now(),0));
         bookingEntity.setId(1L);
@@ -152,7 +162,7 @@ public class UcManageBookingTest {
 
     @Test
     @DisplayName("Test createBooking Success")
-    void testCreateBookingSuccess() throws EntityAlreadyExistsException, EntityDoesNotExistException {
+    void testCreateBookingSuccess() throws EntityAlreadyExistsException, EntityDoesNotExistException, UnprocessableEntityException {
         //Arrange
         when(serviceDao.findById(bookingTo.getServiceId())).thenReturn(Optional.of(serviceEntity));
         when(userDao.findById(bookingTo.getUserId())).thenReturn(Optional.of(userEntity));
@@ -185,6 +195,59 @@ public class UcManageBookingTest {
     }
 
     @Test
+    @DisplayName("Test createBooking EntityDoesNotExistException2")
+    void testCreateBookingEntityDoesNotExistException2() throws EntityAlreadyExistsException, EntityDoesNotExistException {
+        //Arrange
+        when(serviceDao.findById(bookingTo.getServiceId())).thenReturn(Optional.of(serviceEntity));
+        when(userDao.findById(bookingTo.getUserId())).thenReturn(Optional.of(userEntity));
+        when(addressDao.save(any())).thenReturn(addressEntity);
+        when(bookingDao.save(any())).thenReturn(bookingEntity);
+        when(indicatorDao.findById(indicatorEntity.getId())).thenReturn(Optional.empty());
+
+        //Act Assert
+        Assertions.assertThrows(EntityDoesNotExistException.class, () ->
+                ucManageBooking.createBooking(bookingTo));
+    }
+
+    @Test
+    @DisplayName("Test createBooking EntityDoesNotExistException3")
+    void testCreateBookingEntityDoesNotExistException3() throws EntityAlreadyExistsException, EntityDoesNotExistException {
+        //Arrange
+        when(serviceDao.findById(bookingTo.getServiceId())).thenReturn(Optional.of(serviceEntity));
+        when(userDao.findById(bookingTo.getUserId())).thenReturn(Optional.empty());
+
+        //Act Assert
+        Assertions.assertThrows(EntityDoesNotExistException.class, () ->
+                ucManageBooking.createBooking(bookingTo));
+    }
+
+    @Test
+    @DisplayName("Test createBooking Success - AddressAlreadyExists")
+    void testCreateBookingSuccessAddressAlreadyExists() throws EntityAlreadyExistsException, EntityDoesNotExistException, UnprocessableEntityException {
+        //Arrange
+        when(serviceDao.findById(bookingTo.getServiceId())).thenReturn(Optional.of(serviceEntity));
+        when(userDao.findById(bookingTo.getUserId())).thenReturn(Optional.of(userEntity));
+        when(addressValidator.isAddressAlreadyExists(any())).thenReturn(true);
+        when(bookingDao.save(any())).thenReturn(bookingEntity);
+        when(indicatorDao.findById(indicatorEntity.getId())).thenReturn(Optional.ofNullable(indicatorEntity));
+        when(priceIndicatorDao.save(any())).thenReturn(priceIndicatorEntity);
+        when(addressDao.findByCityAndStreetAndBuildingNumberAndApartmentNumberAndPostalCode(
+                any(), any(), any(), any(), any()
+        )).thenReturn(addressEntity);
+
+        //Act
+        Optional<BookingEto> result = ucManageBooking.createBooking(bookingTo);
+
+        // Assert
+        Assertions.assertTrue(result.isPresent());
+        assertThat(result.get()).isEqualToIgnoringGivenFields(bookingEto, "serviceEto", "userEto", "addressEto", "priceIndicatorEtoList");
+        assertThat(result.get().getAddressEto()).isEqualTo(bookingEto.getAddressEto());
+        assertThat(result.get().getServiceEto()).isEqualTo(bookingEto.getServiceEto());
+        assertThat(result.get().getPriceIndicatorEtoList()).isEqualTo(bookingEto.getPriceIndicatorEtoList());
+        assertThat(result.get().getUserEto()).isEqualTo(bookingEto.getUserEto());
+    }
+
+    @Test
     @DisplayName("Test createBooking EntityAlreadyExistsException")
     void testCreateBookingEntityAlreadyExistsException() throws EntityAlreadyExistsException {
         //Arrange
@@ -198,7 +261,7 @@ public class UcManageBookingTest {
 
     @Test
     @DisplayName("Test updateBooking Success")
-    void testUpdateBookingSuccess() throws EntityDoesNotExistException, EntityAlreadyExistsException {
+    void testUpdateBookingSuccess() throws EntityDoesNotExistException, EntityAlreadyExistsException, UnprocessableEntityException {
         //Arrange
         when(bookingDao.findById(bookingEntity.getId())).thenReturn(Optional.of(bookingEntity));
         when(indicatorDao.findById(indicatorEntity.getId())).thenReturn(Optional.ofNullable(indicatorEntity));
@@ -209,6 +272,86 @@ public class UcManageBookingTest {
 
         // Assert
         Assertions.assertTrue(result.isPresent());
+        assertThat(result.get()).isEqualToIgnoringGivenFields(bookingEto, "serviceEto", "userEto", "addressEto", "priceIndicatorEtoList");
+        assertThat(result.get().getAddressEto()).isEqualTo(bookingEto.getAddressEto());
+        assertThat(result.get().getServiceEto()).isEqualTo(bookingEto.getServiceEto());
+        assertThat(result.get().getPriceIndicatorEtoList()).isEqualTo(bookingEto.getPriceIndicatorEtoList());
+        assertThat(result.get().getUserEto()).isEqualTo(bookingEto.getUserEto());
+    }
+
+    @Test
+    @DisplayName("Test updateBooking Success2")
+    void testUpdateBookingSuccess2() throws EntityDoesNotExistException, EntityAlreadyExistsException, UnprocessableEntityException {
+        //Arrange
+        bookingTo.setName("Nowa nazwa");
+        bookingTo.setStart(DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)));
+        bookingTo.setAddressTo(null);
+        bookingTo.setPriceIndicatorToList(Collections.emptyList());
+        bookingTo.setServiceId(2L);
+        bookingEto.setPredictedPrice(900D);
+        bookingEto.setName("Nowa nazwa");
+        bookingEto.setStart(DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)));
+        bookingEto.setAddressEto(null);
+        bookingEto.getServiceEto().setId(2L);
+        when(bookingDao.findById(bookingEntity.getId())).thenReturn(Optional.of(bookingEntity));
+        when(indicatorDao.findById(indicatorEntity.getId())).thenReturn(Optional.ofNullable(indicatorEntity));
+        when(priceIndicatorDao.save(any())).thenReturn(priceIndicatorEntity);
+        when(serviceDao.findById(bookingTo.getServiceId())).thenReturn(Optional.of(serviceEntity));
+
+        //Act
+        Optional<BookingEto> result = ucManageBooking.updateBooking(bookingTo, bookingEntity.getId());
+
+        // Assert
+        Assertions.assertTrue(result.isPresent());
+        assertThat(result.get()).isEqualToIgnoringGivenFields(bookingEto, "serviceEto", "userEto", "addressEto", "priceIndicatorEtoList");
+        assertThat(result.get().getAddressEto()).isEqualTo(bookingEto.getAddressEto());
+        assertThat(result.get().getServiceEto()).isEqualTo(bookingEto.getServiceEto());
+        assertThat(result.get().getPriceIndicatorEtoList()).isEqualTo(bookingEto.getPriceIndicatorEtoList());
+        assertThat(result.get().getUserEto()).isEqualTo(bookingEto.getUserEto());
+    }
+
+    @Test
+    @DisplayName("Test updateBooking Success3")
+    void testUpdateBookingSuccess3() throws EntityDoesNotExistException, EntityAlreadyExistsException, UnprocessableEntityException {
+        //Arrange
+        bookingTo.getAddressTo().setCity("Poznan");
+        bookingEto.getAddressEto().setCity("Poznan");
+        when(bookingDao.findById(bookingEntity.getId())).thenReturn(Optional.of(bookingEntity));
+        when(indicatorDao.findById(indicatorEntity.getId())).thenReturn(Optional.ofNullable(indicatorEntity));
+        when(priceIndicatorDao.save(any())).thenReturn(priceIndicatorEntity);
+
+        //Act
+        Optional<BookingEto> result = ucManageBooking.updateBooking(bookingTo, bookingEntity.getId());
+
+        // Assert
+        Assertions.assertTrue(result.isPresent());
+        assertThat(result.get()).isEqualToIgnoringGivenFields(bookingEto, "serviceEto", "userEto", "addressEto", "priceIndicatorEtoList");
+        assertThat(result.get().getAddressEto()).isEqualTo(bookingEto.getAddressEto());
+        assertThat(result.get().getServiceEto()).isEqualTo(bookingEto.getServiceEto());
+        assertThat(result.get().getPriceIndicatorEtoList()).isEqualTo(bookingEto.getPriceIndicatorEtoList());
+        assertThat(result.get().getUserEto()).isEqualTo(bookingEto.getUserEto());
+    }
+
+    @Test
+    @DisplayName("Test updateBooking Success4")
+    void testUpdateBookingSuccess4() throws EntityDoesNotExistException, EntityAlreadyExistsException, UnprocessableEntityException {
+        //Arrange
+        bookingTo.getAddressTo().setCity("Poznan");
+        bookingEto.getAddressEto().setCity("Poznan");
+
+        when(bookingDao.findById(bookingEntity.getId())).thenReturn(Optional.of(bookingEntity));
+        when(indicatorDao.findById(indicatorEntity.getId())).thenReturn(Optional.ofNullable(indicatorEntity));
+        when(priceIndicatorDao.save(any())).thenReturn(priceIndicatorEntity);
+        when(addressValidator.isAddressAlreadyExists(any())).thenReturn(true);
+        when(addressDao.findByCityAndStreetAndBuildingNumberAndApartmentNumberAndPostalCode(
+                any(), any(), any(), any(), any())).thenReturn(addressEntity2);
+
+        //Act
+        Optional<BookingEto> result = ucManageBooking.updateBooking(bookingTo, bookingEntity.getId());
+
+        // Assert
+        Assertions.assertTrue(result.isPresent());
+
         assertThat(result.get()).isEqualToIgnoringGivenFields(bookingEto, "serviceEto", "userEto", "addressEto", "priceIndicatorEtoList");
         assertThat(result.get().getAddressEto()).isEqualTo(bookingEto.getAddressEto());
         assertThat(result.get().getServiceEto()).isEqualTo(bookingEto.getServiceEto());

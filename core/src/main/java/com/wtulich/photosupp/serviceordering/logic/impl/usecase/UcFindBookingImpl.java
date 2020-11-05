@@ -10,7 +10,13 @@ import com.wtulich.photosupp.serviceordering.logic.api.mapper.ServiceMapper;
 import com.wtulich.photosupp.serviceordering.logic.api.to.BookingEto;
 import com.wtulich.photosupp.serviceordering.logic.api.to.PriceIndicatorEto;
 import com.wtulich.photosupp.serviceordering.logic.api.usecase.UcFindBooking;
+import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
+import com.wtulich.photosupp.userhandling.logic.api.mapper.AccountMapper;
+import com.wtulich.photosupp.userhandling.logic.api.mapper.PermissionsMapper;
+import com.wtulich.photosupp.userhandling.logic.api.mapper.RoleMapper;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.UserMapper;
+import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
+import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
@@ -49,6 +55,16 @@ public class UcFindBookingImpl implements UcFindBooking {
     @Inject
     private IndicatorMapper indicatorMapper;
 
+    @Inject
+    private RoleMapper roleMapper;
+
+    @Inject
+    private AccountMapper accountMapper;
+
+    @Inject
+    private PermissionsMapper permissionsMapper;
+
+
     @Override
     public Optional<BookingEto> findBooking(Long id) throws EntityDoesNotExistException {
 
@@ -72,7 +88,7 @@ public class UcFindBookingImpl implements UcFindBooking {
         BookingEto bookingEto = bookingMapper.toBookingEto(bookingEntity);
 
         bookingEto.setServiceEto(serviceMapper.toServiceEto(bookingEntity.getService()));
-        bookingEto.setUserEto(userMapper.toUserEto(bookingEntity.getUser()));
+        bookingEto.setUserEto(toUserEto(bookingEntity.getUser()));
 
         if( bookingEntity.getAddress() != null ){
             bookingEto.setAddressEto(addressMapper.toAddressEto(bookingEntity.getAddress()));
@@ -91,5 +107,17 @@ public class UcFindBookingImpl implements UcFindBooking {
         }
 
         return bookingEto;
+    }
+
+    private UserEto toUserEto(UserEntity userEntity){
+        UserEto userEto = userMapper.toUserEto(userEntity);
+        userEto.setAccountEto(accountMapper.toAccountEto(userEntity.getAccount()));
+
+        RoleEto roleEto = roleMapper.toRoleEto(userEntity.getRole());
+        roleEto.setPermissionEtoList(userEntity.getRole().getPermissions().stream()
+                .map(p -> permissionsMapper.toPermissionEto(p))
+                .collect(Collectors.toList()));
+        userEto.setRoleEto(roleEto);
+        return userEto;
     }
 }

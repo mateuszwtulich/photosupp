@@ -24,13 +24,13 @@ public class RoleDaoTest {
     @Test
     void existsByName_TRUE() {
         //Act Assert
-        Assertions.assertEquals(true, roleDao.existsByName("USER"));
+        Assertions.assertTrue(roleDao.existsByName("USER"));
     }
 
     @Test
     void existsByName_FALSE() {
         //Act Assert
-        Assertions.assertEquals(false, roleDao.existsByName("NAME"));
+        Assertions.assertFalse(roleDao.existsByName("NAME"));
     }
 
     @Test
@@ -44,7 +44,7 @@ public class RoleDaoTest {
         permissionEntityList.add(permissionEntity);
 
         //Act Assert
-        Assertions.assertEquals(true, roleDao.existsByPermissionsIn(permissionEntityList));
+        Assertions.assertTrue(roleDao.existsByPermissionsIn(permissionEntityList));
     }
 
     @Test
@@ -58,6 +58,6 @@ public class RoleDaoTest {
         permissionEntityList.add(permissionEntity2);
 
         //Act Assert
-        Assertions.assertEquals(false, roleDao.existsByPermissionsIn(permissionEntityList));
+        Assertions.assertFalse(roleDao.existsByPermissionsIn(permissionEntityList));
     }
 }

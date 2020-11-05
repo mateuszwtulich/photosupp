@@ -1,6 +1,7 @@
 package com.wtulich.photosupp.serviceordering.dataaccess.api.dao;
 
 import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.PriceIndicatorEntity;
+import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.PriceIndicatorKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -19,12 +19,12 @@ public class ServiceDaoTest {
     @Test
     void existsByName_TRUE() {
         //Act Assert
-        Assertions.assertEquals(true, serviceDao.existsByName("Film produktowy"));
+        Assertions.assertTrue(serviceDao.existsByName("Film produktowy"));
     }
 
     @Test
     void existsByName_FALSE() {
         //Act Assert
-        Assertions.assertEquals(false, serviceDao.existsByName("Film produktowy!"));
+        Assertions.assertFalse(serviceDao.existsByName("Film produktowy!"));
     }
 }

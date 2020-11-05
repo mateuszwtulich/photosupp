@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith({SpringExtension.class})
 @SpringBootTest(classes = {H2JpaConfig.class})
-public class PriceIndicatorDaoTest {
+public class PriceIndicatorMapperDaoTest {
 
     @Autowired
     private PriceIndicatorDao priceIndicatorDao;

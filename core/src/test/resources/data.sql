@@ -110,7 +110,7 @@ INSERT INTO public.address(
 
 INSERT INTO public.booking(
     id, NAME, DESCRIPTION, START_DATE, END_DATE, FINAL_PRICE, MODIFICATION_DATE, IS_CONFIRMED, ADDRESS_ID, USER_ID, SERVICE_ID)
-    VALUES (1, 'Film dla TestCompany', 'Film produktowy z dojazdem', '2020-04-11', '2020-04-12', 900, '2020-04-11', false, 1, 1, 1);
+    VALUES (1, 'Film dla TestCompany', 'Film produktowy z dojazdem', '2020-04-11', '2020-04-12', 1400, '2020-04-11', false, 1, 1, 1);
 
 INSERT INTO public.price_indicator(
     INDICATOR_ID, BOOKING_ID, INDICATOR_PRICE, MULTIPLIER)

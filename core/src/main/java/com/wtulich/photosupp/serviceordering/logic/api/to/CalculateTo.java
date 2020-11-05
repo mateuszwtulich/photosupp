@@ -12,9 +12,6 @@ public class CalculateTo {
     private Long serviceId;
 
     @NotNull
-    private AddressTo addressTo;
-
-    @NotNull
     private String start;
 
     @NotNull
@@ -26,9 +23,8 @@ public class CalculateTo {
     public CalculateTo() {
     }
 
-    public CalculateTo(Long serviceId, AddressTo addressTo, String start, String end, List<PriceIndicatorTo> priceIndicatorToList) {
+    public CalculateTo(Long serviceId, String start, String end, List<PriceIndicatorTo> priceIndicatorToList) {
         this.serviceId = serviceId;
-        this.addressTo = addressTo;
         this.start = start;
         this.end = end;
         this.priceIndicatorToList = priceIndicatorToList;
@@ -40,14 +36,6 @@ public class CalculateTo {
 
     public void setServiceId(Long serviceId) {
         this.serviceId = serviceId;
-    }
-
-    public AddressTo getAddressTo() {
-        return addressTo;
-    }
-
-    public void setAddressTo(AddressTo addressTo) {
-        this.addressTo = addressTo;
     }
 
     public String getStart() {
@@ -80,7 +68,6 @@ public class CalculateTo {
         if (!(o instanceof CalculateTo)) return false;
         CalculateTo that = (CalculateTo) o;
         return serviceId.equals(that.serviceId) &&
-                addressTo.equals(that.addressTo) &&
                 start.equals(that.start) &&
                 end.equals(that.end) &&
                 priceIndicatorToList.equals(that.priceIndicatorToList);
@@ -88,6 +75,6 @@ public class CalculateTo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(serviceId, addressTo, start, end, priceIndicatorToList);
+        return Objects.hash(serviceId, start, end, priceIndicatorToList);
     }
 }
