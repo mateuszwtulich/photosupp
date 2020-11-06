@@ -100,13 +100,13 @@ public class UserRestServiceIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /user/v1/user/1 - No content")
-    void testGetUserByIdNoContent() throws Exception {
+    @DisplayName("GET /user/v1/user/1 - Not Found")
+    void testGetUserByIdNotFound() throws Exception {
         //Act
         mockMvc.perform(get(GET_USER_BY_ID_URL, 4L))
 
                 //Assert
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -183,13 +183,13 @@ public class UserRestServiceIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /user/v1/role/1 - No content")
-    void testGetRoleByIdNoContent() throws Exception {
+    @DisplayName("GET /user/v1/role/1 - Not Found")
+    void testGetRoleByIdNotFound() throws Exception {
         //Act
         mockMvc.perform(get(GET_ROLE_BY_ID_URL, 10L))
 
                 //Assert
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNotFound());
     }
 
     @Test

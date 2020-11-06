@@ -312,8 +312,8 @@ public class ServiceRestServiceTest {
     }
 
     @Test
-    @DisplayName("GET /service/v1/booking/1 - No content")
-    void testGetBookingByIdNoContent() throws Exception {
+    @DisplayName("GET /service/v1/booking/1 - Not Found")
+    void testGetBookingByIdNotFound() throws Exception {
         //Arrange
         when(serviceOrdering.findBooking(bookingEto.getId()))
                 .thenThrow(EntityDoesNotExistException.class);
@@ -322,7 +322,7 @@ public class ServiceRestServiceTest {
         mockMvc.perform(get(GET_BOOKING_BY_ID_URL, bookingEto.getId()))
 
                 //Assert
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -342,6 +342,7 @@ public class ServiceRestServiceTest {
     @Test
     @DisplayName("DELETE /service/v1/indicator/ - OK")
     void testDeleteIndicatorOk() throws Exception {
+
         //Act
         mockMvc.perform(delete(INDICATOR_ID_URL, indicatorEto.getId()))
 

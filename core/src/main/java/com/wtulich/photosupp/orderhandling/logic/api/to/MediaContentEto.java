@@ -15,16 +15,16 @@ public class MediaContentEto extends AbstractApplicationEntityTransportObject {
     private String url;
 
     @NotNull
-    private OrderEto orderEto;
+    private Long orderId;
 
     public MediaContentEto() {
     }
 
-    public MediaContentEto(Long id, MediaType type, String url, OrderEto orderEto) {
+    public MediaContentEto(Long id, MediaType type, String url, Long orderId) {
         super(id);
         this.type = type;
         this.url = url;
-        this.orderEto = orderEto;
+        this.orderId = orderId;
     }
 
     public MediaType getType() {
@@ -43,27 +43,27 @@ public class MediaContentEto extends AbstractApplicationEntityTransportObject {
         this.url = url;
     }
 
-    public OrderEto getOrderEto() {
-        return orderEto;
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setOrderEto(OrderEto orderEto) {
-        this.orderEto = orderEto;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MediaContentEto)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         MediaContentEto that = (MediaContentEto) o;
         return type == that.type &&
                 url.equals(that.url) &&
-                orderEto.equals(that.orderEto);
+                orderId.equals(that.orderId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), type, url, orderEto);
+        return Objects.hash(super.hashCode(), type, url, orderId);
     }
 }

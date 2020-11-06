@@ -29,13 +29,13 @@ public class OrderEto extends AbstractApplicationEntityTransportObject {
     private Double price;
 
     @NotNull
-    private LocalDate createdAt;
+    private String createdAt;
 
     public OrderEto() {
     }
 
     public OrderEto(Long id, String orderNumber, UserEto coordinator, UserEto user, OrderStatus status,
-                    BookingEto booking, Double price, LocalDate createdAt) {
+                    BookingEto booking, Double price, String createdAt) {
         super(id);
         this.orderNumber = orderNumber;
         this.coordinator = coordinator;
@@ -94,11 +94,11 @@ public class OrderEto extends AbstractApplicationEntityTransportObject {
         this.price = price;
     }
 
-    public LocalDate getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 

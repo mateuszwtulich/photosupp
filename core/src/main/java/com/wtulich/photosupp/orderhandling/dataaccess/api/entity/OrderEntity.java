@@ -2,21 +2,14 @@ package com.wtulich.photosupp.orderhandling.dataaccess.api.entity;
 
 import com.sun.istack.NotNull;
 import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationPersistenceEntity;
+import com.wtulich.photosupp.general.dataaccess.api.generators.StringPrefixedSequenceIdGenerator;
 import com.wtulich.photosupp.general.utils.enums.OrderStatus;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.BookingEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +20,15 @@ public class OrderEntity extends AbstractApplicationPersistenceEntity {
     private static final long serialVersionUID = 1L;
 
     @NotNull
-    @Column(name = "ORDER_NUMBER", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_number_seq")
+    @GenericGenerator(
+            name = "order_number_seq",
+            strategy = "com.wtulich.photosupp.general.dataaccess.api.generators.StringPrefixedSequenceIdGenerator",
+            parameters = {
+                    @Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
+                    @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "INVIU_"),
+                    @Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
+    @Column(name = "ORDER_NUMBER", nullable = false, unique = true)
     private Long orderNumber;
 
     @NotNull

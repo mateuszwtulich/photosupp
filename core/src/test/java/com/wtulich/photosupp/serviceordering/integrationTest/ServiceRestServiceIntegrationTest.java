@@ -268,14 +268,14 @@ public class ServiceRestServiceIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /service/v1/booking/3 - No content")
-    void testGetBookingByIdNoContent() throws Exception {
+    @DisplayName("GET /service/v1/booking/3 - No Found")
+    void testGetBookingByIdNotFound() throws Exception {
 
         //Act
         mockMvc.perform(get(GET_BOOKING_BY_ID_URL, 3L))
 
                 //Assert
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNotFound());
     }
 
     @Test

@@ -47,7 +47,7 @@ public class UserRestServiceImpl implements UserRestService {
                     .body(userHandling.findUser(id).orElseThrow(() ->
                             new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)));
         } catch (EntityDoesNotExistException e) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
@@ -149,7 +149,7 @@ public class UserRestServiceImpl implements UserRestService {
                     .body(userHandling.findRole(id).orElseThrow(() ->
                             new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)));
         } catch (EntityDoesNotExistException e) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 

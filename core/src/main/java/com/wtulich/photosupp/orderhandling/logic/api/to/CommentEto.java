@@ -13,21 +13,21 @@ public class CommentEto extends AbstractApplicationEntityTransportObject {
     private String content;
 
     @NotNull
-    private OrderEto orderEto;
+    private Long orderId;
 
     @NotNull
     private UserEto userEto;
 
     @NotNull
-    private LocalDate createdAt;
+    private String createdAt;
 
     public CommentEto() {
     }
 
-    public CommentEto(Long id, String content, OrderEto orderEto, UserEto userEto, LocalDate createdAt) {
+    public CommentEto(Long id, String content, Long orderId, UserEto userEto, String createdAt) {
         super(id);
         this.content = content;
-        this.orderEto = orderEto;
+        this.orderId = orderId;
         this.userEto = userEto;
         this.createdAt = createdAt;
     }
@@ -40,12 +40,12 @@ public class CommentEto extends AbstractApplicationEntityTransportObject {
         this.content = content;
     }
 
-    public OrderEto getOrderEto() {
-        return orderEto;
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setOrderEto(OrderEto orderEto) {
-        this.orderEto = orderEto;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     public UserEto getUserEto() {
@@ -56,27 +56,28 @@ public class CommentEto extends AbstractApplicationEntityTransportObject {
         this.userEto = userEto;
     }
 
-    public LocalDate getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof CommentEto)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         CommentEto that = (CommentEto) o;
-        return  content.equals(that.content) &&
-                orderEto.equals(that.orderEto) &&
+        return content.equals(that.content) &&
+                orderId.equals(that.orderId) &&
                 userEto.equals(that.userEto) &&
                 createdAt.equals(that.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(content, orderEto, userEto, createdAt);
+        return Objects.hash(super.hashCode(), content, orderId, userEto, createdAt);
     }
 }

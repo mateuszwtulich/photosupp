@@ -104,8 +104,8 @@ public class UserRestServiceTest {
     }
 
     @Test
-    @DisplayName("GET /user/v1/user/1 - No content")
-    void testGetUserByIdNoContent() throws Exception {
+    @DisplayName("GET /user/v1/user/1 - Not Found")
+    void testGetUserByIdNotFound() throws Exception {
         //Arrange
         when(userHandling.findUser(userEto.getId()))
                 .thenThrow(EntityDoesNotExistException.class);
@@ -114,7 +114,7 @@ public class UserRestServiceTest {
         mockMvc.perform(get(GET_USER_BY_ID_URL, userEto.getId()))
 
                 //Assert
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -225,8 +225,8 @@ public class UserRestServiceTest {
     }
 
     @Test
-    @DisplayName("GET /user/v1/role/1 - No content")
-    void testGetRoleByIdNoContent() throws Exception {
+    @DisplayName("GET /user/v1/role/1 - Not found")
+    void testGetRoleByIdNotFound() throws Exception {
         //Arrange
         when(userHandling.findRole(roleEto.getId()))
                 .thenThrow(EntityDoesNotExistException.class);
@@ -235,7 +235,7 @@ public class UserRestServiceTest {
         mockMvc.perform(get(GET_ROLE_BY_ID_URL, roleEto.getId()))
 
                 //Assert
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNotFound());
     }
 
     @Test

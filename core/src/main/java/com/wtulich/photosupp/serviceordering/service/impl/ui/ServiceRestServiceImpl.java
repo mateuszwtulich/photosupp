@@ -86,7 +86,7 @@ public class ServiceRestServiceImpl implements ServiceRestService {
                     .body(serviceOrdering.findBooking(id).orElseThrow(() ->
                             new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)));
         } catch (EntityDoesNotExistException e) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
