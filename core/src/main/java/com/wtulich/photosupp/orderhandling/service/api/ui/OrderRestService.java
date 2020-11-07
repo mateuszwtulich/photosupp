@@ -2,8 +2,6 @@ package com.wtulich.photosupp.orderhandling.service.api.ui;
 
 import com.wtulich.photosupp.general.common.api.RestService;
 import com.wtulich.photosupp.orderhandling.logic.api.to.*;
-import com.wtulich.photosupp.serviceordering.logic.api.to.BookingEto;
-import com.wtulich.photosupp.serviceordering.logic.api.to.BookingTo;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -57,7 +55,7 @@ public interface OrderRestService extends RestService {
     })
     @GetMapping(value = "/order/{id}/comments",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
-    List<OrderEto> getAllCommentsByOrderId(@PathVariable(name = "id") Long id);
+    List<CommentEto> getAllCommentsByOrderId(@PathVariable(name = "id") Long id);
 
 
     @ApiOperation(value = "Get all media content by order id.",
@@ -71,7 +69,7 @@ public interface OrderRestService extends RestService {
     })
     @GetMapping(value = "/order/{id}/mediaContent",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
-    List<OrderEto> getAllMediaContentByOrderId(@PathVariable(name = "id") Long id);
+    List<MediaContentEto> getAllMediaContentByOrderId(@PathVariable(name = "id") Long id);
 
 
     @ApiOperation(value = "Creates order",
@@ -108,7 +106,7 @@ public interface OrderRestService extends RestService {
     ResponseEntity<CommentEto> createComment(@Validated @RequestBody CommentTo commentTo);
 
 
-    @ApiOperation(value = "Creates mediaContent",
+    @ApiOperation(value = "Add mediaContent",
             tags = {"mediaContent"},
             response = MediaContentEto.class)
     @ApiResponses(value = {
@@ -122,5 +120,146 @@ public interface OrderRestService extends RestService {
     @PostMapping(value = "/order/mediaContent",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<MediaContentEto> createMediaContent(@Validated @RequestBody MediaContentTo mediaContentTo);
+    ResponseEntity<MediaContentEto> addMediaContent(@Validated @RequestBody MediaContentTo mediaContentTo);
+
+
+    @ApiOperation(value = "Updates order",
+            tags = {"order"},
+            response = OrderEto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request"),
+            @ApiResponse(code = 401, message = "Unauthorized request"),
+            @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
+            @ApiResponse(code = 404, message = "Entity not found"),
+            @ApiResponse(code = 422, message = "Could not process entity"),
+            @ApiResponse(code = 429, message = "Too many requests"),
+    })
+    @PutMapping(value = "/order/{id}",
+            consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<OrderEto> updateOrder(@Validated @RequestBody OrderTo orderTo, @PathVariable(value = "id") Long id);
+
+
+    @ApiOperation(value = "Updates comment",
+            tags = {"comment"},
+            response = CommentEto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request"),
+            @ApiResponse(code = 401, message = "Unauthorized request"),
+            @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
+            @ApiResponse(code = 404, message = "Entity not found"),
+            @ApiResponse(code = 422, message = "Could not process entity"),
+            @ApiResponse(code = 429, message = "Too many requests"),
+    })
+    @PutMapping(value = "/order/comment/{id}",
+            consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<CommentEto> updateComment(@Validated @RequestBody CommentTo commentTo, @PathVariable(value = "id") Long id);
+
+
+    @ApiOperation(value = "Deletes order",
+            tags = {"order"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request"),
+            @ApiResponse(code = 401, message = "Unauthorized request"),
+            @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
+            @ApiResponse(code = 404, message = "Entity not found"),
+            @ApiResponse(code = 429, message = "Too many requests"),
+    })
+    @DeleteMapping(value = "/order/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<?> deleteOrder(@PathVariable(value = "id") Long id);
+
+
+    @ApiOperation(value = "Deletes comment",
+            tags = {"comment"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request"),
+            @ApiResponse(code = 401, message = "Unauthorized request"),
+            @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
+            @ApiResponse(code = 404, message = "Entity not found"),
+            @ApiResponse(code = 429, message = "Too many requests"),
+    })
+    @DeleteMapping(value = "/order/comment/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<?> deleteComment(@PathVariable(value = "id") Long id);
+
+
+    @ApiOperation(value = "Deletes mediaContent",
+            tags = {"mediaContent"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request"),
+            @ApiResponse(code = 401, message = "Unauthorized request"),
+            @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
+            @ApiResponse(code = 404, message = "Entity not found"),
+            @ApiResponse(code = 429, message = "Too many requests"),
+    })
+    @DeleteMapping(value = "/order/mediaContent/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<?> deleteMediaContent(@PathVariable(value = "id") Long id);
+
+
+    @ApiOperation(value = "Deletes all mediaContent by order id",
+            tags = {"mediaContent"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request"),
+            @ApiResponse(code = 401, message = "Unauthorized request"),
+            @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
+            @ApiResponse(code = 404, message = "Entity not found"),
+            @ApiResponse(code = 429, message = "Too many requests"),
+    })
+    @DeleteMapping(value = "/order/{orderId}/mediaContent",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<?> deleteAllMediaContent(@PathVariable(value = "orderId") Long orderId);
+
+
+    @ApiOperation(value = "Finishes order",
+            tags = {"order"},
+            response = OrderEto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request"),
+            @ApiResponse(code = 401, message = "Unauthorized request"),
+            @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
+            @ApiResponse(code = 404, message = "Entity not found"),
+            @ApiResponse(code = 422, message = "Could not process entity"),
+            @ApiResponse(code = 429, message = "Too many requests"),
+    })
+    @PutMapping(value = "/order/{id}/finish",
+            consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<OrderEto> finishOrder(@PathVariable(value = "id") Long id);
+
+
+    @ApiOperation(value = "Accepts order",
+            tags = {"order"},
+            response = OrderEto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request"),
+            @ApiResponse(code = 401, message = "Unauthorized request"),
+            @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
+            @ApiResponse(code = 404, message = "Entity not found"),
+            @ApiResponse(code = 422, message = "Could not process entity"),
+            @ApiResponse(code = 429, message = "Too many requests"),
+    })
+    @PutMapping(value = "/order/{id}/accept",
+            consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<OrderEto> acceptOrder(@PathVariable(value = "id") Long id);
+
+
+    @ApiOperation(value = "Sends order to verification",
+            tags = {"order"},
+            response = OrderEto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request"),
+            @ApiResponse(code = 401, message = "Unauthorized request"),
+            @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
+            @ApiResponse(code = 404, message = "Entity not found"),
+            @ApiResponse(code = 422, message = "Could not process entity"),
+            @ApiResponse(code = 429, message = "Too many requests"),
+    })
+    @PutMapping(value = "/order/{id}/verification",
+            consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<OrderEto> sentToVerificationOrder(@PathVariable(value = "id") Long id);
 }

@@ -15,6 +15,15 @@ public class CommentTo {
     @NotNull
     private Long userId;
 
+    public CommentTo() {
+    }
+
+    public CommentTo(String content, Long orderId, Long userId) {
+        this.content = content;
+        this.orderId = orderId;
+        this.userId = userId;
+    }
+
     public String getContent() {
         return content;
     }

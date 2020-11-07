@@ -30,6 +30,15 @@ public class MediaContentEntity extends AbstractApplicationPersistenceEntity {
     @JoinColumn(name = "ORDER_ID", referencedColumnName = "id", nullable = false)
     private OrderEntity order;
 
+    public MediaContentEntity() {
+    }
+
+    public MediaContentEntity(MediaType type, String url, OrderEntity order) {
+        this.type = type;
+        this.url = url;
+        this.order = order;
+    }
+
     public MediaType getType() {
         return type;
     }

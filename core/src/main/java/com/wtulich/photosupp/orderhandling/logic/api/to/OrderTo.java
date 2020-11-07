@@ -17,6 +17,16 @@ public class OrderTo {
     @NotNull
     private Double price;
 
+    public OrderTo() {
+    }
+
+    public OrderTo(Long coordinatorId, Long userId, Long bookingId, Double price) {
+        this.coordinatorId = coordinatorId;
+        this.userId = userId;
+        this.bookingId = bookingId;
+        this.price = price;
+    }
+
     public Long getCoordinatorId() {
         return coordinatorId;
     }

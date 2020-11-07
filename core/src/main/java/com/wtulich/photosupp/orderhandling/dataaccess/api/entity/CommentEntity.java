@@ -37,6 +37,16 @@ public class CommentEntity extends AbstractApplicationPersistenceEntity {
     @Column(name = "CREATED_AT", nullable = false)
     private LocalDate createdAt;
 
+    public CommentEntity() {
+    }
+
+    public CommentEntity(String content, UserEntity user, OrderEntity order, LocalDate createdAt) {
+        this.content = content;
+        this.user = user;
+        this.order = order;
+        this.createdAt = createdAt;
+    }
+
     public String getContent() {
         return content;
     }

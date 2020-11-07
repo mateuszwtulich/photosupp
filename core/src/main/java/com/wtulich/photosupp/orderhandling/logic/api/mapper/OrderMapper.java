@@ -6,7 +6,7 @@ import com.wtulich.photosupp.orderhandling.logic.api.to.OrderTo;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface IOrderMapper {
+public interface OrderMapper {
 
     OrderEntity toOrderEntity(OrderTo orderTo);
 

@@ -47,76 +47,81 @@ public class OrderHandlingImpl implements OrderHandling {
 
     @Override
     public void deleteComment(Long id) throws EntityDoesNotExistException {
-
+        ucDeleteComment.deleteComment(id);
     }
 
     @Override
     public void deleteMediaContent(Long id) throws EntityDoesNotExistException {
-
+        ucDeleteMediaContent.deleteMediaContent(id);
     }
 
     @Override
     public void deleteAllMediaContent(Long id) throws EntityDoesNotExistException {
-
+        ucDeleteMediaContent.deleteAllMediaContent(id);
     }
 
     @Override
     public void deleteOrder(Long id) throws EntityDoesNotExistException, EntityHasAssignedEntitiesException {
-
+        ucDeleteOrder.deleteOrder(id);
     }
 
     @Override
-    public Optional<List<CommentEto>> findAllCommentsByOrderId(Long id) {
-        return Optional.empty();
+    public Optional<List<CommentEto>> findAllCommentsByOrderId(Long id) throws EntityDoesNotExistException {
+        return ucFindComment.findAllCommentsByOrderId(id);
     }
 
     @Override
-    public Optional<List<MediaContentEto>> findAllMediaContentByOrderId(Long id) {
-        return Optional.empty();
+    public Optional<List<MediaContentEto>> findAllMediaContentByOrderId(Long id) throws EntityDoesNotExistException {
+        return ucFindMediaContent.findAllMediaContentByOrderId(id);
     }
 
     @Override
     public Optional<List<OrderEto>> findAllOrders() {
-        return Optional.empty();
+        return ucFindOrder.findAllOrders();
     }
 
     @Override
     public Optional<OrderEto> findOrder(Long id) throws EntityDoesNotExistException {
-        return Optional.empty();
+        return ucFindOrder.findOrder(id);
     }
 
     @Override
     public Optional<MediaContentEto> addMediaContent(MediaContentTo mediaContentTo) throws EntityDoesNotExistException {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<MediaContentEto> updateMediaContent(MediaContentTo mediaContentTo, Long id) throws EntityDoesNotExistException {
-        return Optional.empty();
+        return ucManageMediaContent.addMediaContent(mediaContentTo);
     }
 
     @Override
     public Optional<OrderEto> createOrder(OrderTo orderTo) throws EntityDoesNotExistException, EntityAlreadyExistsException {
-        return Optional.empty();
+        return ucManageOrder.createOrder(orderTo);
     }
 
     @Override
     public Optional<OrderEto> updateOrder(OrderTo orderTo, Long id) throws EntityDoesNotExistException, EntityAlreadyExistsException {
-        return Optional.empty();
+        return ucManageOrder.updateOrder(orderTo, id);
     }
 
     @Override
-    public Optional<OrderEto> closeOrder(Long id) throws EntityDoesNotExistException, OrderStatusInappropriateException {
-        return Optional.empty();
+    public Optional<OrderEto> finishOrder(Long id) throws EntityDoesNotExistException, OrderStatusInappropriateException {
+        return ucManageOrder.finishOrder(id);
     }
 
     @Override
     public Optional<OrderEto> acceptOrder(Long id) throws EntityDoesNotExistException, OrderStatusInappropriateException {
-        return Optional.empty();
+        return ucManageOrder.acceptOrder(id);
     }
 
     @Override
     public Optional<OrderEto> sendOrderToVerification(Long id) throws EntityDoesNotExistException, OrderStatusInappropriateException {
-        return Optional.empty();
+        return ucManageOrder.sendOrderToVerification(id);
+    }
+
+    @Override
+    public Optional<CommentEto> createComment(CommentTo commentTo) throws EntityDoesNotExistException {
+        return ucManageComment.createComment(commentTo);
+    }
+
+    @Override
+    public Optional<CommentEto> updateComment(CommentTo commentTo, Long id) throws EntityDoesNotExistException {
+        return ucManageComment.updateComment(commentTo, id);
     }
 }

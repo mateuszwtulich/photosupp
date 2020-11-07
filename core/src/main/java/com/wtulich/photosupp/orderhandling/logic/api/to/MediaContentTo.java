@@ -16,6 +16,15 @@ public class MediaContentTo {
     @NotNull
     private Long orderId;
 
+    public MediaContentTo() {
+    }
+
+    public MediaContentTo(MediaType type, String url, Long orderId) {
+        this.type = type;
+        this.url = url;
+        this.orderId = orderId;
+    }
+
     public MediaType getType() {
         return type;
     }

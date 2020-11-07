@@ -14,7 +14,7 @@ public interface UcManageOrder {
 
     Optional<OrderEto> updateOrder(OrderTo orderTo, Long id) throws EntityDoesNotExistException, EntityAlreadyExistsException;
 
-    Optional<OrderEto> closeOrder(Long id)  throws EntityDoesNotExistException, OrderStatusInappropriateException;
+    Optional<OrderEto> finishOrder(Long id)  throws EntityDoesNotExistException, OrderStatusInappropriateException;
 
     Optional<OrderEto> acceptOrder(Long id)  throws EntityDoesNotExistException, OrderStatusInappropriateException;
 

@@ -29,7 +29,7 @@ public class OrderEntity extends AbstractApplicationPersistenceEntity {
                     @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "INVIU_"),
                     @Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
     @Column(name = "ORDER_NUMBER", nullable = false, unique = true)
-    private Long orderNumber;
+    private String orderNumber;
 
     @NotNull
     @Column(name = "STATUS", nullable = false)
@@ -64,11 +64,24 @@ public class OrderEntity extends AbstractApplicationPersistenceEntity {
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, targetEntity = MediaContentEntity.class, orphanRemoval = true)
     private List<MediaContentEntity> mediaContentList;
 
-    public Long getOrderNumber() {
+    public OrderEntity() {
+    }
+
+    public OrderEntity(String orderNumber, OrderStatus status, Double price, LocalDate createdAt, UserEntity user, UserEntity coordinator, BookingEntity booking) {
+        this.orderNumber = orderNumber;
+        this.status = status;
+        this.price = price;
+        this.createdAt = createdAt;
+        this.user = user;
+        this.coordinator = coordinator;
+        this.booking = booking;
+    }
+
+    public String getOrderNumber() {
         return orderNumber;
     }
 
-    public void setOrderNumber(Long orderNumber) {
+    public void setOrderNumber(String orderNumber) {
         this.orderNumber = orderNumber;
     }
 

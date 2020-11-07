@@ -6,7 +6,7 @@ import com.wtulich.photosupp.orderhandling.logic.api.to.MediaContentTo;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface IMediaContentMapper {
+public interface MediaContentMapper {
 
     MediaContentEntity toMediaContentEntity(MediaContentTo mediaContentTo);
 

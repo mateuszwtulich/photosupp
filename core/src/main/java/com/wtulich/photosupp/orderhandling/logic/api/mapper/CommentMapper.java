@@ -6,7 +6,7 @@ import com.wtulich.photosupp.orderhandling.logic.api.to.CommentTo;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface ICommentMapper {
+public interface CommentMapper {
 
     CommentEntity toCommentEntity(CommentTo commentTo);
 
