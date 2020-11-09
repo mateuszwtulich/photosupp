@@ -5,6 +5,7 @@ import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
 import com.wtulich.photosupp.general.utils.enums.MediaType;
 import com.wtulich.photosupp.general.utils.enums.OrderStatus;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.dao.MediaContentDao;
+import com.wtulich.photosupp.orderhandling.dataaccess.api.dao.OrderDao;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.MediaContentEntity;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.OrderEntity;
 import com.wtulich.photosupp.orderhandling.logic.api.mapper.MediaContentMapper;
@@ -46,6 +47,9 @@ public class UcFindMediaContentTest {
     @MockBean
     private MediaContentDao mediaContentDao;
 
+    @MockBean
+    private OrderDao orderDao;
+
     private List<MediaContentEntity> mediaContentEntities;
     private List<MediaContentEto> mediaContentEtos;
     private OrderEntity orderEntity;
@@ -84,7 +88,8 @@ public class UcFindMediaContentTest {
     @DisplayName("Test findAllMediaContent Success")
     void testFindAllMediaContentSuccess() throws EntityDoesNotExistException {
         //Arrange
-        when(mediaContentDao.findAll()).thenReturn(mediaContentEntities);
+        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
+        when(mediaContentDao.findAllByOrder_Id(orderEntity.getId())).thenReturn(mediaContentEntities);
 
         //Act
         Optional<List<MediaContentEto>> result = ucFindMediaContent.findAllMediaContentByOrderId(orderEntity.getId());
@@ -99,7 +104,8 @@ public class UcFindMediaContentTest {
     @DisplayName("Test findAllMediaContent No content")
     void testFindAllMediaContentNoContent() throws EntityDoesNotExistException {
         //Arrange
-        when(mediaContentDao.findAll()).thenReturn(new ArrayList<>());
+        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
+        when(mediaContentDao.findAllByOrder_Id(orderEntity.getId())).thenReturn(new ArrayList<>());
 
         //Act
         Optional<List<MediaContentEto>> result = ucFindMediaContent.findAllMediaContentByOrderId(orderEntity.getId());
@@ -107,5 +113,16 @@ public class UcFindMediaContentTest {
         // Assert
         Assertions.assertTrue(result.isPresent());
         Assertions.assertTrue(result.get().size() == 0);
+    }
+
+    @Test
+    @DisplayName("Test findAllMediaContent Not Found")
+    void testFindAllMediaContentNotFound() {
+        //Arrange
+        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(null));
+
+        //Act Assert
+        Assertions.assertThrows(EntityDoesNotExistException.class, () ->
+                ucFindMediaContent.findAllMediaContentByOrderId(orderEntity.getId()));
     }
 }

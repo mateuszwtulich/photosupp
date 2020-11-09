@@ -2,19 +2,21 @@ package com.wtulich.photosupp.orderhandling.logic.impl.usecase;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.dao.OrderDao;
+import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.OrderEntity;
 import com.wtulich.photosupp.orderhandling.logic.api.mapper.OrderMapper;
 import com.wtulich.photosupp.orderhandling.logic.api.to.OrderEto;
 import com.wtulich.photosupp.orderhandling.logic.api.usecase.UcFindOrder;
-import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.BookingDao;
+import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.BookingEntity;
 import com.wtulich.photosupp.serviceordering.logic.api.mapper.AddressMapper;
 import com.wtulich.photosupp.serviceordering.logic.api.mapper.BookingMapper;
 import com.wtulich.photosupp.serviceordering.logic.api.mapper.IndicatorMapper;
 import com.wtulich.photosupp.serviceordering.logic.api.mapper.ServiceMapper;
-import com.wtulich.photosupp.userhandling.dataaccess.api.dao.UserDao;
+import com.wtulich.photosupp.serviceordering.logic.api.to.BookingEto;
+import com.wtulich.photosupp.serviceordering.logic.api.to.PriceIndicatorEto;
+import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.AccountMapper;
-import com.wtulich.photosupp.userhandling.logic.api.mapper.PermissionsMapper;
-import com.wtulich.photosupp.userhandling.logic.api.mapper.RoleMapper;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.UserMapper;
+import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +25,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Validated
 @Named
@@ -35,12 +38,6 @@ public class UcFindOrderImpl implements UcFindOrder {
 
     @Inject
     private OrderDao orderDao;
-
-    @Inject
-    private BookingDao bookingDao;
-
-    @Inject
-    private UserDao userDao;
 
     @Inject
     private OrderMapper orderMapper;
@@ -61,21 +58,68 @@ public class UcFindOrderImpl implements UcFindOrder {
     private IndicatorMapper indicatorMapper;
 
     @Inject
-    private RoleMapper roleMapper;
-
-    @Inject
     private AccountMapper accountMapper;
-
-    @Inject
-    private PermissionsMapper permissionsMapper;
 
     @Override
     public Optional<List<OrderEto>> findAllOrders() {
-        return Optional.empty();
+        LOG.debug(GET_ALL_ORDERS_LOG);
+
+        return Optional.of(orderDao.findAll().stream()
+                .map(orderEntity -> toOrderEto(orderEntity))
+                .collect(Collectors.toList()));
     }
 
     @Override
     public Optional<OrderEto> findOrder(Long id) throws EntityDoesNotExistException {
-        return Optional.empty();
+        OrderEntity orderEntity = orderDao.findById(id).orElseThrow(() ->
+                new EntityDoesNotExistException("Order with id " + id + " does not exist."));
+
+        LOG.debug(GET_ORDER_LOG);
+
+        return Optional.of(toOrderEto(orderEntity));
+    }
+
+    private OrderEto toOrderEto(OrderEntity orderEntity) {
+        OrderEto orderEto = orderMapper.toOrderEto(orderEntity);
+
+        if( orderEntity.getBooking() != null){
+            orderEto.setBooking(toBookingEto(orderEntity.getBooking()));
+        }
+
+        orderEto.setCoordinator(toUserEto(orderEntity.getCoordinator()));
+        orderEto.setUser(toUserEto(orderEntity.getUser()));
+
+        return orderEto;
+    }
+
+    private BookingEto toBookingEto(BookingEntity bookingEntity) {
+        BookingEto bookingEto = bookingMapper.toBookingEto(bookingEntity);
+        bookingEto.setServiceEto(serviceMapper.toServiceEto(bookingEntity.getService()));
+        bookingEto.setUserEto(toUserEto(bookingEntity.getUser()));
+
+        if( bookingEntity.getAddress() != null ){
+            bookingEto.setAddressEto(addressMapper.toAddressEto(bookingEntity.getAddress()));
+        }
+
+        if( bookingEntity.getPriceIndicatorList() != null ) {
+            bookingEto.setPriceIndicatorEtoList(
+                    bookingEntity.getPriceIndicatorList().stream()
+                            .map(priceIndicatorEntity ->
+                                    new PriceIndicatorEto(
+                                            indicatorMapper.toIndicatorEto(priceIndicatorEntity.getIndicator()),
+                                            bookingEntity.getId(),
+                                            priceIndicatorEntity.getIndicatorPrice(),
+                                            priceIndicatorEntity.getMultiplier()
+                                    )).collect(Collectors.toList()));
+        }
+
+        return bookingEto;
+    }
+
+    private UserEto toUserEto(UserEntity userEntity) {
+        UserEto userEto = userMapper.toUserEto(userEntity);
+        userEto.setAccountEto(accountMapper.toAccountEto(userEntity.getAccount()));
+
+        return userEto;
     }
 }

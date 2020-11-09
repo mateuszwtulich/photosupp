@@ -1,9 +1,13 @@
 package com.wtulich.photosupp.orderhandling.logic.impl.usecase;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
+import com.wtulich.photosupp.general.logic.api.exception.EntityHasAssignedEntitiesException;
 import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
+import com.wtulich.photosupp.general.utils.enums.MediaType;
 import com.wtulich.photosupp.general.utils.enums.OrderStatus;
+import com.wtulich.photosupp.orderhandling.dataaccess.api.dao.MediaContentDao;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.dao.OrderDao;
+import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.MediaContentEntity;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.OrderEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.AccountEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.PermissionEntity;
@@ -38,6 +42,9 @@ public class UcDeleteOrderTest {
     @MockBean
     private OrderDao orderDao;
 
+    @MockBean
+    private MediaContentDao mediaContentDao;
+
     private OrderEntity orderEntity;
 
     @BeforeEach
@@ -55,7 +62,7 @@ public class UcDeleteOrderTest {
         UserEntity userEntity = new UserEntity("NAME2", "SURNAME2", roleEntity, accountEntity);
         userEntity.setId(2L);
 
-        OrderEntity orderEntity = new OrderEntity("INVIU_00001", OrderStatus.IN_PROGRESS, 1000D, LocalDate.now(), userEntity, userEntity,  null );
+        orderEntity = new OrderEntity("INVIU_00001", OrderStatus.IN_PROGRESS, 1000D, LocalDate.now(), userEntity, userEntity,  null );
         orderEntity.setId(1L);
     }
 
@@ -69,7 +76,6 @@ public class UcDeleteOrderTest {
         Assertions.assertDoesNotThrow(() -> ucDeleteOrder.deleteOrder(orderEntity.getId()));
     }
 
-
     @Test
     @DisplayName("Test deleteOrder Failure")
     void testDeleteOrderFailure() {
@@ -78,6 +84,24 @@ public class UcDeleteOrderTest {
 
         //Act Assert
         Assertions.assertThrows(EntityDoesNotExistException.class, () ->
+                ucDeleteOrder.deleteOrder(orderEntity.getId()));
+    }
+
+    @Test
+    @DisplayName("Test deleteOrder Failure2")
+    void testDeleteOrderFailure2() {
+        //Arrange
+        MediaContentEntity mediaContentEntity = new MediaContentEntity(MediaType.IMAGE, "https://sample.com/jpg1", orderEntity);
+        mediaContentEntity.setId(1L);
+        List<MediaContentEntity> mediaContentEntities = new ArrayList<>();
+        mediaContentEntities.add(mediaContentEntity);
+        orderEntity.setMediaContentList(mediaContentEntities);
+
+        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.of(orderEntity));
+        when(mediaContentDao.findAllByOrder_Id(orderEntity.getId())).thenReturn(mediaContentEntities);
+
+        //Act Assert
+        Assertions.assertThrows(EntityHasAssignedEntitiesException.class, () ->
                 ucDeleteOrder.deleteOrder(orderEntity.getId()));
     }
 }

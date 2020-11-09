@@ -4,12 +4,9 @@ import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsExce
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
 import com.wtulich.photosupp.general.utils.enums.OrderStatus;
-import com.wtulich.photosupp.orderhandling.dataaccess.api.dao.CommentDao;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.dao.OrderDao;
-import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.CommentEntity;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.OrderEntity;
-import com.wtulich.photosupp.orderhandling.logic.api.to.CommentEto;
-import com.wtulich.photosupp.orderhandling.logic.api.to.CommentTo;
+import com.wtulich.photosupp.orderhandling.logic.api.exception.OrderStatusInappropriateException;
 import com.wtulich.photosupp.orderhandling.logic.api.to.OrderEto;
 import com.wtulich.photosupp.orderhandling.logic.api.to.OrderTo;
 import com.wtulich.photosupp.orderhandling.logic.impl.validator.OrderValidator;
@@ -155,30 +152,164 @@ public class UcManageOrderTest {
                 ucManageOrder.createOrder(orderTo));
     }
 
-//    @Test
-//    @DisplayName("Test updateComment Success")
-//    void testUpdateCommentSuccess() throws EntityDoesNotExistException {
-//        //Arrange
-//        commentTo.setContent("Updated");
-//        commentEto.setContent("Updated");
-//        when(commentDao.findById(commentEntity.getId())).thenReturn(Optional.ofNullable(commentEntity));
-//
-//        //Act
-//        Optional<CommentEto> result = ucManageComment.updateComment(commentTo, commentEntity.getId());
-//
-//        // Assert
-//        Assertions.assertTrue(result.isPresent());
-//        assertThat(commentEto).isEqualToComparingFieldByField(result.get());
-//    }
-//
-//    @Test
-//    @DisplayName("Test updateComment EntityDoesNotExistException")
-//    void testUpdateCommentEntityDoesNotExistException() {
-//        //Arrange
-//        when(commentDao.findById(commentEntity.getId())).thenReturn(Optional.empty());
-//
-//        //Act Assert
-//        Assertions.assertThrows(EntityDoesNotExistException.class, () ->
-//                ucManageComment.updateComment(commentTo, commentEntity.getId()));
-//    }
+    @Test
+    @DisplayName("Test updateOrder Success")
+    void testUpdateOrderSuccess() throws EntityDoesNotExistException, EntityAlreadyExistsException {
+        //Arrange
+        orderTo.setPrice(900D);
+        orderEto.setPrice(900D);
+        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
+
+        //Act
+        Optional<OrderEto> result = ucManageOrder.updateOrder(orderTo, orderEntity.getId());
+
+        // Assert
+        Assertions.assertTrue(result.isPresent());
+        assertThat(orderEto).isEqualToComparingFieldByField(result.get());
+    }
+
+    @Test
+    @DisplayName("Test updateOrder EntityDoesNotExistException")
+    void testUpdateOrderEntityDoesNotExistException() {
+        //Arrange
+        when(orderDao.findById(2L)).thenReturn(Optional.empty());
+
+        //Act Assert
+        Assertions.assertThrows(EntityDoesNotExistException.class, () ->
+                ucManageOrder.updateOrder(orderTo, 2L));
+    }
+
+    @Test
+    @DisplayName("Test updateOrder EntityAlreadyExistsException")
+    void testUpdateOrderEntityAlreadyExistsException() throws EntityAlreadyExistsException {
+        //Arrange
+        orderTo.setBookingId(2L);
+        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
+        doThrow(EntityAlreadyExistsException.class)
+                .when(orderValidator).verifyIfBookingHasAssignedOrders(orderEntity.getBooking());
+
+        //Act Assert
+        Assertions.assertThrows(EntityAlreadyExistsException.class, () ->
+                ucManageOrder.updateOrder(orderTo, 2L));
+    }
+
+    @Test
+    @DisplayName("Test acceptOrder Success")
+    void testAcceptOrderSuccess() throws EntityDoesNotExistException, OrderStatusInappropriateException {
+        //Arrange
+        orderEntity.setStatus(OrderStatus.IN_PROGRESS);
+        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
+
+        //Act
+        Optional<OrderEto> result = ucManageOrder.acceptOrder(orderEntity.getId());
+
+        // Assert
+        Assertions.assertTrue(result.isPresent());
+        assertThat(orderEto).isEqualToComparingFieldByField(result.get());
+    }
+
+    @Test
+    @DisplayName("Test acceptOrder EntityDoesNotExistException")
+    void testAcceptOrderEntityDoesNotExistException() {
+        //Arrange
+        when(orderDao.findById(2L)).thenReturn(Optional.empty());
+
+        //Act Assert
+        Assertions.assertThrows(EntityDoesNotExistException.class, () ->
+                ucManageOrder.acceptOrder(2L));
+    }
+
+    @Test
+    @DisplayName("Test acceptOrder OrderStatusInappropriateException")
+    void testAcceptOrderEntityAlreadyExistsException() throws OrderStatusInappropriateException {
+        //Arrange
+        orderEntity.setStatus(OrderStatus.TO_VERIFY);
+        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
+        doThrow(OrderStatusInappropriateException.class)
+                .when(orderValidator).verifyIfOrderCanBeAccepted(orderEntity);
+
+        //Act Assert
+        Assertions.assertThrows(OrderStatusInappropriateException.class, () ->
+                ucManageOrder.acceptOrder(orderEntity.getId()));
+    }
+
+    @Test
+    @DisplayName("Test sendToVerificationOrder Success")
+    void testSendToVerificationOrderSuccess() throws EntityDoesNotExistException, OrderStatusInappropriateException {
+        //Arrange
+        orderEntity.setStatus(OrderStatus.TO_VERIFY);
+        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
+
+        //Act
+        Optional<OrderEto> result = ucManageOrder.sendOrderToVerification(orderEntity.getId());
+
+        // Assert
+        Assertions.assertTrue(result.isPresent());
+        assertThat(orderEto).isEqualToComparingFieldByField(result.get());
+    }
+
+    @Test
+    @DisplayName("Test sendToVerificationOrder EntityDoesNotExistException")
+    void testSendToVerificationOrderEntityDoesNotExistException() {
+        //Arrange
+        when(orderDao.findById(2L)).thenReturn(Optional.empty());
+
+        //Act Assert
+        Assertions.assertThrows(EntityDoesNotExistException.class, () ->
+                ucManageOrder.sendOrderToVerification(2L));
+    }
+
+    @Test
+    @DisplayName("Test sendToVerificationOrder OrderStatusInappropriateException")
+    void testSendToVerificationOrderEntityAlreadyExistsException() throws OrderStatusInappropriateException {
+        //Arrange
+        orderEntity.setStatus(OrderStatus.FINISHED);
+        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
+        doThrow(OrderStatusInappropriateException.class)
+                .when(orderValidator).verifyIfOrderCanBeSentToVerification(orderEntity);
+
+        //Act Assert
+        Assertions.assertThrows(OrderStatusInappropriateException.class, () ->
+                ucManageOrder.sendOrderToVerification(orderEntity.getId()));
+    }
+
+    @Test
+    @DisplayName("Test finishOrder Success")
+    void testFinishOrderSuccess() throws EntityDoesNotExistException, OrderStatusInappropriateException {
+        //Arrange
+        orderEntity.setStatus(OrderStatus.TO_VERIFY);
+        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
+
+        //Act
+        Optional<OrderEto> result = ucManageOrder.sendOrderToVerification(orderEntity.getId());
+
+        // Assert
+        Assertions.assertTrue(result.isPresent());
+        assertThat(orderEto).isEqualToComparingFieldByField(result.get());
+    }
+
+    @Test
+    @DisplayName("Test finishOrder EntityDoesNotExistException")
+    void testFinishOrderEntityDoesNotExistException() {
+        //Arrange
+        when(orderDao.findById(2L)).thenReturn(Optional.empty());
+
+        //Act Assert
+        Assertions.assertThrows(EntityDoesNotExistException.class, () ->
+                ucManageOrder.finishOrder(2L));
+    }
+
+    @Test
+    @DisplayName("Test finishOrder OrderStatusInappropriateException")
+    void testFinishOrderEntityAlreadyExistsException() throws OrderStatusInappropriateException {
+        //Arrange
+        orderEntity.setStatus(OrderStatus.NEW);
+        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
+        doThrow(OrderStatusInappropriateException.class)
+                .when(orderValidator).verifyIfOrderCanBeFinished(orderEntity);
+
+        //Act Assert
+        Assertions.assertThrows(OrderStatusInappropriateException.class, () ->
+                ucManageOrder.finishOrder(orderEntity.getId()));
+    }
 }

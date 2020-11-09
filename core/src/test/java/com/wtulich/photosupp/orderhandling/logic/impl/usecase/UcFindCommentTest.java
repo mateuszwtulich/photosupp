@@ -4,6 +4,7 @@ import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistExcep
 import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
 import com.wtulich.photosupp.general.utils.enums.OrderStatus;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.dao.CommentDao;
+import com.wtulich.photosupp.orderhandling.dataaccess.api.dao.OrderDao;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.CommentEntity;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.OrderEntity;
 import com.wtulich.photosupp.orderhandling.logic.api.mapper.CommentMapper;
@@ -50,6 +51,9 @@ public class UcFindCommentTest {
     @MockBean
     private CommentDao commentDao;
 
+    @MockBean
+    private OrderDao orderDao;
+
     private List<CommentEntity> commentEntities;
     private List<CommentEto> commentEtos;
     private OrderEntity orderEntity;
@@ -78,11 +82,8 @@ public class UcFindCommentTest {
         commentEntities = new ArrayList<>();
         commentEntities.add(commentEntity);
 
-        List<PermissionEto> permissionEtoList2 = new ArrayList<>();
-        permissionEtoList2.add(new PermissionEto(6L, ApplicationPermissions.AUTH_USER, "Standard user with no special permissions."));
-        RoleEto roleEto2 = new RoleEto(2L, "USER", "Standard user with no special permissions", permissionEtoList2);
         AccountEto accountEto2 = new AccountEto(2L, "user2", "passw0rd", "user2@test.com", true);
-        UserEto userEto2 = new UserEto(2L, "NAME2", "SURNAME2", accountEto2, roleEto2);
+        UserEto userEto2 = new UserEto(2L, "NAME2", "SURNAME2", accountEto2, null);
 
         CommentEto commentEto = new CommentEto(1L, "Perfect, thanks!", 1L, userEto2,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format(LocalDate.now()));
@@ -95,7 +96,8 @@ public class UcFindCommentTest {
     @DisplayName("Test findAllComments Success")
     void testFindAllCommentsSuccess() throws EntityDoesNotExistException {
         //Arrange
-        when(commentDao.findAll()).thenReturn(commentEntities);
+        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
+        when(commentDao.findAllByOrder_Id(orderEntity.getId())).thenReturn(commentEntities);
 
         //Act
         Optional<List<CommentEto>> result = ucFindComment.findAllCommentsByOrderId(orderEntity.getId());
@@ -104,13 +106,15 @@ public class UcFindCommentTest {
         Assertions.assertTrue(result.isPresent());
         assertThat(result.get()).hasSize(commentEtos.size());
         assertThat(commentEtos.get(0)).isEqualTo(result.get().get(0));
+
     }
 
     @Test
     @DisplayName("Test findAllComments No content")
     void testFindAllCommentsNoContent() throws EntityDoesNotExistException {
         //Arrange
-        when(commentDao.findAll()).thenReturn(new ArrayList<>());
+        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
+        when(commentDao.findAllByOrder_Id(orderEntity.getId())).thenReturn(new ArrayList<>());
 
         //Act
         Optional<List<CommentEto>> result = ucFindComment.findAllCommentsByOrderId(orderEntity.getId());
@@ -118,5 +122,16 @@ public class UcFindCommentTest {
         // Assert
         Assertions.assertTrue(result.isPresent());
         Assertions.assertTrue(result.get().size() == 0);
+    }
+
+    @Test
+    @DisplayName("Test findAllComments Not Found")
+    void testFindAllCommentsNotFound() {
+        //Arrange
+        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(null));
+
+        //Act Assert
+        Assertions.assertThrows(EntityDoesNotExistException.class, () ->
+                ucFindComment.findAllCommentsByOrderId(orderEntity.getId()));
     }
 }

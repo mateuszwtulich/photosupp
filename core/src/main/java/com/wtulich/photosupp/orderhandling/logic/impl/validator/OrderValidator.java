@@ -40,10 +40,4 @@ public class OrderValidator {
             throw new OrderStatusInappropriateException(ORDER_STATUS_INAPPROPRIATE);
         }
     }
-
-    private void verifyIfOrderCanBeDeleted(OrderEntity orderEntity) throws OrderStatusInappropriateException {
-        if(!orderEntity.getStatus().equals(OrderStatus.FINISHED)){
-            throw new OrderStatusInappropriateException(ORDER_STATUS_INAPPROPRIATE);
-        }
-    }
 }

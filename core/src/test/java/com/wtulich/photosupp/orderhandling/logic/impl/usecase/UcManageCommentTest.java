@@ -7,15 +7,17 @@ import com.wtulich.photosupp.orderhandling.dataaccess.api.dao.CommentDao;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.dao.OrderDao;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.CommentEntity;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.OrderEntity;
+import com.wtulich.photosupp.orderhandling.logic.api.mapper.CommentMapper;
 import com.wtulich.photosupp.orderhandling.logic.api.to.CommentEto;
 import com.wtulich.photosupp.orderhandling.logic.api.to.CommentTo;
+import com.wtulich.photosupp.userhandling.dataaccess.api.dao.UserDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.AccountEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.PermissionEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.RoleEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
+import com.wtulich.photosupp.userhandling.logic.api.mapper.AccountMapper;
+import com.wtulich.photosupp.userhandling.logic.api.mapper.UserMapper;
 import com.wtulich.photosupp.userhandling.logic.api.to.AccountEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.PermissionEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
 import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,10 +53,23 @@ public class UcManageCommentTest {
     @MockBean
     private OrderDao orderDao;
 
+    @MockBean
+    private UserDao userDao;
+
+    @Autowired
+    private CommentMapper commentMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private AccountMapper accountMapper;
+
     private CommentEntity commentEntity;
     private CommentEto commentEto;
     private CommentTo commentTo;
     private OrderEntity orderEntity;
+    private UserEntity userEntity2;
 
     @BeforeEach
     void setUp() {
@@ -81,19 +96,17 @@ public class UcManageCommentTest {
         AccountEntity accountEntity2 = new AccountEntity( "user2", "passw0rd", "user2@test.com", true);
         accountEntity2.setId(2L);
 
-        UserEntity userEntity2 = new UserEntity("NAME2", "SURNAME2", roleEntity2, accountEntity2);
+        userEntity2 = new UserEntity("NAME2", "SURNAME2", roleEntity2, accountEntity2);
         userEntity2.setId(2L);
 
         orderEntity = new OrderEntity("INVIU_00001", OrderStatus.IN_PROGRESS, 1000D, LocalDate.now(), userEntity2, userEntity,  null );
         orderEntity.setId(1L);
 
-        commentEntity = new CommentEntity("Perfect, thanks!", userEntity, orderEntity, LocalDate.now());
+        commentEntity = new CommentEntity("Perfect, thanks!", userEntity2, orderEntity, LocalDate.now());
+        commentEntity.setId(1L);
 
-        List<PermissionEto> permissionEtoList2 = new ArrayList<>();
-        permissionEtoList2.add(new PermissionEto(6L, ApplicationPermissions.AUTH_USER, "Standard user with no special permissions."));
-        RoleEto roleEto2 = new RoleEto(2L, "USER", "Standard user with no special permissions", permissionEtoList2);
         AccountEto accountEto2 = new AccountEto(2L, "user2", "passw0rd", "user2@test.com", true);
-        UserEto userEto2 = new UserEto(2L, "NAME2", "SURNAME2", accountEto2, roleEto2);
+        UserEto userEto2 = new UserEto(2L, "NAME2", "SURNAME2", accountEto2, null);
 
         commentEto = new CommentEto(1L, "Perfect, thanks!", 1L, userEto2,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format(LocalDate.now()));
@@ -105,7 +118,8 @@ public class UcManageCommentTest {
     @DisplayName("Test createComment Success")
     void testCreateCommentSuccess() throws EntityDoesNotExistException {
         //Arrange
-        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
+        when(orderDao.findById(commentTo.getOrderId())).thenReturn(Optional.ofNullable(orderEntity));
+        when(userDao.findById(commentTo.getUserId())).thenReturn(Optional.of(userEntity2));
         when(commentDao.save(commentEntity)).thenReturn(commentEntity);
 
         //Act
@@ -120,7 +134,7 @@ public class UcManageCommentTest {
     @DisplayName("Test createComment EntityDoesNotExistException")
     void testCreateCommentEntityDoesNotExistException() throws EntityDoesNotExistException {
         //Arrange
-        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(null));
+        when(orderDao.findById(commentTo.getOrderId())).thenReturn(Optional.ofNullable(null));
 
         //Act Assert
         Assertions.assertThrows(EntityDoesNotExistException.class, () ->

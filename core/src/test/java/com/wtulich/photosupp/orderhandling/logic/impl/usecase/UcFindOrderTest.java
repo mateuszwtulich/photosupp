@@ -7,13 +7,20 @@ import com.wtulich.photosupp.orderhandling.dataaccess.api.dao.OrderDao;
 import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.OrderEntity;
 import com.wtulich.photosupp.orderhandling.logic.api.mapper.OrderMapper;
 import com.wtulich.photosupp.orderhandling.logic.api.to.OrderEto;
+import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.*;
+import com.wtulich.photosupp.serviceordering.logic.api.mapper.AddressMapper;
+import com.wtulich.photosupp.serviceordering.logic.api.mapper.BookingMapper;
+import com.wtulich.photosupp.serviceordering.logic.api.mapper.IndicatorMapper;
+import com.wtulich.photosupp.serviceordering.logic.api.mapper.ServiceMapper;
+import com.wtulich.photosupp.serviceordering.logic.api.to.BookingEto;
+import com.wtulich.photosupp.serviceordering.logic.api.to.PriceIndicatorEto;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.AccountEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.PermissionEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.RoleEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
+import com.wtulich.photosupp.userhandling.logic.api.mapper.AccountMapper;
+import com.wtulich.photosupp.userhandling.logic.api.mapper.UserMapper;
 import com.wtulich.photosupp.userhandling.logic.api.to.AccountEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.PermissionEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
 import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +52,24 @@ public class UcFindOrderTest {
 
     @Autowired
     private OrderMapper orderMapper;
+
+    @Autowired
+    private BookingMapper bookingMapper;
+
+    @Autowired
+    private ServiceMapper serviceMapper;
+
+    @Autowired
+    private AddressMapper addressMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private IndicatorMapper indicatorMapper;
+
+    @Autowired
+    private AccountMapper accountMapper;
 
     @MockBean
     private OrderDao orderDao;
@@ -82,25 +107,52 @@ public class UcFindOrderTest {
         UserEntity userEntity2 = new UserEntity("NAME2", "SURNAME2", roleEntity2, accountEntity2);
         userEntity2.setId(2L);
 
-        orderEntity = new OrderEntity("INVIU_00001", OrderStatus.IN_PROGRESS, 1000D, LocalDate.now(), userEntity, userEntity,  null );
+        AddressEntity addressEntity =  new AddressEntity("Wroclaw", "Wroblewskiego", "27", null, "51-627");
+        ServiceEntity serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
+        IndicatorEntity indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", 40);
+
+        BookingEntity bookingEntity = new BookingEntity("Film dla TestCompany", "Film produktowy z dojazdem", 900D,
+                addressEntity, userEntity2, serviceEntity, false, LocalDate.now(), LocalDate.now(), LocalDate.now());
+        bookingEntity.setId(1L);
+
+        PriceIndicatorEntity priceIndicatorEntity = new PriceIndicatorEntity(indicatorEntity, bookingEntity, 400, 10);
+        List<PriceIndicatorEntity> priceIndicatorEntities = new ArrayList<>();
+        priceIndicatorEntities.add(priceIndicatorEntity);
+        bookingEntity.setPriceIndicatorList(priceIndicatorEntities);
+
+        orderEntity = new OrderEntity("INVIU_00001", OrderStatus.IN_PROGRESS, 1000D, LocalDate.now(), userEntity2, userEntity,  bookingEntity );
         orderEntity.setId(1L);
 
         orderEntities = new ArrayList<>();
         orderEntities.add(orderEntity);
 
-        List<PermissionEto> permissionEtoList = new ArrayList<>();
-        permissionEtoList.add(new PermissionEto(1L, ApplicationPermissions.A_CRUD_SUPER, "DESC1"));
-        RoleEto roleEto = new RoleEto(1L, "MANAGER", "Manager with all permissions in order management", permissionEtoList);
-        AccountEto accountEto = new AccountEto(1L, "user1", "passw0rd", "user1@test.com", false);
-        UserEto userEto = new UserEto(1L, "NAME", "SURNAME", accountEto, roleEto);
+//        List<PermissionEto> permissionEtoList = new ArrayList<>();
+//        permissionEtoList.add(new PermissionEto(1L, ApplicationPermissions.A_CRUD_SUPER, "DESC1"));
+//        RoleEto roleEto = new RoleEto(1L, "MANAGER", "Manager with all permissions in order management", permissionEtoList);
+        AccountEto accountEto = new AccountEto(1L, "user1", "passw0rd", "user1@test.com", true);
+        UserEto userEto = new UserEto(1L, "NAME", "SURNAME", accountEto, null);
 
-        List<PermissionEto> permissionEtoList2 = new ArrayList<>();
-        permissionEtoList2.add(new PermissionEto(6L, ApplicationPermissions.AUTH_USER, "Standard user with no special permissions."));
-        RoleEto roleEto2 = new RoleEto(2L, "USER", "Standard user with no special permissions", permissionEtoList2);
+//        List<PermissionEto> permissionEtoList2 = new ArrayList<>();
+//        permissionEtoList2.add(new PermissionEto(6L, ApplicationPermissions.AUTH_USER, "Standard user with no special permissions."));
+//        RoleEto roleEto2 = new RoleEto(2L, "USER", "Standard user with no special permissions", permissionEtoList2);
         AccountEto accountEto2 = new AccountEto(2L, "user2", "passw0rd", "user2@test.com", true);
-        UserEto userEto2 = new UserEto(2L, "NAME2", "SURNAME2", accountEto2, roleEto2);
+        UserEto userEto2 = new UserEto(2L, "NAME2", "SURNAME2", accountEto2, null);
 
-        orderEto = new OrderEto(1L, "INVIU_00001", userEto, userEto2, OrderStatus.IN_PROGRESS, null, 1000D,
+        BookingEto bookingEto = new BookingEto(1L, "Film dla TestCompany", "Film produktowy z dojazdem", serviceMapper.toServiceEto(serviceEntity),
+                addressMapper.toAddressEto(addressEntity), userEto, false, 900D,
+                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( LocalDate.now()),
+                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( LocalDate.now()),
+                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( LocalDate.now()),
+                null);
+
+        PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorMapper.toIndicatorEto(indicatorEntity), bookingEto.getId(), 400, 10);
+        List<PriceIndicatorEto> priceIndicatorEtoList = new ArrayList<>();
+        priceIndicatorEtoList.add(priceIndicatorEto);
+
+        bookingEto.setPriceIndicatorEtoList(priceIndicatorEtoList);
+
+
+        orderEto = new OrderEto(1L, "INVIU_00001", userEto, userEto2, OrderStatus.IN_PROGRESS, bookingEto, 1000D,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format(LocalDate.now()));
 
         orderEtoList = new ArrayList<>();
