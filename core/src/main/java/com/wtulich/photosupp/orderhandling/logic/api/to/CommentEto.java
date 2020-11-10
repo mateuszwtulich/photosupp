@@ -13,7 +13,7 @@ public class CommentEto extends AbstractApplicationEntityTransportObject {
     private String content;
 
     @NotNull
-    private Long orderId;
+    private String orderNumber;
 
     @NotNull
     private UserEto userEto;
@@ -24,10 +24,10 @@ public class CommentEto extends AbstractApplicationEntityTransportObject {
     public CommentEto() {
     }
 
-    public CommentEto(Long id, String content, Long orderId, UserEto userEto, String createdAt) {
+    public CommentEto(Long id, String content, String orderNumber, UserEto userEto, String createdAt) {
         super(id);
         this.content = content;
-        this.orderId = orderId;
+        this.orderNumber = orderNumber;
         this.userEto = userEto;
         this.createdAt = createdAt;
     }
@@ -40,12 +40,12 @@ public class CommentEto extends AbstractApplicationEntityTransportObject {
         this.content = content;
     }
 
-    public Long getOrderId() {
-        return orderId;
+    public String getOrderNumber() {
+        return orderNumber;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     public UserEto getUserEto() {
@@ -71,13 +71,13 @@ public class CommentEto extends AbstractApplicationEntityTransportObject {
         if (!super.equals(o)) return false;
         CommentEto that = (CommentEto) o;
         return content.equals(that.content) &&
-                orderId.equals(that.orderId) &&
+                orderNumber.equals(that.orderNumber) &&
                 userEto.equals(that.userEto) &&
                 createdAt.equals(that.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), content, orderId, userEto, createdAt);
+        return Objects.hash(super.hashCode(), content, orderNumber, userEto, createdAt);
     }
 }

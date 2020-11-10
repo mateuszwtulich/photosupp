@@ -27,7 +27,7 @@ public class MediaContentEntity extends AbstractApplicationPersistenceEntity {
     private String url;
 
     @ManyToOne(targetEntity = OrderEntity.class)
-    @JoinColumn(name = "ORDER_ID", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "ORDER_ID", referencedColumnName = "order_number", nullable = false)
     private OrderEntity order;
 
     public MediaContentEntity() {

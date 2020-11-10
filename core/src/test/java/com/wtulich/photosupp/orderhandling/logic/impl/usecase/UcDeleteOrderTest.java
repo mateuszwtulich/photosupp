@@ -25,6 +25,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -63,28 +64,27 @@ public class UcDeleteOrderTest {
         userEntity.setId(2L);
 
         orderEntity = new OrderEntity("INVIU_00001", OrderStatus.IN_PROGRESS, 1000D, LocalDate.now(), userEntity, userEntity,  null );
-        orderEntity.setId(1L);
     }
 
     @Test
     @DisplayName("Test deleteOrder Success")
     void testDeleteOrderSuccess() {
         //Arrange
-        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.of(orderEntity));
+        when(orderDao.findByOrderNumber(orderEntity.getOrderNumber())).thenReturn(Optional.of(orderEntity));
 
         //Act Assert
-        Assertions.assertDoesNotThrow(() -> ucDeleteOrder.deleteOrder(orderEntity.getId()));
+        Assertions.assertDoesNotThrow(() -> ucDeleteOrder.deleteOrder(orderEntity.getOrderNumber()));
     }
 
     @Test
     @DisplayName("Test deleteOrder Failure")
     void testDeleteOrderFailure() {
         //Arrange
-        when(orderDao.findById(orderEntity.getId())).thenReturn(java.util.Optional.ofNullable(null));
+        when(orderDao.findByOrderNumber(orderEntity.getOrderNumber())).thenReturn(java.util.Optional.ofNullable(null));
 
         //Act Assert
         Assertions.assertThrows(EntityDoesNotExistException.class, () ->
-                ucDeleteOrder.deleteOrder(orderEntity.getId()));
+                ucDeleteOrder.deleteOrder(orderEntity.getOrderNumber()));
     }
 
     @Test
@@ -97,11 +97,11 @@ public class UcDeleteOrderTest {
         mediaContentEntities.add(mediaContentEntity);
         orderEntity.setMediaContentList(mediaContentEntities);
 
-        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.of(orderEntity));
-        when(mediaContentDao.findAllByOrder_Id(orderEntity.getId())).thenReturn(mediaContentEntities);
+        when(orderDao.findByOrderNumber(orderEntity.getOrderNumber())).thenReturn(Optional.of(orderEntity));
+        when(mediaContentDao.findAllByOrder_OrderNumber(orderEntity.getOrderNumber())).thenReturn(mediaContentEntities);
 
         //Act Assert
         Assertions.assertThrows(EntityHasAssignedEntitiesException.class, () ->
-                ucDeleteOrder.deleteOrder(orderEntity.getId()));
+                ucDeleteOrder.deleteOrder(orderEntity.getOrderNumber()));
     }
 }

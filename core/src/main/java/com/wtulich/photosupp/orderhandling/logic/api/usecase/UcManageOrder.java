@@ -12,11 +12,11 @@ public interface UcManageOrder {
 
     Optional<OrderEto> createOrder(OrderTo orderTo) throws EntityDoesNotExistException, EntityAlreadyExistsException;
 
-    Optional<OrderEto> updateOrder(OrderTo orderTo, Long id) throws EntityDoesNotExistException, EntityAlreadyExistsException;
+    Optional<OrderEto> updateOrder(OrderTo orderTo, String orderNumber) throws EntityDoesNotExistException, EntityAlreadyExistsException;
 
-    Optional<OrderEto> finishOrder(Long id)  throws EntityDoesNotExistException, OrderStatusInappropriateException;
+    Optional<OrderEto> finishOrder(String orderNumber)  throws EntityDoesNotExistException, OrderStatusInappropriateException;
 
-    Optional<OrderEto> acceptOrder(Long id)  throws EntityDoesNotExistException, OrderStatusInappropriateException;
+    Optional<OrderEto> acceptOrder(String orderNumber)  throws EntityDoesNotExistException, OrderStatusInappropriateException;
 
-    Optional<OrderEto> sendOrderToVerification(Long id)  throws EntityDoesNotExistException, OrderStatusInappropriateException;
+    Optional<OrderEto> sendOrderToVerification(String orderNumber)  throws EntityDoesNotExistException, OrderStatusInappropriateException;
 }

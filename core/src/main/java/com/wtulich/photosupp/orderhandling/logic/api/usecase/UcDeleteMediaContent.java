@@ -5,5 +5,5 @@ import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistExcep
 public interface UcDeleteMediaContent {
 
     void deleteMediaContent(Long id) throws EntityDoesNotExistException;
-    void deleteAllMediaContent(Long id) throws EntityDoesNotExistException;
+    void deleteAllMediaContent(String orderNumber) throws EntityDoesNotExistException;
 }

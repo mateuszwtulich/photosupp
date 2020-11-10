@@ -28,8 +28,8 @@ public class BookingValidator {
         List<BookingEntity> bookingEntityList = bookingDao.findAllByUser_Id(bookingTo.getUserId());
 
         if (bookingEntityList.stream().anyMatch(bookingEntity ->
-                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( bookingEntity.getStart()).compareTo(bookingTo.getStart()) <= 1 &&
-                        DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( bookingEntity.getEnd()).compareTo(bookingTo.getEnd()) >= -1)) {
+                !bookingEntity.getStart().isAfter(LocalDate.parse(bookingTo.getStart()))  &&
+                        !bookingEntity.getEnd().isBefore(LocalDate.parse(bookingTo.getEnd())))) {
             throw new EntityAlreadyExistsException("Booking of that user already exists in this period of time.");
         }
     }

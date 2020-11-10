@@ -262,4 +262,22 @@ public interface ServiceRestService extends RestService {
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<CalculateCto> calculateService(@Validated @RequestBody CalculateTo calculateTo);
+
+
+    @ApiOperation(value = "Confirms booking",
+            tags = {"booking"},
+            response = BookingEtoWithOrderNumber.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request"),
+            @ApiResponse(code = 401, message = "Unauthorized request"),
+            @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
+            @ApiResponse(code = 404, message = "Entity not found"),
+            @ApiResponse(code = 422, message = "Could not process entity"),
+            @ApiResponse(code = 429, message = "Too many requests"),
+    })
+    @PutMapping(value = "/booking/{id}/confirm",
+            consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<BookingEtoWithOrderNumber> confirmBooking(@Validated @RequestBody Long coordinatorId,
+                                                             @PathVariable(value = "id") Long id);
 }

@@ -75,7 +75,7 @@ public class UcManageCommentImpl implements UcManageComment {
 
     private CommentEto toCommentEto(CommentEntity commentEntity){
         CommentEto commentEto = commentMapper.toCommentEto(commentEntity);
-        commentEto.setOrderId(commentEntity.getOrder().getId());
+        commentEto.setOrderNumber(commentEntity.getOrder().getOrderNumber());
         commentEto.setUserEto(toUserEto(commentEntity.getUser()));
 
         return commentEto;
@@ -84,16 +84,16 @@ public class UcManageCommentImpl implements UcManageComment {
     private CommentEntity toCommentEntity(CommentTo commentTo) throws EntityDoesNotExistException {
         CommentEntity commentEntity = commentMapper.toCommentEntity(commentTo);
 
-        commentEntity.setOrder(getOrderById(commentTo.getOrderId()));
+        commentEntity.setOrder(getOrderByOrderNumber(commentTo.getOrderNumber()));
         commentEntity.setUser(getUserById(commentTo.getUserId()));
         commentEntity.setCreatedAt(LocalDate.now());
 
         return commentEntity;
     }
 
-    private OrderEntity getOrderById(Long orderId) throws EntityDoesNotExistException {
-        return orderDao.findById(orderId).orElseThrow(() ->
-                new EntityDoesNotExistException("Order with id " + orderId + " does not exist."));
+    private OrderEntity getOrderByOrderNumber(String orderNumber) throws EntityDoesNotExistException {
+        return orderDao.findByOrderNumber(orderNumber).orElseThrow(() ->
+                new EntityDoesNotExistException("Order with order number " + orderNumber + " does not exist."));
     }
 
     private UserEntity getUserById(Long userId) throws EntityDoesNotExistException {

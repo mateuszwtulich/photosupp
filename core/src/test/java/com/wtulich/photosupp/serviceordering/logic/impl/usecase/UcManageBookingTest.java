@@ -4,6 +4,9 @@ import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsExce
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.general.logic.api.exception.UnprocessableEntityException;
 import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
+import com.wtulich.photosupp.general.utils.enums.OrderStatus;
+import com.wtulich.photosupp.orderhandling.dataaccess.api.dao.OrderDao;
+import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.OrderEntity;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.*;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.*;
 import com.wtulich.photosupp.serviceordering.logic.api.to.*;
@@ -27,7 +30,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -40,6 +45,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith({SpringExtension.class})
 @SpringBootTest
@@ -60,6 +68,9 @@ public class UcManageBookingTest {
 
     @MockBean
     private AddressDao addressDao;
+
+    @MockBean
+    private OrderDao orderDao;
 
     @MockBean
     private IndicatorDao indicatorDao;
@@ -382,5 +393,54 @@ public class UcManageBookingTest {
         //Act Assert
         Assertions.assertThrows(EntityDoesNotExistException.class, () ->
                 ucManageBooking.updateBooking(bookingTo, bookingEntity.getId()));
+    }
+
+    @Test
+    @DisplayName("Test confirmBooking OK")
+    void testConfirmBookingOk() throws Exception {
+        //Arrange
+        List<PriceIndicatorEto> priceIndicatorEtoList = new ArrayList<>();
+        AddressEto addressEto = new AddressEto(1L, "Wroclaw", "Wroblewskiego", "27", null, "51-627");
+        ServiceEto serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
+        IndicatorEto indicatorEto = new IndicatorEto(1L, "Podroz sluzbowa", "Paliwo, amortyzacja", 40);
+
+        BookingEtoWithOrderNumber bookingEtoWithOrderNumber = new BookingEtoWithOrderNumber(1L, "Film dla TestCompany",
+                "Film produktowy z dojazdem", serviceEto, addressEto, true, 1400D,
+                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
+                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)),
+                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
+                priceIndicatorEtoList, "INVIU_00001");
+
+        PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorEto, bookingEto.getId(), 400, 10);
+        priceIndicatorEtoList.add(priceIndicatorEto);
+
+        OrderEntity orderEntity = new OrderEntity("INVIU_00001", OrderStatus.NEW, 1400D, LocalDate.now(), userEntity, userEntity,  bookingEntity);
+
+        when(bookingDao.findById(bookingEntity.getId())).thenReturn(Optional.ofNullable(bookingEntity));
+        when(userDao.findById(userEntity.getId())).thenReturn(Optional.ofNullable(userEntity));
+        when(orderDao.save(any())).thenReturn(orderEntity);
+
+        //Act
+        Optional<BookingEtoWithOrderNumber> result = ucManageBooking.confirmBooking(bookingEto.getId(), userEntity.getId());
+
+        // Assert
+        Assertions.assertTrue(result.isPresent());
+
+        assertThat(result.get()).isEqualToIgnoringGivenFields(bookingEtoWithOrderNumber, "serviceEto", "addressEto", "priceIndicatorEtoList");
+        assertThat(result.get().getAddressEto()).isEqualTo(bookingEtoWithOrderNumber.getAddressEto());
+        assertThat(result.get().getServiceEto()).isEqualTo(bookingEtoWithOrderNumber.getServiceEto());
+        assertThat(result.get().getPriceIndicatorEtoList()).isEqualTo(bookingEtoWithOrderNumber.getPriceIndicatorEtoList());
+    }
+
+
+    @Test
+    @DisplayName("Test confirmBooking EntityDoesNotExistException")
+    void testConfirmBookingEntityDoesNotExistException() {
+        //Arrange
+        when(bookingDao.findById(bookingEntity.getId())).thenReturn(Optional.empty());
+
+        //Act Assert
+        Assertions.assertThrows(EntityDoesNotExistException.class, () ->
+                ucManageBooking.confirmBooking(bookingEntity.getId(), userEntity.getId()));
     }
 }

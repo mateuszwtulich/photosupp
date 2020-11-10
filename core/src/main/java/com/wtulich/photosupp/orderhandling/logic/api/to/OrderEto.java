@@ -9,7 +9,7 @@ import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class OrderEto extends AbstractApplicationEntityTransportObject {
+public class OrderEto {
 
     @NotNull
     private String orderNumber;
@@ -34,9 +34,8 @@ public class OrderEto extends AbstractApplicationEntityTransportObject {
     public OrderEto() {
     }
 
-    public OrderEto(Long id, String orderNumber, UserEto coordinator, UserEto user, OrderStatus status,
+    public OrderEto(String orderNumber, UserEto coordinator, UserEto user, OrderStatus status,
                     BookingEto booking, Double price, String createdAt) {
-        super(id);
         this.orderNumber = orderNumber;
         this.coordinator = coordinator;
         this.user = user;

@@ -3,15 +3,9 @@ package com.wtulich.photosupp.serviceordering.dataaccess.api.entity;
 import com.sun.istack.NotNull;
 import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationPersistenceEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +34,6 @@ public class BookingEntity extends AbstractApplicationPersistenceEntity {
     @Column(name = "FINAL_PRICE")
     private Double predictedPrice;
 
-    @NotNull
     @Column(name = "MODIFICATION_DATE", nullable = false)
     private LocalDate modificationDate;
 

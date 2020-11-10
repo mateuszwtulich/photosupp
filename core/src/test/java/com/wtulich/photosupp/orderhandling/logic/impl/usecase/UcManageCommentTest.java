@@ -31,6 +31,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +101,6 @@ public class UcManageCommentTest {
         userEntity2.setId(2L);
 
         orderEntity = new OrderEntity("INVIU_00001", OrderStatus.IN_PROGRESS, 1000D, LocalDate.now(), userEntity2, userEntity,  null );
-        orderEntity.setId(1L);
 
         commentEntity = new CommentEntity("Perfect, thanks!", userEntity2, orderEntity, LocalDate.now());
         commentEntity.setId(1L);
@@ -108,17 +108,17 @@ public class UcManageCommentTest {
         AccountEto accountEto2 = new AccountEto(2L, "user2", "passw0rd", "user2@test.com", true);
         UserEto userEto2 = new UserEto(2L, "NAME2", "SURNAME2", accountEto2, null);
 
-        commentEto = new CommentEto(1L, "Perfect, thanks!", 1L, userEto2,
+        commentEto = new CommentEto(1L, "Perfect, thanks!", "INVIU_00001", userEto2,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format(LocalDate.now()));
 
-        commentTo = new CommentTo("Perfect, thanks!", 1L, 2L);
+        commentTo = new CommentTo("Perfect, thanks!", "INVIU_00001", 2L);
     }
 
     @Test
     @DisplayName("Test createComment Success")
     void testCreateCommentSuccess() throws EntityDoesNotExistException {
         //Arrange
-        when(orderDao.findById(commentTo.getOrderId())).thenReturn(Optional.ofNullable(orderEntity));
+        when(orderDao.findByOrderNumber(commentTo.getOrderNumber())).thenReturn(Optional.ofNullable(orderEntity));
         when(userDao.findById(commentTo.getUserId())).thenReturn(Optional.of(userEntity2));
         when(commentDao.save(commentEntity)).thenReturn(commentEntity);
 
@@ -134,7 +134,19 @@ public class UcManageCommentTest {
     @DisplayName("Test createComment EntityDoesNotExistException")
     void testCreateCommentEntityDoesNotExistException() throws EntityDoesNotExistException {
         //Arrange
-        when(orderDao.findById(commentTo.getOrderId())).thenReturn(Optional.ofNullable(null));
+        when(orderDao.findByOrderNumber(commentTo.getOrderNumber())).thenReturn(Optional.ofNullable(null));
+
+        //Act Assert
+        Assertions.assertThrows(EntityDoesNotExistException.class, () ->
+                ucManageComment.createComment(commentTo));
+    }
+
+    @Test
+    @DisplayName("Test createComment EntityDoesNotExistException2")
+    void testCreateCommentEntityDoesNotExistException2() throws EntityDoesNotExistException {
+        //Arrange
+        when(orderDao.findByOrderNumber(commentTo.getOrderNumber())).thenReturn(Optional.ofNullable(orderEntity));
+        when(userDao.findById(commentTo.getUserId())).thenReturn(Optional.ofNullable(null));
 
         //Act Assert
         Assertions.assertThrows(EntityDoesNotExistException.class, () ->

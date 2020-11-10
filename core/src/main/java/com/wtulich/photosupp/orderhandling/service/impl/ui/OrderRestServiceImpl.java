@@ -22,7 +22,7 @@ public class OrderRestServiceImpl implements OrderRestService {
     private static String ORDERS_NOT_EXIST = "Orders do not exist.";
     private static String MEDIA_CONTENT_NOT_EXIST = "Media content does not exist.";
     private static String COMMENT_NOT_EXIST = "Comments do not exist.";
-    private static final String BASE_URL = "service/v1/";
+    private static final String BASE_URL = "order/v1/";
 
     @Inject
     private OrderHandlingImpl orderHandling;
@@ -38,11 +38,11 @@ public class OrderRestServiceImpl implements OrderRestService {
     }
 
     @Override
-    public ResponseEntity<OrderEto> getOrder(Long id) {
+    public ResponseEntity<OrderEto> getOrder(String orderNumber) {
         try {
             return ResponseEntity
                     .ok()
-                    .body(orderHandling.findOrder(id).orElseThrow(() ->
+                    .body(orderHandling.findOrder(orderNumber).orElseThrow(() ->
                             new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)));
         } catch (EntityDoesNotExistException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -50,9 +50,9 @@ public class OrderRestServiceImpl implements OrderRestService {
     }
 
     @Override
-    public List<CommentEto> getAllCommentsByOrderId(Long id) {
+    public List<CommentEto> getAllCommentsByOrderId(String orderNumber) {
         try {
-            return orderHandling.findAllCommentsByOrderId(id).map( comments -> {
+            return orderHandling.findAllCommentsByOrderNumber(orderNumber).map( comments -> {
                 if(comments.isEmpty()) {
                     throw new ResponseStatusException(HttpStatus.NO_CONTENT, COMMENT_NOT_EXIST);
                 }
@@ -64,9 +64,9 @@ public class OrderRestServiceImpl implements OrderRestService {
     }
 
     @Override
-    public List<MediaContentEto> getAllMediaContentByOrderId(Long id) {
+    public List<MediaContentEto> getAllMediaContentByOrderId(String orderNumber) {
         try {
-            return orderHandling.findAllMediaContentByOrderId(id).map( mediaContentList -> {
+            return orderHandling.findAllMediaContentByOrderNumber(orderNumber).map( mediaContentList -> {
                 if(mediaContentList.isEmpty()) {
                     throw new ResponseStatusException(HttpStatus.NO_CONTENT, MEDIA_CONTENT_NOT_EXIST);
                 }
@@ -116,11 +116,11 @@ public class OrderRestServiceImpl implements OrderRestService {
     }
 
     @Override
-    public ResponseEntity<OrderEto> updateOrder(OrderTo orderTo, Long id) {
+    public ResponseEntity<OrderEto> updateOrder(OrderTo orderTo, String orderNumber) {
         try {
             return ResponseEntity
                     .ok()
-                    .body(orderHandling.updateOrder(orderTo, id).orElseThrow(() ->
+                    .body(orderHandling.updateOrder(orderTo, orderNumber).orElseThrow(() ->
                             new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)));
         } catch (EntityDoesNotExistException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -142,9 +142,9 @@ public class OrderRestServiceImpl implements OrderRestService {
     }
 
     @Override
-    public ResponseEntity<?> deleteOrder(Long id) {
+    public ResponseEntity<?> deleteOrder(String orderNumber) {
         try {
-            orderHandling.deleteOrder(id);
+            orderHandling.deleteOrder(orderNumber);
             return ResponseEntity.ok().build();
         } catch (EntityDoesNotExistException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -173,9 +173,9 @@ public class OrderRestServiceImpl implements OrderRestService {
     }
 
     @Override
-    public ResponseEntity<?> deleteAllMediaContent(Long orderId) {
+    public ResponseEntity<?> deleteAllMediaContent(String orderNumber) {
         try {
-            orderHandling.deleteAllMediaContent(orderId);
+            orderHandling.deleteAllMediaContent(orderNumber);
             return ResponseEntity.ok().build();
         } catch (EntityDoesNotExistException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -183,11 +183,11 @@ public class OrderRestServiceImpl implements OrderRestService {
     }
 
     @Override
-    public ResponseEntity<OrderEto> finishOrder(Long id) {
+    public ResponseEntity<OrderEto> finishOrder(String orderNumber) {
         try {
             return ResponseEntity
                     .ok()
-                    .body(orderHandling.finishOrder(id).orElseThrow(() ->
+                    .body(orderHandling.finishOrder(orderNumber).orElseThrow(() ->
                             new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)));
         } catch (EntityDoesNotExistException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -197,11 +197,11 @@ public class OrderRestServiceImpl implements OrderRestService {
     }
 
     @Override
-    public ResponseEntity<OrderEto> acceptOrder(Long id) {
+    public ResponseEntity<OrderEto> acceptOrder(String orderNumber) {
         try {
             return ResponseEntity
                     .ok()
-                    .body(orderHandling.acceptOrder(id).orElseThrow(() ->
+                    .body(orderHandling.acceptOrder(orderNumber).orElseThrow(() ->
                             new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)));
         } catch (EntityDoesNotExistException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -210,11 +210,11 @@ public class OrderRestServiceImpl implements OrderRestService {
         }        }
 
     @Override
-    public ResponseEntity<OrderEto> sentToVerificationOrder(Long id) {
+    public ResponseEntity<OrderEto> sentToVerificationOrder(String orderNumber) {
         try {
             return ResponseEntity
                     .ok()
-                    .body(orderHandling.sendOrderToVerification(id).orElseThrow(() ->
+                    .body(orderHandling.sendOrderToVerification(orderNumber).orElseThrow(() ->
                             new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)));
         } catch (EntityDoesNotExistException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

@@ -25,7 +25,7 @@ public class UcFindMediaContentImpl implements UcFindMediaContent {
 
     private static final Logger LOG = LoggerFactory.getLogger(UcFindMediaContentImpl.class);
     private static final String ID_CANNOT_BE_NULL = "id cannot be a null value";
-    private static final String GET_ALL_MEDIA_CONTENT_LOG = "Get all Media Content of Order with id {} from database.";
+    private static final String GET_ALL_MEDIA_CONTENT_LOG = "Get all Media Content of Order with order number {} from database.";
 
     @Inject
     private MediaContentDao mediaContentDao;
@@ -37,21 +37,21 @@ public class UcFindMediaContentImpl implements UcFindMediaContent {
     private MediaContentMapper mediaContentMapper;
 
     @Override
-    public Optional<List<MediaContentEto>> findAllMediaContentByOrderId(Long id) throws EntityDoesNotExistException {
-        Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
-        OrderEntity orderEntity = orderDao.findById(id).orElseThrow(() ->
-                new EntityDoesNotExistException("Order with id " + id + " does not exist."));
+    public Optional<List<MediaContentEto>> findAllMediaContentByOrderNumber(String orderNumber) throws EntityDoesNotExistException {
+        Objects.requireNonNull(orderNumber, ID_CANNOT_BE_NULL);
+        OrderEntity orderEntity = orderDao.findByOrderNumber(orderNumber).orElseThrow(() ->
+                new EntityDoesNotExistException("Order with order number " + orderNumber + " does not exist."));
 
         LOG.debug(GET_ALL_MEDIA_CONTENT_LOG);
 
-        return Optional.of(mediaContentDao.findAllByOrder_Id(orderEntity.getId()).stream()
+        return Optional.of(mediaContentDao.findAllByOrder_OrderNumber(orderEntity.getOrderNumber()).stream()
                 .map(mediaContentEntity -> toMediaContentEto(mediaContentEntity))
                 .collect(Collectors.toList()));
     }
 
     private MediaContentEto toMediaContentEto(MediaContentEntity mediaContentEntity){
         MediaContentEto mediaContentEto = mediaContentMapper.toMediaContentEto(mediaContentEntity);
-        mediaContentEto.setOrderId(mediaContentEntity.getOrder().getId());
+        mediaContentEto.setOrderNumber(mediaContentEntity.getOrder().getOrderNumber());
 
         return mediaContentEto;
     }

@@ -44,18 +44,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class OrderRestServiceTest {
-    private static String GET_ALL_MEDIA_CONTENT_BY_ID_URL = "/order/v1/order/{id}/mediaContent";
+    private static String GET_ALL_MEDIA_CONTENT_BY_ORDER_NUMBER_URL = "/order/v1/order/{orderNumber}/mediaContent";
     private static String GET_ALL_ORDERS_URL =  "/order/v1/orders";
-    private static String GET_ALL_COMMENTS_BY_ID_URL =  "/order/v1/order/{id}/comments";
+    private static String GET_ALL_COMMENTS_ORDER_NUMBER_URL =  "/order/v1/order/{orderNumber}/comments";
     private static String MEDIA_CONTENT_ID_URL = "/order/v1/order/mediaContent/{id}";
-    private static String ORDER_ID_URL = "/order/v1/order/{id}";
+    private static String ORDER_NUMBER_URL = "/order/v1/order/{orderNumber}";
     private static String COMMENT_ID_URL = "/order/v1/order/comment/{id}";
     private static String MEDIA_CONTENT_URL = "/order/v1/order/mediaContent";
     private static String ORDER_URL = "/order/v1/order";
     private static String COMMENT_URL = "/order/v1/order/comment";
-    private static String SENT_TO_VERIFICATION_ORDER = "/order/v1/order/{id}/verification";
-    private static String FINISH_ORDER = "/order/v1/order/{id}/finish";
-    private static String ACCEPT_ORDER = "/order/v1/order/{id}/accept";
+    private static String SENT_TO_VERIFICATION_ORDER = "/order/v1/order/{orderNumber}/verification";
+    private static String FINISH_ORDER = "/order/v1/order/{orderNumber}/finish";
+    private static String ACCEPT_ORDER = "/order/v1/order/{orderNumber}/accept";
 
     @MockBean
     private OrderHandlingImpl orderHandling;
@@ -69,7 +69,6 @@ public class OrderRestServiceTest {
     private CommentEto commentEto;
     private OrderTo orderTo;
     private CommentTo commentTo;
-    private BookingTo bookingTo;
     private MediaContentTo mediaContentTo;
 
     @BeforeEach
@@ -88,14 +87,14 @@ public class OrderRestServiceTest {
         AccountEto accountEto2 = new AccountEto(2L, "user2", "passw0rd", "user2@test.com", true);
         UserEto userEto2 = new UserEto(2L, "NAME2", "SURNAME2", accountEto2, roleEto2);
 
-        mediaContentEto = new MediaContentEto(1L, MediaType.IMAGE, "https://sample.com/jpg1", 1L);
-        commentEto = new CommentEto(1L, "Perfect, thanks!", 1L, userEto2,
+        mediaContentEto = new MediaContentEto(1L, MediaType.IMAGE, "https://sample.com/jpg1", "INVIU_00001");
+        commentEto = new CommentEto(1L, "Perfect, thanks!", "INVIU_00001", userEto2,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format(LocalDate.now()));
-        orderEto = new OrderEto(1L, "INVIU_00001", userEto, userEto2, OrderStatus.IN_PROGRESS, null, 1000D,
+        orderEto = new OrderEto("INVIU_00001", userEto, userEto2, OrderStatus.IN_PROGRESS, null, 1000D,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format(LocalDate.now()));
 
-        mediaContentTo = new MediaContentTo(MediaType.IMAGE, "https://sample.com/jpg1", 1L);
-        commentTo = new CommentTo("Perfect, thanks!", 1L, 2L);
+        mediaContentTo = new MediaContentTo(MediaType.IMAGE, "https://sample.com/jpg1", "INVIU_00001");
+        commentTo = new CommentTo("Perfect, thanks!", "INVIU_00001", 2L);
         orderTo = new OrderTo(1L, 2L, 1L, 1000D);
     }
 
@@ -134,15 +133,15 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("GET /order/v1/order/{id}/mediaContent - Found")
-    void testGetAllMediaContentByOrderIdFound() throws Exception {
+    @DisplayName("GET /order/v1/order/{orderNumber}/mediaContent - Found")
+    void testGetAllMediaContentByOrderFound() throws Exception {
         //Arrange
         ArrayList<MediaContentEto> mediaContentList = new ArrayList<>();
         mediaContentList.add(mediaContentEto);
-        when(orderHandling.findAllMediaContentByOrderId(orderEto.getId())).thenReturn(Optional.of(mediaContentList));
+        when(orderHandling.findAllMediaContentByOrderNumber(orderEto.getOrderNumber())).thenReturn(Optional.of(mediaContentList));
 
         //Act
-        MvcResult result = mockMvc.perform(get(GET_ALL_MEDIA_CONTENT_BY_ID_URL, orderEto.getId())
+        MvcResult result = mockMvc.perform(get(GET_ALL_MEDIA_CONTENT_BY_ORDER_NUMBER_URL, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE))
 
                 //Assert
@@ -155,43 +154,43 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("GET /order/v1/order/{id}/mediaContent - Not Found")
-    void testGetAllMediaContentByOrderIdNotFound() throws Exception {
+    @DisplayName("GET /order/v1/order/{orderNumber}/mediaContent - Not Found")
+    void testGetAllMediaContentByOrderNotFound() throws Exception {
         //Arrange
         ArrayList<MediaContentEto> mediaContentList = new ArrayList<>();
         mediaContentList.add(mediaContentEto);
-        doThrow(EntityDoesNotExistException.class).when(orderHandling).findAllMediaContentByOrderId(2L);
+        doThrow(EntityDoesNotExistException.class).when(orderHandling).findAllMediaContentByOrderNumber("INVIU_00002");
 
         //Act
-        mockMvc.perform(get(GET_ALL_MEDIA_CONTENT_BY_ID_URL, 2L))
+        mockMvc.perform(get(GET_ALL_MEDIA_CONTENT_BY_ORDER_NUMBER_URL, "INVIU_00002"))
 
                 //Assert
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @DisplayName("GET /order/v1/order/{id}/mediaContent - No content")
-    void testGetAllMediaContentByOrderIdNoContent() throws Exception {
+    @DisplayName("GET /order/v1/order/{orderNumber}/mediaContent - No content")
+    void testGetAllMediaContentByOrderNoContent() throws Exception {
         //Arrange
-        when(orderHandling.findAllMediaContentByOrderId(orderEto.getId())).thenReturn(Optional.of(new ArrayList<>()));
+        when(orderHandling.findAllMediaContentByOrderNumber(orderEto.getOrderNumber())).thenReturn(Optional.of(new ArrayList<>()));
 
         //Act
-        mockMvc.perform(get(GET_ALL_MEDIA_CONTENT_BY_ID_URL, orderEto.getId()))
+        mockMvc.perform(get(GET_ALL_MEDIA_CONTENT_BY_ORDER_NUMBER_URL, orderEto.getOrderNumber()))
 
                 //Assert
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    @DisplayName("GET /order/v1/order/{id}/comments - Found")
-    void testGetAllCommentsByOrderIdFound() throws Exception {
+    @DisplayName("GET /order/v1/order/{orderNumber}/comments - Found")
+    void testGetAllCommentsByOrderFound() throws Exception {
         //Arrange
         ArrayList<CommentEto> comments = new ArrayList<>();
         comments.add(commentEto);
-        when(orderHandling.findAllCommentsByOrderId(orderEto.getId())).thenReturn(Optional.of(comments));
+        when(orderHandling.findAllCommentsByOrderNumber(orderEto.getOrderNumber())).thenReturn(Optional.of(comments));
 
         //Act
-        MvcResult result = mockMvc.perform(get(GET_ALL_COMMENTS_BY_ID_URL, orderEto.getId())
+        MvcResult result = mockMvc.perform(get(GET_ALL_COMMENTS_ORDER_NUMBER_URL, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE))
 
                 //Assert
@@ -204,41 +203,41 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("GET /order/v1/order/{id}/comments - Not Found")
-    void testGetAllCommentsByOrderIdNotFound() throws Exception {
+    @DisplayName("GET /order/v1/order/{orderNumber}/comments - Not Found")
+    void testGetAllCommentsByOrderNotFound() throws Exception {
         //Arrange
         ArrayList<MediaContentEto> mediaContentList = new ArrayList<>();
         mediaContentList.add(mediaContentEto);
-        doThrow(EntityDoesNotExistException.class).when(orderHandling).findAllCommentsByOrderId(2L);
+        doThrow(EntityDoesNotExistException.class).when(orderHandling).findAllCommentsByOrderNumber("INVIU_00002");
 
         //Act
-        mockMvc.perform(get(GET_ALL_COMMENTS_BY_ID_URL, 2L))
+        mockMvc.perform(get(GET_ALL_COMMENTS_ORDER_NUMBER_URL, "INVIU_00002"))
 
                 //Assert
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @DisplayName("GET /order/v1/order/{id}/comments - No content")
-    void testGetAllCommentsByOrderIdNoContent() throws Exception {
+    @DisplayName("GET /order/v1/order/{orderNumber}/comments - No content")
+    void testGetAllCommentsByOrderNoContent() throws Exception {
         //Arrange
-        when(orderHandling.findAllCommentsByOrderId(orderEto.getId())).thenReturn(Optional.of(new ArrayList<>()));
+        when(orderHandling.findAllCommentsByOrderNumber(orderEto.getOrderNumber())).thenReturn(Optional.of(new ArrayList<>()));
 
         //Act
-        mockMvc.perform(get(GET_ALL_COMMENTS_BY_ID_URL, commentEto.getId()))
+        mockMvc.perform(get(GET_ALL_COMMENTS_ORDER_NUMBER_URL, orderEto.getOrderNumber()))
 
                 //Assert
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    @DisplayName("GET /order/v1/order/{id} - Found")
-    void testGetOrderByIdFound() throws Exception {
+    @DisplayName("GET /order/v1/order/{orderNumber} - Found")
+    void testGetOrderFound() throws Exception {
         //Arrange
-        when(orderHandling.findOrder(orderEto.getId())).thenReturn(Optional.of(orderEto));
+        when(orderHandling.findOrder(orderEto.getOrderNumber())).thenReturn(Optional.of(orderEto));
 
         //Act
-        MvcResult result = mockMvc.perform(get(ORDER_ID_URL, orderEto.getId())
+        MvcResult result = mockMvc.perform(get(ORDER_NUMBER_URL, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE))
 
                 //Assert
@@ -251,65 +250,65 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("GET /order/v1/order/{id}  - Not Found")
-    void testGetOrderByIdNotFound() throws Exception {
+    @DisplayName("GET /order/v1/order/{orderNumber}  - Not Found")
+    void testGetOrderNotFound() throws Exception {
         //Arrange
-        when(orderHandling.findOrder(2L))
+        when(orderHandling.findOrder("INVIU_00002"))
                 .thenThrow(EntityDoesNotExistException.class);
 
         //Act
-        mockMvc.perform(get(ORDER_ID_URL, 2L))
+        mockMvc.perform(get(ORDER_NUMBER_URL, "INVIU_00002"))
 
                 //Assert
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @DisplayName("GET /order/v1/order/{id} - ISE")
-    void testGetOrderByIdISE() throws Exception {
+    @DisplayName("GET /order/v1/order/{orderNumber} - ISE")
+    void testGetOrderISE() throws Exception {
         //Arrange
-        when(orderHandling.findOrder(2L))
+        when(orderHandling.findOrder("INVIU_00002"))
                 .thenReturn(Optional.empty());
 
         //Act
-        mockMvc.perform(get(ORDER_ID_URL, 2L))
+        mockMvc.perform(get(ORDER_NUMBER_URL, "INVIU_00002"))
 
                 //Assert
                 .andExpect(status().isInternalServerError());
     }
 
     @Test
-    @DisplayName("DELETE /order/v1/order/{id} - OK")
+    @DisplayName("DELETE /order/v1/order/{orderNumber} - OK")
     void testDeleteOrderOk() throws Exception {
 
         //Act
-        mockMvc.perform(delete(ORDER_ID_URL, orderEto.getId()))
+        mockMvc.perform(delete(ORDER_NUMBER_URL, orderEto.getOrderNumber()))
 
                 //Assert
                 .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("DELETE /order/v1/order/{id} - Not Found")
+    @DisplayName("DELETE /order/v1/order/{orderNumber} - Not Found")
     void testDeleteOrderNotFound() throws Exception {
         //Arrange
-        doThrow(EntityDoesNotExistException.class).when(orderHandling).deleteOrder(2L);
+        doThrow(EntityDoesNotExistException.class).when(orderHandling).deleteOrder("INVIU_00002");
 
         //Act
-        mockMvc.perform(delete(ORDER_ID_URL, 2L))
+        mockMvc.perform(delete(ORDER_NUMBER_URL, "INVIU_00002"))
 
                 //Assert
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @DisplayName("DELETE /order/v1/order/{id} - Unprocessable Entity")
+    @DisplayName("DELETE /order/v1/order/{orderNumber} - Unprocessable Entity")
     void testDeleteOrderUnprocessableEntity() throws Exception {
         //Arrange
-        doThrow(EntityHasAssignedEntitiesException.class).when(orderHandling).deleteOrder(2L);
+        doThrow(EntityHasAssignedEntitiesException.class).when(orderHandling).deleteOrder("INVIU_00002");
 
         //Act
-        mockMvc.perform(delete(ORDER_ID_URL, 2L))
+        mockMvc.perform(delete(ORDER_NUMBER_URL, "INVIU_00002"))
 
                 //Assert
                 .andExpect(status().isUnprocessableEntity());
@@ -364,24 +363,24 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("DELETE /order/v1/order/mediaContent/{id} - OK")
+    @DisplayName("DELETE /order/v1/order/{orderNumber}/mediaContent - OK")
     void testDeleteAllMediaContentOk() throws Exception {
 
         //Act
-        mockMvc.perform(delete(GET_ALL_MEDIA_CONTENT_BY_ID_URL, orderEto.getId()))
+        mockMvc.perform(delete(GET_ALL_MEDIA_CONTENT_BY_ORDER_NUMBER_URL, orderEto.getOrderNumber()))
 
                 //Assert
                 .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("DELETE /order/v1/order/mediaContent/{id} - Not Found")
+    @DisplayName("DELETE /order/v1/order/{orderNumber}/mediaContent - Not Found")
     void testDeleteAllMediaContentNotFound() throws Exception {
         //Arrange
-        doThrow(EntityDoesNotExistException.class).when(orderHandling).deleteAllMediaContent(3L);
+        doThrow(EntityDoesNotExistException.class).when(orderHandling).deleteAllMediaContent("INVIU_00003");
 
         //Act
-        mockMvc.perform(delete(GET_ALL_MEDIA_CONTENT_BY_ID_URL, 3L))
+        mockMvc.perform(delete(GET_ALL_MEDIA_CONTENT_BY_ORDER_NUMBER_URL, "INVIU_00003"))
 
                 //Assert
                 .andExpect(status().isNotFound());
@@ -560,13 +559,13 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("PUT /order/v1/order/{id} - OK")
+    @DisplayName("PUT /order/v1/order/{orderNumber} - OK")
     void testUpdateOrderOk() throws Exception {
         //Arrange
-        when(orderHandling.updateOrder(orderTo, orderEto.getId())).thenReturn(Optional.of(orderEto));
+        when(orderHandling.updateOrder(orderTo, orderEto.getOrderNumber())).thenReturn(Optional.of(orderEto));
 
         //Act
-        MvcResult result = mockMvc.perform(put(ORDER_ID_URL, orderEto.getId())
+        MvcResult result = mockMvc.perform(put(ORDER_NUMBER_URL, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(orderTo)))
 
@@ -580,13 +579,13 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("PUT /order/v1/order/{id} - Not Found")
+    @DisplayName("PUT /order/v1/order/{orderNumber} - Not Found")
     void testUpdateOrderNotFound() throws Exception {
         //Arrange
-        when(orderHandling.updateOrder(orderTo, orderEto.getId())).thenThrow(EntityDoesNotExistException.class);
+        when(orderHandling.updateOrder(orderTo, orderEto.getOrderNumber())).thenThrow(EntityDoesNotExistException.class);
 
         //Act
-        MvcResult result = mockMvc.perform(put(ORDER_ID_URL, orderEto.getId())
+        MvcResult result = mockMvc.perform(put(ORDER_NUMBER_URL, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(orderTo)))
 
@@ -596,13 +595,13 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("PUT /order/v1/order/{id} - Unprocessable Entity")
+    @DisplayName("PUT /order/v1/order/{orderNumber} - Unprocessable Entity")
     void testUpdateOrderUnprocessableEntity() throws Exception {
         //Arrange
-        when(orderHandling.updateOrder(orderTo, orderEto.getId())).thenThrow(EntityAlreadyExistsException.class);
+        when(orderHandling.updateOrder(orderTo, orderEto.getOrderNumber())).thenThrow(EntityAlreadyExistsException.class);
 
         //Act
-        mockMvc.perform(put(ORDER_ID_URL, orderEto.getId())
+        mockMvc.perform(put(ORDER_NUMBER_URL, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(orderTo)))
 
@@ -612,13 +611,13 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("PUT /order/v1/order/{id} - ISE")
+    @DisplayName("PUT /order/v1/order/{orderNumber} - ISE")
     void testUpdateOrderISE() throws Exception {
         //Arrange
-        when(orderHandling.updateOrder(orderTo, orderEto.getId())).thenReturn(Optional.empty());
+        when(orderHandling.updateOrder(orderTo, orderEto.getOrderNumber())).thenReturn(Optional.empty());
 
         //Act
-        mockMvc.perform(put(ORDER_ID_URL, orderEto.getId())
+        mockMvc.perform(put(ORDER_NUMBER_URL, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(orderTo)))
 
@@ -680,13 +679,13 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("PUT /order/v1/order/{id}/finish - OK")
+    @DisplayName("PUT /order/v1/order/{orderNumber}/finish - OK")
     void testFinishOrderOk() throws Exception {
         //Arrange
-        when(orderHandling.finishOrder(orderEto.getId())).thenReturn(Optional.ofNullable(orderEto));
+        when(orderHandling.finishOrder(orderEto.getOrderNumber())).thenReturn(Optional.ofNullable(orderEto));
 
         //Act
-        MvcResult result = mockMvc.perform(put(FINISH_ORDER, orderEto.getId())
+        MvcResult result = mockMvc.perform(put(FINISH_ORDER, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE))
 
                 //Assert
@@ -699,13 +698,13 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("PUT /order/v1/order/{id}/finish - Not Found")
+    @DisplayName("PUT /order/v1/order/{orderNumber}/finish - Not Found")
     void testFinishOrderNotFound() throws Exception {
         //Arrange
-        when(orderHandling.finishOrder(orderEto.getId())).thenThrow(EntityDoesNotExistException.class);
+        when(orderHandling.finishOrder(orderEto.getOrderNumber())).thenThrow(EntityDoesNotExistException.class);
 
         //Act
-        mockMvc.perform(put(FINISH_ORDER, orderEto.getId())
+        mockMvc.perform(put(FINISH_ORDER, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE))
 
                 //Assert
@@ -713,13 +712,13 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("PUT /order/v1/order/{id}/finish - Unprocessable Entity")
+    @DisplayName("PUT /order/v1/order/{orderNumber}/finish - Unprocessable Entity")
     void testFinishOrderUnprocessableEntity() throws Exception {
         //Arrange
-        when(orderHandling.finishOrder(orderEto.getId())).thenThrow(OrderStatusInappropriateException.class);
+        when(orderHandling.finishOrder(orderEto.getOrderNumber())).thenThrow(OrderStatusInappropriateException.class);
 
         //Act
-        mockMvc.perform(put(FINISH_ORDER, orderEto.getId())
+        mockMvc.perform(put(FINISH_ORDER, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE))
 
                 //Assert
@@ -727,26 +726,26 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("PUT /order/v1/order/{id}/finish - ISE")
+    @DisplayName("PUT /order/v1/order/{orderNumber}/finish - ISE")
     void testFinishOrderISE() throws Exception {
         //Arrange
-        when(orderHandling.finishOrder(orderEto.getId())).thenReturn(Optional.empty());
+        when(orderHandling.finishOrder(orderEto.getOrderNumber())).thenReturn(Optional.empty());
 
         //Act
-        mockMvc.perform(put(FINISH_ORDER, orderEto.getId())
+        mockMvc.perform(put(FINISH_ORDER, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE))
                 //Assert
                 .andExpect(status().isInternalServerError());
     }
 
     @Test
-    @DisplayName("PUT /order/v1/order/{id}/accept - OK")
+    @DisplayName("PUT /order/v1/order/{orderNumber}/accept - OK")
     void testAcceptOrderOk() throws Exception {
         //Arrange
-        when(orderHandling.acceptOrder(orderEto.getId())).thenReturn(Optional.ofNullable(orderEto));
+        when(orderHandling.acceptOrder(orderEto.getOrderNumber())).thenReturn(Optional.ofNullable(orderEto));
 
         //Act
-        MvcResult result = mockMvc.perform(put(ACCEPT_ORDER, orderEto.getId())
+        MvcResult result = mockMvc.perform(put(ACCEPT_ORDER, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE))
 
                 //Assert
@@ -759,13 +758,13 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("PUT /order/v1/order/{id}/accept - Not Found")
+    @DisplayName("PUT /order/v1/order/{orderNumber}/accept - Not Found")
     void testAcceptOrderNotFound() throws Exception {
         //Arrange
-        when(orderHandling.acceptOrder(orderEto.getId())).thenThrow(EntityDoesNotExistException.class);
+        when(orderHandling.acceptOrder(orderEto.getOrderNumber())).thenThrow(EntityDoesNotExistException.class);
 
         //Act
-        mockMvc.perform(put(ACCEPT_ORDER, orderEto.getId())
+        mockMvc.perform(put(ACCEPT_ORDER, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE))
 
                 //Assert
@@ -773,13 +772,13 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("PUT /order/v1/order/{id}/accept - Unprocessable Entity")
+    @DisplayName("PUT /order/v1/order/{orderNumber}/accept - Unprocessable Entity")
     void testAcceptOrderUnprocessableEntity() throws Exception {
         //Arrange
-        when(orderHandling.acceptOrder(orderEto.getId())).thenThrow(OrderStatusInappropriateException.class);
+        when(orderHandling.acceptOrder(orderEto.getOrderNumber())).thenThrow(OrderStatusInappropriateException.class);
 
         //Act
-        mockMvc.perform(put(ACCEPT_ORDER, orderEto.getId())
+        mockMvc.perform(put(ACCEPT_ORDER, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE))
 
                 //Assert
@@ -787,26 +786,26 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("PUT /order/v1/order/{id}/accept  - ISE")
+    @DisplayName("PUT /order/v1/order/{orderNumber}/accept  - ISE")
     void testAcceptOrderISE() throws Exception {
         //Arrange
-        when(orderHandling.acceptOrder(orderEto.getId())).thenReturn(Optional.empty());
+        when(orderHandling.acceptOrder(orderEto.getOrderNumber())).thenReturn(Optional.empty());
 
         //Act
-        mockMvc.perform(put(ACCEPT_ORDER, orderEto.getId())
+        mockMvc.perform(put(ACCEPT_ORDER, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE))
                 //Assert
                 .andExpect(status().isInternalServerError());
     }
 
     @Test
-    @DisplayName("PUT /order/v1/order/{id}/verification - OK")
+    @DisplayName("PUT /order/v1/order/{orderNumber}/verification - OK")
     void testVerificationOrderOk() throws Exception {
         //Arrange
-        when(orderHandling.sendOrderToVerification(orderEto.getId())).thenReturn(Optional.of(orderEto));
+        when(orderHandling.sendOrderToVerification(orderEto.getOrderNumber())).thenReturn(Optional.of(orderEto));
 
         //Act
-        MvcResult result = mockMvc.perform(put(SENT_TO_VERIFICATION_ORDER, orderEto.getId())
+        MvcResult result = mockMvc.perform(put(SENT_TO_VERIFICATION_ORDER, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE))
 
                 //Assert
@@ -819,13 +818,13 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("PUT /order/v1/order/{id}/verification - Not Found")
-    void testVerficationOrderNotFound() throws Exception {
+    @DisplayName("PUT /order/v1/order/{orderNumber}/verification - Not Found")
+    void testVerificationOrderNotFound() throws Exception {
         //Arrange
-        when(orderHandling.sendOrderToVerification(orderEto.getId())).thenThrow(EntityDoesNotExistException.class);
+        when(orderHandling.sendOrderToVerification(orderEto.getOrderNumber())).thenThrow(EntityDoesNotExistException.class);
 
         //Act
-        mockMvc.perform(put(SENT_TO_VERIFICATION_ORDER, orderEto.getId())
+        mockMvc.perform(put(SENT_TO_VERIFICATION_ORDER, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE))
 
                 //Assert
@@ -833,26 +832,26 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    @DisplayName("PUT /order/v1/order/{id}/verification - Unprocessable Entity")
+    @DisplayName("PUT /order/v1/order/{orderNumber}/verification - Unprocessable Entity")
     void testVerificationOrderUnprocessableEntity() throws Exception {
         //Arrange
-        when(orderHandling.sendOrderToVerification(orderEto.getId())).thenThrow(OrderStatusInappropriateException.class);
+        when(orderHandling.sendOrderToVerification(orderEto.getOrderNumber())).thenThrow(OrderStatusInappropriateException.class);
 
         //Act
-        mockMvc.perform(put(SENT_TO_VERIFICATION_ORDER, orderEto.getId())
+        mockMvc.perform(put(SENT_TO_VERIFICATION_ORDER, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE))
                 //Assert
                 .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
-    @DisplayName("PUT /order/v1/order/{id}/verification  - ISE")
+    @DisplayName("PUT /order/v1/order/{orderNumber}/verification  - ISE")
     void testVerificationOrderISE() throws Exception {
         //Arrange
-        when(orderHandling.sendOrderToVerification(orderEto.getId())).thenReturn(Optional.empty());
+        when(orderHandling.sendOrderToVerification(orderEto.getOrderNumber())).thenReturn(Optional.empty());
 
         //Act
-        mockMvc.perform(put(SENT_TO_VERIFICATION_ORDER, orderEto.getId())
+        mockMvc.perform(put(SENT_TO_VERIFICATION_ORDER, orderEto.getOrderNumber())
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE))
                 //Assert
                 .andExpect(status().isInternalServerError());

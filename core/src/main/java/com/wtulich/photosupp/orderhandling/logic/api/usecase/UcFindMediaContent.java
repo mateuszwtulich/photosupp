@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface UcFindMediaContent {
 
-    Optional<List<MediaContentEto>> findAllMediaContentByOrderId(Long id) throws EntityDoesNotExistException;
+    Optional<List<MediaContentEto>> findAllMediaContentByOrderNumber(String orderNumber) throws EntityDoesNotExistException;
 }

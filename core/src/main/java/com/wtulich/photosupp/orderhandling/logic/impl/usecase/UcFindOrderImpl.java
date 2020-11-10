@@ -33,7 +33,7 @@ public class UcFindOrderImpl implements UcFindOrder {
 
     private static final Logger LOG = LoggerFactory.getLogger(UcFindOrderImpl.class);
     private static final String ID_CANNOT_BE_NULL = "id cannot be a null value";
-    private static final String GET_ORDER_LOG = "Get Order with id {} from database.";
+    private static final String GET_ORDER_LOG = "Get Order with order number {} from database.";
     private static final String GET_ALL_ORDERS_LOG = "Get all Orders from database.";
 
     @Inject
@@ -70,9 +70,9 @@ public class UcFindOrderImpl implements UcFindOrder {
     }
 
     @Override
-    public Optional<OrderEto> findOrder(Long id) throws EntityDoesNotExistException {
-        OrderEntity orderEntity = orderDao.findById(id).orElseThrow(() ->
-                new EntityDoesNotExistException("Order with id " + id + " does not exist."));
+    public Optional<OrderEto> findOrder(String orderNumber) throws EntityDoesNotExistException {
+        OrderEntity orderEntity = orderDao.findByOrderNumber(orderNumber).orElseThrow(() ->
+                new EntityDoesNotExistException("Order with order number " + orderNumber + " does not exist."));
 
         LOG.debug(GET_ORDER_LOG);
 

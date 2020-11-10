@@ -216,4 +216,16 @@ public class ServiceRestServiceImpl implements ServiceRestService {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         }
     }
+
+    @Override
+    public ResponseEntity<BookingEtoWithOrderNumber> confirmBooking(Long id, Long coordinatorId) {
+        try {
+            return ResponseEntity
+                    .ok()
+                    .body(serviceOrdering.confirmBooking(id, coordinatorId).orElseThrow(() ->
+                            new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)));
+        } catch (EntityDoesNotExistException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 }

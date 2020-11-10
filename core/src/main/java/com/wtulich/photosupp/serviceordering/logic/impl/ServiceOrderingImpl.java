@@ -114,6 +114,11 @@ public class ServiceOrderingImpl implements ServiceOrdering {
     }
 
     @Override
+    public Optional<BookingEtoWithOrderNumber> confirmBooking(Long id, Long coordinatorId) throws EntityDoesNotExistException {
+        return ucManageBooking.confirmBooking(id, coordinatorId);
+    }
+
+    @Override
     public Optional<IndicatorEto> createIndicator(IndicatorTo indicatorTo) throws EntityAlreadyExistsException {
         return ucManageIndicator.createIndicator(indicatorTo);
     }

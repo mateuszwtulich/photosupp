@@ -34,6 +34,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +122,6 @@ public class UcFindOrderTest {
         bookingEntity.setPriceIndicatorList(priceIndicatorEntities);
 
         orderEntity = new OrderEntity("INVIU_00001", OrderStatus.IN_PROGRESS, 1000D, LocalDate.now(), userEntity2, userEntity,  bookingEntity );
-        orderEntity.setId(1L);
 
         orderEntities = new ArrayList<>();
         orderEntities.add(orderEntity);
@@ -152,7 +152,7 @@ public class UcFindOrderTest {
         bookingEto.setPriceIndicatorEtoList(priceIndicatorEtoList);
 
 
-        orderEto = new OrderEto(1L, "INVIU_00001", userEto, userEto2, OrderStatus.IN_PROGRESS, bookingEto, 1000D,
+        orderEto = new OrderEto("INVIU_00001", userEto, userEto2, OrderStatus.IN_PROGRESS, bookingEto, 1000D,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format(LocalDate.now()));
 
         orderEtoList = new ArrayList<>();
@@ -192,10 +192,10 @@ public class UcFindOrderTest {
     @DisplayName("Test findOrderById Success")
     void testFindOrderByIdSuccess() throws EntityDoesNotExistException {
         //Arrange
-        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.of(orderEntity));
+        when(orderDao.findByOrderNumber(orderEntity.getOrderNumber())).thenReturn(Optional.of(orderEntity));
 
         //Act
-        Optional<OrderEto> result = ucFindOrder.findOrder(orderEntity.getId());
+        Optional<OrderEto> result = ucFindOrder.findOrder(orderEntity.getOrderNumber());
 
         // Assert
         Assertions.assertTrue(result.isPresent());
@@ -206,10 +206,10 @@ public class UcFindOrderTest {
     @DisplayName("Test findOrderById Failure")
     void testFindOrderByIdFailure() {
         //Arrange
-        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(null));
+        when(orderDao.findByOrderNumber(orderEntity.getOrderNumber())).thenReturn(Optional.ofNullable(null));
 
         //Act Assert
         Assertions.assertThrows(EntityDoesNotExistException.class, () ->
-                ucFindOrder.findOrder(orderEntity.getId()));
+                ucFindOrder.findOrder(orderEntity.getOrderNumber()));
     }
 }

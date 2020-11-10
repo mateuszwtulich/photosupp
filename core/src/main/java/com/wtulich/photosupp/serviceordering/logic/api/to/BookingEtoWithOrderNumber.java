@@ -3,11 +3,10 @@ package com.wtulich.photosupp.serviceordering.logic.api.to;
 import com.sun.istack.NotNull;
 import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationEntityTransportObject;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-public class BookingEtoWithOrderId extends AbstractApplicationEntityTransportObject {
+public class BookingEtoWithOrderNumber extends AbstractApplicationEntityTransportObject {
 
     @NotNull
     private String name;
@@ -36,14 +35,14 @@ public class BookingEtoWithOrderId extends AbstractApplicationEntityTransportObj
     private List<PriceIndicatorEto> priceIndicatorEtoList;
 
     @NotNull
-    private Long orderId;
+    private String orderNumber;
 
-    public BookingEtoWithOrderId() {
+    public BookingEtoWithOrderNumber() {
     }
 
-    public BookingEtoWithOrderId(Long id, String name, String description, ServiceEto serviceEto, AddressEto addressEto,
-                                 boolean isConfirmed, Double predictedPrice, String start, String end,
-                                 String modificationDate, List<PriceIndicatorEto> priceIndicatorEtoList, Long orderId) {
+    public BookingEtoWithOrderNumber(Long id, String name, String description, ServiceEto serviceEto, AddressEto addressEto,
+                                     boolean isConfirmed, Double predictedPrice, String start, String end,
+                                     String modificationDate, List<PriceIndicatorEto> priceIndicatorEtoList, String orderNumber) {
         super(id);
         this.name = name;
         this.description = description;
@@ -55,7 +54,7 @@ public class BookingEtoWithOrderId extends AbstractApplicationEntityTransportObj
         this.end = end;
         this.modificationDate = modificationDate;
         this.priceIndicatorEtoList = priceIndicatorEtoList;
-        this.orderId = orderId;
+        this.orderNumber = orderNumber;
     }
 
     public String getName() {
@@ -138,20 +137,20 @@ public class BookingEtoWithOrderId extends AbstractApplicationEntityTransportObj
         this.priceIndicatorEtoList = priceIndicatorEtoList;
     }
 
-    public Long getOrderId() {
-        return orderId;
+    public String getOrderNumber() {
+        return orderNumber;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BookingEtoWithOrderId)) return false;
+        if (!(o instanceof BookingEtoWithOrderNumber)) return false;
         if (!super.equals(o)) return false;
-        BookingEtoWithOrderId that = (BookingEtoWithOrderId) o;
+        BookingEtoWithOrderNumber that = (BookingEtoWithOrderNumber) o;
         return isConfirmed == that.isConfirmed &&
                 name.equals(that.name) &&
                 Objects.equals(description, that.description) &&
@@ -162,11 +161,11 @@ public class BookingEtoWithOrderId extends AbstractApplicationEntityTransportObj
                 end.equals(that.end) &&
                 modificationDate.equals(that.modificationDate) &&
                 Objects.equals(priceIndicatorEtoList, that.priceIndicatorEtoList) &&
-                orderId.equals(that.orderId);
+                orderNumber.equals(that.orderNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, description, serviceEto, addressEto, isConfirmed, predictedPrice, start, end, modificationDate, priceIndicatorEtoList, orderId);
+        return Objects.hash(super.hashCode(), name, description, serviceEto, addressEto, isConfirmed, predictedPrice, start, end, modificationDate, priceIndicatorEtoList, orderNumber);
     }
 }

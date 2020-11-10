@@ -24,7 +24,6 @@ import java.util.Optional;
 public class UcManageMediaContentImpl implements UcManageMediaContent {
 
     private static final Logger LOG = LoggerFactory.getLogger(UcManageMediaContentImpl.class);
-    private static final String ID_CANNOT_BE_NULL = "id cannot be a null value";
     private static final String CREATE_MEDIA_CONTENT_LOG = "Create Media Content with url {} in database.";
 
     @Inject
@@ -41,20 +40,20 @@ public class UcManageMediaContentImpl implements UcManageMediaContent {
         LOG.debug(CREATE_MEDIA_CONTENT_LOG, mediaContentTo.getUrl());
 
         MediaContentEntity mediaContentEntity = mediaContentMapper.toMediaContentEntity(mediaContentTo);
-        mediaContentEntity.setOrder(getOrderById(mediaContentTo.getOrderId()));
+        mediaContentEntity.setOrder(getOrderByOrderNumber(mediaContentTo.getOrderNumber()));
 
         return Optional.of(toMediaContentEto(mediaContentDao.save(mediaContentEntity)));
     }
 
     private MediaContentEto toMediaContentEto(MediaContentEntity mediaContentEntity){
         MediaContentEto mediaContentEto = mediaContentMapper.toMediaContentEto(mediaContentEntity);
-        mediaContentEto.setOrderId(mediaContentEntity.getOrder().getId());
+        mediaContentEto.setOrderNumber(mediaContentEntity.getOrder().getOrderNumber());
 
         return mediaContentEto;
     }
 
-    private OrderEntity getOrderById(Long orderId) throws EntityDoesNotExistException {
-        return orderDao.findById(orderId).orElseThrow(() ->
-                new EntityDoesNotExistException("Order with id " + orderId + " does not exist."));
+    private OrderEntity getOrderByOrderNumber(String orderNumber) throws EntityDoesNotExistException {
+        return orderDao.findByOrderNumber(orderNumber).orElseThrow(() ->
+                new EntityDoesNotExistException("Order with order number " + orderNumber + " does not exist."));
     }
 }

@@ -24,6 +24,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -63,7 +64,6 @@ public class UcDeleteMediaContentTest {
         userEntity.setId(2L);
 
         orderEntity = new OrderEntity("INVIU_00001", OrderStatus.IN_PROGRESS, 1000D, LocalDate.now(), userEntity, userEntity,  null );
-        orderEntity.setId(1L);
 
         mediaContentEntity = new MediaContentEntity(MediaType.IMAGE, "https://sample.com/jpg1", orderEntity);
         mediaContentEntity.setId(1L);
@@ -95,10 +95,10 @@ public class UcDeleteMediaContentTest {
     @DisplayName("Test deleteAllMediaContent Success")
     void testDeleteAllCommentSuccess() {
         //Arrange
-        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.of(orderEntity));
+        when(orderDao.findByOrderNumber(orderEntity.getOrderNumber())).thenReturn(Optional.of(orderEntity));
 
         //Act Assert
-        Assertions.assertDoesNotThrow(() -> ucDeleteMediaContent.deleteAllMediaContent(orderEntity.getId()));
+        Assertions.assertDoesNotThrow(() -> ucDeleteMediaContent.deleteAllMediaContent(orderEntity.getOrderNumber()));
     }
 
 
@@ -106,10 +106,10 @@ public class UcDeleteMediaContentTest {
     @DisplayName("Test deleteAllMediaContent Failure")
     void testDeleteAllCommentFailure() {
         //Arrange
-        when(orderDao.findById(orderEntity.getId())).thenReturn(java.util.Optional.ofNullable(null));
+        when(orderDao.findByOrderNumber(orderEntity.getOrderNumber())).thenReturn(java.util.Optional.ofNullable(null));
 
         //Act Assert
         Assertions.assertThrows(EntityDoesNotExistException.class, () ->
-                ucDeleteMediaContent.deleteAllMediaContent(orderEntity.getId()));
+                ucDeleteMediaContent.deleteAllMediaContent(orderEntity.getOrderNumber()));
     }
 }

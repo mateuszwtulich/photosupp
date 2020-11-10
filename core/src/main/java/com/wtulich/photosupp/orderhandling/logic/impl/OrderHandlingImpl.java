@@ -56,23 +56,23 @@ public class OrderHandlingImpl implements OrderHandling {
     }
 
     @Override
-    public void deleteAllMediaContent(Long id) throws EntityDoesNotExistException {
-        ucDeleteMediaContent.deleteAllMediaContent(id);
+    public void deleteAllMediaContent(String orderNumber) throws EntityDoesNotExistException {
+        ucDeleteMediaContent.deleteAllMediaContent(orderNumber);
     }
 
     @Override
-    public void deleteOrder(Long id) throws EntityDoesNotExistException, EntityHasAssignedEntitiesException {
-        ucDeleteOrder.deleteOrder(id);
+    public void deleteOrder(String orderNumber) throws EntityDoesNotExistException, EntityHasAssignedEntitiesException {
+        ucDeleteOrder.deleteOrder(orderNumber);
     }
 
     @Override
-    public Optional<List<CommentEto>> findAllCommentsByOrderId(Long id) throws EntityDoesNotExistException {
-        return ucFindComment.findAllCommentsByOrderId(id);
+    public Optional<List<CommentEto>> findAllCommentsByOrderNumber(String orderNumber) throws EntityDoesNotExistException {
+        return ucFindComment.findAllCommentsByOrderNumber(orderNumber);
     }
 
     @Override
-    public Optional<List<MediaContentEto>> findAllMediaContentByOrderId(Long id) throws EntityDoesNotExistException {
-        return ucFindMediaContent.findAllMediaContentByOrderId(id);
+    public Optional<List<MediaContentEto>> findAllMediaContentByOrderNumber(String orderNumber) throws EntityDoesNotExistException {
+        return ucFindMediaContent.findAllMediaContentByOrderNumber(orderNumber);
     }
 
     @Override
@@ -81,8 +81,8 @@ public class OrderHandlingImpl implements OrderHandling {
     }
 
     @Override
-    public Optional<OrderEto> findOrder(Long id) throws EntityDoesNotExistException {
-        return ucFindOrder.findOrder(id);
+    public Optional<OrderEto> findOrder(String orderNumber) throws EntityDoesNotExistException {
+        return ucFindOrder.findOrder(orderNumber);
     }
 
     @Override
@@ -96,23 +96,23 @@ public class OrderHandlingImpl implements OrderHandling {
     }
 
     @Override
-    public Optional<OrderEto> updateOrder(OrderTo orderTo, Long id) throws EntityDoesNotExistException, EntityAlreadyExistsException {
-        return ucManageOrder.updateOrder(orderTo, id);
+    public Optional<OrderEto> updateOrder(OrderTo orderTo, String orderNumber) throws EntityDoesNotExistException, EntityAlreadyExistsException {
+        return ucManageOrder.updateOrder(orderTo, orderNumber);
     }
 
     @Override
-    public Optional<OrderEto> finishOrder(Long id) throws EntityDoesNotExistException, OrderStatusInappropriateException {
-        return ucManageOrder.finishOrder(id);
+    public Optional<OrderEto> finishOrder(String orderNumber) throws EntityDoesNotExistException, OrderStatusInappropriateException {
+        return ucManageOrder.finishOrder(orderNumber);
     }
 
     @Override
-    public Optional<OrderEto> acceptOrder(Long id) throws EntityDoesNotExistException, OrderStatusInappropriateException {
-        return ucManageOrder.acceptOrder(id);
+    public Optional<OrderEto> acceptOrder(String orderNumber) throws EntityDoesNotExistException, OrderStatusInappropriateException {
+        return ucManageOrder.acceptOrder(orderNumber);
     }
 
     @Override
-    public Optional<OrderEto> sendOrderToVerification(Long id) throws EntityDoesNotExistException, OrderStatusInappropriateException {
-        return ucManageOrder.sendOrderToVerification(id);
+    public Optional<OrderEto> sendOrderToVerification(String orderNumber) throws EntityDoesNotExistException, OrderStatusInappropriateException {
+        return ucManageOrder.sendOrderToVerification(orderNumber);
     }
 
     @Override

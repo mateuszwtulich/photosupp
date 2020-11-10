@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface UcFindComment {
 
-    Optional<List<CommentEto>> findAllCommentsByOrderId(Long id) throws EntityDoesNotExistException;
+    Optional<List<CommentEto>> findAllCommentsByOrderNumber(String orderNumber) throws EntityDoesNotExistException;
 }

@@ -26,6 +26,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -81,21 +82,20 @@ public class UcManageMediaContentTest {
         userEntity2.setId(2L);
 
         orderEntity = new OrderEntity("INVIU_00001", OrderStatus.IN_PROGRESS, 1000D, LocalDate.now(), userEntity2, userEntity,  null );
-        orderEntity.setId(1L);
 
         mediaContentEntity = new MediaContentEntity(MediaType.IMAGE, "https://sample.com/jpg1", orderEntity);
         mediaContentEntity.setId(1L);
 
-        mediaContentEto = new MediaContentEto(1L, MediaType.IMAGE, "https://sample.com/jpg1", 1L);
+        mediaContentEto = new MediaContentEto(1L, MediaType.IMAGE, "https://sample.com/jpg1", "INVIU_00001");
 
-        mediaContentTo = new MediaContentTo(MediaType.IMAGE, "https://sample.com/jpg1", 1L);
+        mediaContentTo = new MediaContentTo(MediaType.IMAGE, "https://sample.com/jpg1", "INVIU_00001");
     }
 
     @Test
     @DisplayName("Test createMediaContent Success")
     void testCreateMediaContentSuccess() throws EntityDoesNotExistException {
         //Arrange
-        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
+        when(orderDao.findByOrderNumber(orderEntity.getOrderNumber())).thenReturn(Optional.ofNullable(orderEntity));
         when(mediaContentDao.save(mediaContentEntity)).thenReturn(mediaContentEntity);
 
         //Act
@@ -110,7 +110,7 @@ public class UcManageMediaContentTest {
     @DisplayName("Test createMediaContent EntityDoesNotExistException")
     void testCreateMediaContentEntityDoesNotExistException() throws EntityDoesNotExistException {
         //Arrange
-        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(null));
+        when(orderDao.findByOrderNumber(orderEntity.getOrderNumber())).thenReturn(Optional.ofNullable(null));
 
         //Act Assert
         Assertions.assertThrows(EntityDoesNotExistException.class, () ->

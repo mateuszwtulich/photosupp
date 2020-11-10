@@ -115,3 +115,15 @@ INSERT INTO public.booking(
 INSERT INTO public.price_indicator(
     INDICATOR_ID, BOOKING_ID, INDICATOR_PRICE, MULTIPLIER)
     VALUES (1, 1, 400, 10);
+
+INSERT INTO public.photosupp_order(
+    ORDER_NUMBER, USER_ID, COORDINATOR_ID, STATUS, BOOKING_ID, CREATED_AT, PRICE)
+    VALUES ('INVIU_00001', 1, 2, 'NEW', null, '2020-09-11', 1000);
+
+INSERT INTO public.PHOTOSUPP_COMMENT(
+    id, CONTENT, ORDER_ID, USER_ID, CREATED_AT)
+    VALUES (1, 'Perfect, thanks!', 'INVIU_00001', 2, '2020-09-11');
+
+INSERT INTO public.media_content(
+    id, TYPE, URL, ORDER_ID)
+    VALUES (1, 'IMAGE', 'https://sample.com/jpg1', 'INVIU_00001');

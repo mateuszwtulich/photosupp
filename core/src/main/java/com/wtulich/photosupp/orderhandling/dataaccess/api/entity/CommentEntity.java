@@ -3,6 +3,8 @@ package com.wtulich.photosupp.orderhandling.dataaccess.api.entity;
 import com.sun.istack.NotNull;
 import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationPersistenceEntity;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -25,16 +28,15 @@ public class CommentEntity extends AbstractApplicationPersistenceEntity {
 
     @NotNull
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinColumn(name = "USER_ID", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "USER_ID", nullable = false, referencedColumnName = "ID")
     private UserEntity user;
 
     @NotNull
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinColumn(name = "ORDER_ID", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "ORDER_ID", nullable = false, referencedColumnName = "order_number")
     private OrderEntity order;
 
-    @NotNull
-    @Column(name = "CREATED_AT", nullable = false)
+    @Column(name = "CREATED_AT", updatable = false)
     private LocalDate createdAt;
 
     public CommentEntity() {

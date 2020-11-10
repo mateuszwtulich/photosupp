@@ -30,7 +30,7 @@ public interface OrderRestService extends RestService {
     List<OrderEto> getAllOrders();
 
 
-    @ApiOperation(value = "Get order by id.",
+    @ApiOperation(value = "Get order by number.",
             tags = {"order"},
             response = OrderEto.class)
     @ApiResponses(value = {
@@ -39,12 +39,12 @@ public interface OrderRestService extends RestService {
             @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @GetMapping(value = "/order/{id}",
+    @GetMapping(value = "/order/{orderNumber}",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<OrderEto> getOrder(@PathVariable(value = "id") Long id);
+    ResponseEntity<OrderEto> getOrder(@PathVariable(value = "orderNumber") String orderNumber);
 
 
-    @ApiOperation(value = "Get all comments by order id.",
+    @ApiOperation(value = "Get all comments by order number.",
             tags = {"comment"},
             response = CommentEto.class, responseContainer = "List")
     @ApiResponses(value = {
@@ -53,12 +53,12 @@ public interface OrderRestService extends RestService {
             @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @GetMapping(value = "/order/{id}/comments",
+    @GetMapping(value = "/order/{orderNumber}/comments",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
-    List<CommentEto> getAllCommentsByOrderId(@PathVariable(name = "id") Long id);
+    List<CommentEto> getAllCommentsByOrderId(@PathVariable(name = "orderNumber") String orderNumber);
 
 
-    @ApiOperation(value = "Get all media content by order id.",
+    @ApiOperation(value = "Get all media content by order number.",
             tags = {"mediaContent"},
             response = MediaContentEto.class, responseContainer = "List")
     @ApiResponses(value = {
@@ -67,9 +67,9 @@ public interface OrderRestService extends RestService {
             @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @GetMapping(value = "/order/{id}/mediaContent",
+    @GetMapping(value = "/order/{orderNumber}/mediaContent",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
-    List<MediaContentEto> getAllMediaContentByOrderId(@PathVariable(name = "id") Long id);
+    List<MediaContentEto> getAllMediaContentByOrderId(@PathVariable(name = "orderNumber") String orderNumber);
 
 
     @ApiOperation(value = "Creates order",
@@ -134,10 +134,10 @@ public interface OrderRestService extends RestService {
             @ApiResponse(code = 422, message = "Could not process entity"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @PutMapping(value = "/order/{id}",
+    @PutMapping(value = "/order/{orderNumber}",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<OrderEto> updateOrder(@Validated @RequestBody OrderTo orderTo, @PathVariable(value = "id") Long id);
+    ResponseEntity<OrderEto> updateOrder(@Validated @RequestBody OrderTo orderTo, @PathVariable(value = "orderNumber") String orderNumber);
 
 
     @ApiOperation(value = "Updates comment",
@@ -166,9 +166,9 @@ public interface OrderRestService extends RestService {
             @ApiResponse(code = 404, message = "Entity not found"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @DeleteMapping(value = "/order/{id}",
+    @DeleteMapping(value = "/order/{orderNumber}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> deleteOrder(@PathVariable(value = "id") Long id);
+    ResponseEntity<?> deleteOrder(@PathVariable(value = "orderNumber") String orderNumber);
 
 
     @ApiOperation(value = "Deletes comment",
@@ -199,7 +199,7 @@ public interface OrderRestService extends RestService {
     ResponseEntity<?> deleteMediaContent(@PathVariable(value = "id") Long id);
 
 
-    @ApiOperation(value = "Deletes all mediaContent by order id",
+    @ApiOperation(value = "Deletes all mediaContent by order number",
             tags = {"mediaContent"})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful request"),
@@ -208,9 +208,9 @@ public interface OrderRestService extends RestService {
             @ApiResponse(code = 404, message = "Entity not found"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @DeleteMapping(value = "/order/{orderId}/mediaContent",
+    @DeleteMapping(value = "/order/{orderNumber}/mediaContent",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> deleteAllMediaContent(@PathVariable(value = "orderId") Long orderId);
+    ResponseEntity<?> deleteAllMediaContent(@PathVariable(value = "orderNumber") String orderNumber);
 
 
     @ApiOperation(value = "Finishes order",
@@ -224,10 +224,10 @@ public interface OrderRestService extends RestService {
             @ApiResponse(code = 422, message = "Could not process entity"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @PutMapping(value = "/order/{id}/finish",
+    @PutMapping(value = "/order/{orderNumber}/finish",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<OrderEto> finishOrder(@PathVariable(value = "id") Long id);
+    ResponseEntity<OrderEto> finishOrder(@PathVariable(value = "orderNumber") String orderNumber);
 
 
     @ApiOperation(value = "Accepts order",
@@ -241,10 +241,10 @@ public interface OrderRestService extends RestService {
             @ApiResponse(code = 422, message = "Could not process entity"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @PutMapping(value = "/order/{id}/accept",
+    @PutMapping(value = "/order/{orderNumber}/accept",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<OrderEto> acceptOrder(@PathVariable(value = "id") Long id);
+    ResponseEntity<OrderEto> acceptOrder(@PathVariable(value = "orderNumber") String orderNumber);
 
 
     @ApiOperation(value = "Sends order to verification",
@@ -258,8 +258,8 @@ public interface OrderRestService extends RestService {
             @ApiResponse(code = 422, message = "Could not process entity"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @PutMapping(value = "/order/{id}/verification",
+    @PutMapping(value = "/order/{orderNumber}/verification",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<OrderEto> sentToVerificationOrder(@PathVariable(value = "id") Long id);
+    ResponseEntity<OrderEto> sentToVerificationOrder(@PathVariable(value = "orderNumber") String orderNumber);
 }

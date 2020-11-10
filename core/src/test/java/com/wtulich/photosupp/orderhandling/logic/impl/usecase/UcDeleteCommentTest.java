@@ -22,6 +22,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +58,6 @@ public class UcDeleteCommentTest {
         userEntity.setId(2L);
 
         OrderEntity orderEntity = new OrderEntity("INVIU_00001", OrderStatus.IN_PROGRESS, 1000D, LocalDate.now(), userEntity, userEntity,  null );
-        orderEntity.setId(1L);
 
         commentEntity = new CommentEntity("Perfect, thanks!", userEntity, orderEntity, LocalDate.now());
         commentEntity.setId(1L);

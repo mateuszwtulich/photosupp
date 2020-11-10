@@ -18,7 +18,7 @@ import javax.inject.Named;
 public class UcDeleteOrderImpl implements UcDeleteOrder {
 
     private static final Logger LOG = LoggerFactory.getLogger(UcDeleteOrderImpl.class);
-    private static final String DELETE_ORDER_LOG = "Delete Order with id {} in database.";
+    private static final String DELETE_ORDER_LOG = "Delete Order with order status {} in database.";
 
     @Inject
     private OrderDao orderDao;
@@ -27,16 +27,16 @@ public class UcDeleteOrderImpl implements UcDeleteOrder {
     private MediaContentDao mediaContentDao;
 
     @Override
-    public void deleteOrder(Long id) throws EntityDoesNotExistException, EntityHasAssignedEntitiesException {
-        OrderEntity orderEntity = orderDao.findById(id).orElseThrow(() ->
-                new EntityDoesNotExistException("Order with id " + id + " does not exist."));
+    public void deleteOrder(String orderStatus) throws EntityDoesNotExistException, EntityHasAssignedEntitiesException {
+        OrderEntity orderEntity = orderDao.findByOrderNumber(orderStatus).orElseThrow(() ->
+                new EntityDoesNotExistException("Order with order status " + orderStatus + " does not exist."));
 
-        if(mediaContentDao.findAllByOrder_Id(orderEntity.getId()).isEmpty()){
-            LOG.debug(DELETE_ORDER_LOG, orderEntity.getId());
+        if(mediaContentDao.findAllByOrder_OrderNumber(orderEntity.getOrderNumber()).isEmpty()){
+            LOG.debug(DELETE_ORDER_LOG, orderEntity.getOrderNumber());
 
-            orderDao.deleteById(orderEntity.getId());
+            orderDao.deleteByOrderNumber(orderEntity.getOrderNumber());
         } else {
-            throw new EntityHasAssignedEntitiesException("Order with id " + id + " has assigned media content.");
+            throw new EntityHasAssignedEntitiesException("Order with order status " + orderStatus + " has assigned media content.");
         }
     }
 }

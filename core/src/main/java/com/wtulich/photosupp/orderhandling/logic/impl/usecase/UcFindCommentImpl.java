@@ -29,7 +29,7 @@ public class UcFindCommentImpl implements UcFindComment {
 
     private static final Logger LOG = LoggerFactory.getLogger(UcFindCommentImpl.class);
     private static final String ID_CANNOT_BE_NULL = "id cannot be a null value";
-    private static final String GET_ALL_COMMENTS_LOG = "Get all Comments of Order with id {} from database.";
+    private static final String GET_ALL_COMMENTS_LOG = "Get all Comments of Order with order number {} from database.";
 
     @Inject
     private CommentDao commentDao;
@@ -47,22 +47,22 @@ public class UcFindCommentImpl implements UcFindComment {
     private AccountMapper accountMapper;
 
     @Override
-    public Optional<List<CommentEto>> findAllCommentsByOrderId(Long id) throws EntityDoesNotExistException {
+    public Optional<List<CommentEto>> findAllCommentsByOrderNumber(String orderNumber) throws EntityDoesNotExistException {
 
-        Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
-        OrderEntity orderEntity = orderDao.findById(id).orElseThrow(() ->
-                new EntityDoesNotExistException("Order with id " + id + " does not exist."));
+        Objects.requireNonNull(orderNumber, ID_CANNOT_BE_NULL);
+        OrderEntity orderEntity = orderDao.findByOrderNumber(orderNumber).orElseThrow(() ->
+                new EntityDoesNotExistException("Order with order number " + orderNumber + " does not exist."));
 
         LOG.debug(GET_ALL_COMMENTS_LOG);
 
-        return Optional.of(commentDao.findAllByOrder_Id(orderEntity.getId()).stream()
+        return Optional.of(commentDao.findAllByOrder_OrderNumber(orderEntity.getOrderNumber()).stream()
                 .map(commentEntity -> toCommentEto(commentEntity))
                 .collect(Collectors.toList()));
     }
 
     private CommentEto toCommentEto(CommentEntity commentEntity){
         CommentEto commentEto = commentMapper.toCommentEto(commentEntity);
-        commentEto.setOrderId(commentEntity.getOrder().getId());
+        commentEto.setOrderNumber(commentEntity.getOrder().getOrderNumber());
         commentEto.setUserEto(toUserEto(commentEntity.getUser()));
 
         return commentEto;

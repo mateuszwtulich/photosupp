@@ -10,7 +10,7 @@ public class CommentTo {
     private String content;
 
     @NotNull
-    private Long orderId;
+    private String orderNumber;
 
     @NotNull
     private Long userId;
@@ -18,9 +18,9 @@ public class CommentTo {
     public CommentTo() {
     }
 
-    public CommentTo(String content, Long orderId, Long userId) {
+    public CommentTo(String content, String orderNumber, Long userId) {
         this.content = content;
-        this.orderId = orderId;
+        this.orderNumber = orderNumber;
         this.userId = userId;
     }
 
@@ -32,12 +32,12 @@ public class CommentTo {
         this.content = content;
     }
 
-    public Long getOrderId() {
-        return orderId;
+    public String getOrderNumber() {
+        return orderNumber;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     public Long getUserId() {
@@ -54,12 +54,12 @@ public class CommentTo {
         if (!(o instanceof CommentTo)) return false;
         CommentTo commentTo = (CommentTo) o;
         return content.equals(commentTo.content) &&
-                orderId.equals(commentTo.orderId) &&
+                orderNumber.equals(commentTo.orderNumber) &&
                 userId.equals(commentTo.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(content, orderId, userId);
+        return Objects.hash(content, orderNumber, userId);
     }
 }

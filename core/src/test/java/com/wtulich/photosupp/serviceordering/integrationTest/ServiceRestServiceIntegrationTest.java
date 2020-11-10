@@ -1,6 +1,7 @@
 package com.wtulich.photosupp.serviceordering.integrationTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
 import com.wtulich.photosupp.serviceordering.logic.api.to.*;
 import com.wtulich.photosupp.userhandling.logic.api.to.AccountEto;
@@ -24,8 +25,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,6 +38,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ServiceRestServiceIntegrationTest {
+    private static String GET_ALL_MEDIA_CONTENT_BY_ORDER_NUMBER_URL = "/order/v1/order/{orderNumber}/mediaContent";
+    private static String ORDER_NUMBER_URL = "/order/v1/order/{orderNumber}";
     private static String GET_ALL_CITIES_URL = "/service/v1/address/cities";
     private static String GET_ALL_STREETS_URL = "/service/v1/address/streets";
     private static String GET_ALL_BOOKINGS_URL =  "/service/v1/bookings";
@@ -47,7 +52,7 @@ public class ServiceRestServiceIntegrationTest {
     private static String SERVICE_URL = "/service/v1/service";
     private static String BOOKING_URL = "/service/v1/booking";
     private static String INDICATOR_URL = "/service/v1/indicator";
-    private static String CONFIRM_BOOKING = "/service/v1/booking/confirm";
+    private static String CONFIRM_BOOKING = "/service/v1/booking/{id}/confirm";
     private static String CALCULATE_SERVICE_URL = "/service/v1/service/calculate";
 
     @Autowired
@@ -700,6 +705,45 @@ public class ServiceRestServiceIntegrationTest {
         mockMvc.perform(post(CALCULATE_SERVICE_URL)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(calculateTo)))
+
+                //Assert
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
+    @DisplayName("PUT /service/v1/booking/1/confirm - OK")
+    void testConfirmBookingOk() throws Exception {
+        //Arrange
+        mockMvc.perform(delete(GET_ALL_MEDIA_CONTENT_BY_ORDER_NUMBER_URL, "INVIU_00001"));
+        mockMvc.perform(delete(ORDER_NUMBER_URL, "INVIU_00001"));
+
+        BookingEtoWithOrderNumber bookingEtoWithOrderNumber =
+                new BookingEtoWithOrderNumber(1L, "Film dla TestCompany", "Film produktowy z dojazdem",
+                        serviceEto, addressEto, true, 1400D, "2020-04-11", "2020-04-12",
+                        "2020-04-11", priceIndicatorEtoList, "INVIU_00001");
+
+        //Act
+        MvcResult result = mockMvc.perform(put(CONFIRM_BOOKING, bookingEto.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(1L)))
+
+                //Assert
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), BookingEtoWithOrderNumber.class))
+                .isEqualToComparingFieldByField(bookingEtoWithOrderNumber);
+    }
+
+    @Test
+    @DisplayName("PUT /service/v1/booking/1/confirm - Not Found")
+    void testConfirmBookingNotFound() throws Exception {
+        //Act
+        mockMvc.perform(put(CONFIRM_BOOKING, 3L)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(1L)))
 
                 //Assert
                 .andExpect(status().isNotFound())

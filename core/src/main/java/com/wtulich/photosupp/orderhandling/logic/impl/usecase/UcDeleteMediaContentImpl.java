@@ -39,12 +39,12 @@ public class UcDeleteMediaContentImpl implements UcDeleteMediaContent {
     }
 
     @Override
-    public void deleteAllMediaContent(Long id) throws EntityDoesNotExistException {
-        OrderEntity orderEntity = orderDao.findById(id).orElseThrow(() ->
-                new EntityDoesNotExistException("Order with id " + id + " does not exist."));
+    public void deleteAllMediaContent(String orderNumber) throws EntityDoesNotExistException {
+        OrderEntity orderEntity = orderDao.findByOrderNumber(orderNumber).orElseThrow(() ->
+                new EntityDoesNotExistException("Order with order number " + orderNumber + " does not exist."));
 
-        LOG.debug(DELETE_ALL_MEDIA_CONTENT_LOG, orderEntity.getId());
+        LOG.debug(DELETE_ALL_MEDIA_CONTENT_LOG, orderEntity.getOrderNumber());
 
-        mediaContentDao.deleteAllByOrder_Id(id);
+        mediaContentDao.deleteAllByOrder_OrderNumber(orderNumber);
     }
 }

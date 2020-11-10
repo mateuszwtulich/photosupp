@@ -5,5 +5,5 @@ import com.wtulich.photosupp.general.logic.api.exception.EntityHasAssignedEntiti
 
 public interface UcDeleteOrder {
 
-    void deleteOrder(Long id) throws EntityDoesNotExistException, EntityHasAssignedEntitiesException;
+    void deleteOrder(String orderNumber) throws EntityDoesNotExistException, EntityHasAssignedEntitiesException;
 }

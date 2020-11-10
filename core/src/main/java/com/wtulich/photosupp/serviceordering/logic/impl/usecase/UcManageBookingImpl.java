@@ -3,6 +3,8 @@ package com.wtulich.photosupp.serviceordering.logic.impl.usecase;
 import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.general.logic.api.exception.UnprocessableEntityException;
+import com.wtulich.photosupp.orderhandling.dataaccess.api.dao.OrderDao;
+import com.wtulich.photosupp.orderhandling.dataaccess.api.entity.OrderEntity;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.*;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.*;
 import com.wtulich.photosupp.serviceordering.logic.api.mapper.*;
@@ -39,6 +41,7 @@ public class UcManageBookingImpl implements UcManageBooking {
     private static final String CREATE_ADDRESS_LOG = "Create Address in database.";
     private static final String UPDATE_BOOKING_LOG = "Update Booking with id {} from database.";
     private static final String UPDATE_ADDRESS_LOG = "Update Address in database.";
+    private static final String CONFIRM_BOOKING_URL = "Confirm booking with id {} from database.";
 
     @Inject
     private BookingDao bookingDao;
@@ -88,6 +91,9 @@ public class UcManageBookingImpl implements UcManageBooking {
     @Inject
     private UserMapper userMapper;
 
+    @Inject
+    private OrderDao orderDao;
+
 
     @Override
     public Optional<BookingEto> createBooking(BookingTo bookingTo) throws EntityAlreadyExistsException, EntityDoesNotExistException, UnprocessableEntityException {
@@ -114,12 +120,21 @@ public class UcManageBookingImpl implements UcManageBooking {
 
         Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
 
-        BookingEntity bookingEntity = bookingDao.findById(id).orElseThrow(() ->
-                new EntityDoesNotExistException("Booking with id " + id + " does not exist."));
-
+        BookingEntity bookingEntity = getBookingById(id);
         LOG.debug(UPDATE_BOOKING_LOG, id);
 
         return toBookingEto(mapBookingEntity(bookingEntity, bookingTo));
+    }
+
+    @Override
+    public Optional<BookingEtoWithOrderNumber> confirmBooking(Long id, Long coordinatorId) throws EntityDoesNotExistException {
+
+        Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
+
+        BookingEntity bookingEntity = getBookingById(id);
+        LOG.debug(CONFIRM_BOOKING_URL, id);
+
+        return Optional.of(toBookingEtoWithOrderNumber(bookingEntity, coordinatorId));
     }
 
     private BookingEntity toBookingEntity(BookingTo bookingTo) throws EntityDoesNotExistException {
@@ -223,6 +238,11 @@ public class UcManageBookingImpl implements UcManageBooking {
                 new EntityDoesNotExistException("Indicator with id " + indicatorId + " does not exist."));
     }
 
+    private BookingEntity getBookingById(Long bookingId) throws EntityDoesNotExistException {
+        return bookingDao.findById(bookingId).orElseThrow(() ->
+                new EntityDoesNotExistException("Booking with id " + bookingId + " does not exist."));
+    }
+
     private BookingEntity mapBookingEntity(BookingEntity bookingEntity, BookingTo bookingTo)
             throws EntityDoesNotExistException, EntityAlreadyExistsException, UnprocessableEntityException {
 
@@ -259,9 +279,8 @@ public class UcManageBookingImpl implements UcManageBooking {
             }
         }
 
+        bookingEntity.setModificationDate(LocalDate.now());
         bookingEntity.setPredictedPrice(calculatePredictedPrice(bookingEntity));
-
-        bookingEntity.setModificationDate( LocalDate.now() );
 
         return bookingEntity;
     }
@@ -310,5 +329,29 @@ public class UcManageBookingImpl implements UcManageBooking {
                 .collect(Collectors.toList()));
         userEto.setRoleEto(roleEto);
         return userEto;
+    }
+
+    private BookingEtoWithOrderNumber toBookingEtoWithOrderNumber(BookingEntity bookingEntity, Long coordinatorId)
+            throws EntityDoesNotExistException {
+        BookingEto bookingEto = toBookingEto(bookingEntity).get();
+
+        BookingEtoWithOrderNumber bookingEtoWithOrderNumber = bookingMapper.toBookingEtoWithOrderId(bookingEto);
+        bookingEtoWithOrderNumber.setConfirmed(true);
+
+        bookingEtoWithOrderNumber.setOrderNumber(createOrder(bookingEntity, coordinatorId).getOrderNumber());
+
+        return bookingEtoWithOrderNumber;
+    }
+
+    private OrderEntity createOrder(BookingEntity bookingEntity, Long coordinatorId) throws EntityDoesNotExistException {
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setStatus(com.wtulich.photosupp.general.utils.enums.OrderStatus.NEW);
+        orderEntity.setPrice(bookingEntity.getPredictedPrice());
+        orderEntity.setCreatedAt(LocalDate.now());
+        orderEntity.setUser(bookingEntity.getUser());
+        orderEntity.setBooking(bookingEntity);
+
+        orderEntity.setCoordinator(getUserById(coordinatorId));
+        return orderDao.save(orderEntity);
     }
 }

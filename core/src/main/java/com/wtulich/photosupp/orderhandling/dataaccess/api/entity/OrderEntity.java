@@ -1,7 +1,6 @@
 package com.wtulich.photosupp.orderhandling.dataaccess.api.entity;
 
 import com.sun.istack.NotNull;
-import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationPersistenceEntity;
 import com.wtulich.photosupp.general.dataaccess.api.generators.StringPrefixedSequenceIdGenerator;
 import com.wtulich.photosupp.general.utils.enums.OrderStatus;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.BookingEntity;
@@ -16,10 +15,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "PHOTOSUPP_ORDER")
-public class OrderEntity extends AbstractApplicationPersistenceEntity {
+public class OrderEntity {
     private static final long serialVersionUID = 1L;
 
-    @NotNull
+    @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_number_seq")
     @GenericGenerator(
             name = "order_number_seq",
@@ -28,7 +27,7 @@ public class OrderEntity extends AbstractApplicationPersistenceEntity {
                     @Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
                     @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "INVIU_"),
                     @Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
-    @Column(name = "ORDER_NUMBER", nullable = false, unique = true)
+    @Column(name = "ORDER_NUMBER", nullable = false, updatable = false)
     private String orderNumber;
 
     @NotNull
@@ -40,8 +39,7 @@ public class OrderEntity extends AbstractApplicationPersistenceEntity {
     @Column(name = "PRICE", nullable = false)
     private Double price;
 
-    @NotNull
-    @Column(name = "CREATED_AT", nullable = false)
+    @Column(name = "CREATED_AT", updatable = false)
     private LocalDate createdAt;
 
     @NotNull
@@ -55,7 +53,7 @@ public class OrderEntity extends AbstractApplicationPersistenceEntity {
     private UserEntity coordinator;
 
     @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "BOOKING_ID", nullable = true, referencedColumnName = "id", unique = true)
+    @JoinColumn(name = "BOOKING_ID", referencedColumnName = "id")
     private BookingEntity booking;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, targetEntity = CommentEntity.class, orphanRemoval = true)

@@ -23,6 +23,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +90,6 @@ public class OrderValidatorTest {
         userEntity2.setId(2L);
 
         orderEntity = new OrderEntity("INVIU_00001", OrderStatus.IN_PROGRESS, 1000D, LocalDate.now(), userEntity2, userEntity,  bookingEntity );
-        orderEntity.setId(1L);
     }
 
     @Test
@@ -100,7 +100,7 @@ public class OrderValidatorTest {
 
         //Act Assert
         Assertions.assertThrows(EntityAlreadyExistsException.class, () ->
-                orderValidator.verifyIfBookingHasAssignedOrders(bookingEntity));
+                orderValidator.verifyIfBookingHasAssignedOrders(bookingEntity.getId()));
     }
 
     @Test
@@ -110,7 +110,7 @@ public class OrderValidatorTest {
         when(orderDao.existsByBooking_Id(orderEntity.getBooking().getId())).thenReturn(false);
 
         //Act Assert
-        Assertions.assertDoesNotThrow(() -> orderValidator.verifyIfBookingHasAssignedOrders(bookingEntity));
+        Assertions.assertDoesNotThrow(() -> orderValidator.verifyIfBookingHasAssignedOrders(bookingEntity.getId()));
     }
 
     @Test

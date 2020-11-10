@@ -26,6 +26,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -71,14 +72,13 @@ public class UcFindMediaContentTest {
         userEntity.setId(2L);
 
         orderEntity = new OrderEntity("INVIU_00001", OrderStatus.IN_PROGRESS, 1000D, LocalDate.now(), userEntity, userEntity,  null );
-        orderEntity.setId(1L);
 
         MediaContentEntity mediaContentEntity = new MediaContentEntity(MediaType.IMAGE, "https://sample.com/jpg1", orderEntity);
         mediaContentEntity.setId(1L);
         mediaContentEntities = new ArrayList<>();
         mediaContentEntities.add(mediaContentEntity);
 
-        MediaContentEto mediaContentEto = new MediaContentEto(1L, MediaType.IMAGE, "https://sample.com/jpg1", 1L);
+        MediaContentEto mediaContentEto = new MediaContentEto(1L, MediaType.IMAGE, "https://sample.com/jpg1", "INVIU_00001");
 
         mediaContentEtos = new ArrayList<>();
         mediaContentEtos.add(mediaContentEto);
@@ -88,11 +88,11 @@ public class UcFindMediaContentTest {
     @DisplayName("Test findAllMediaContent Success")
     void testFindAllMediaContentSuccess() throws EntityDoesNotExistException {
         //Arrange
-        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
-        when(mediaContentDao.findAllByOrder_Id(orderEntity.getId())).thenReturn(mediaContentEntities);
+        when(orderDao.findByOrderNumber(orderEntity.getOrderNumber())).thenReturn(Optional.ofNullable(orderEntity));
+        when(mediaContentDao.findAllByOrder_OrderNumber(orderEntity.getOrderNumber())).thenReturn(mediaContentEntities);
 
         //Act
-        Optional<List<MediaContentEto>> result = ucFindMediaContent.findAllMediaContentByOrderId(orderEntity.getId());
+        Optional<List<MediaContentEto>> result = ucFindMediaContent.findAllMediaContentByOrderNumber(orderEntity.getOrderNumber());
 
         // Assert
         Assertions.assertTrue(result.isPresent());
@@ -104,11 +104,11 @@ public class UcFindMediaContentTest {
     @DisplayName("Test findAllMediaContent No content")
     void testFindAllMediaContentNoContent() throws EntityDoesNotExistException {
         //Arrange
-        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
-        when(mediaContentDao.findAllByOrder_Id(orderEntity.getId())).thenReturn(new ArrayList<>());
+        when(orderDao.findByOrderNumber(orderEntity.getOrderNumber())).thenReturn(Optional.ofNullable(orderEntity));
+        when(mediaContentDao.findAllByOrder_OrderNumber(orderEntity.getOrderNumber())).thenReturn(new ArrayList<>());
 
         //Act
-        Optional<List<MediaContentEto>> result = ucFindMediaContent.findAllMediaContentByOrderId(orderEntity.getId());
+        Optional<List<MediaContentEto>> result = ucFindMediaContent.findAllMediaContentByOrderNumber(orderEntity.getOrderNumber());
 
         // Assert
         Assertions.assertTrue(result.isPresent());
@@ -119,10 +119,10 @@ public class UcFindMediaContentTest {
     @DisplayName("Test findAllMediaContent Not Found")
     void testFindAllMediaContentNotFound() {
         //Arrange
-        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(null));
+        when(orderDao.findByOrderNumber(orderEntity.getOrderNumber())).thenReturn(Optional.ofNullable(null));
 
         //Act Assert
         Assertions.assertThrows(EntityDoesNotExistException.class, () ->
-                ucFindMediaContent.findAllMediaContentByOrderId(orderEntity.getId()));
+                ucFindMediaContent.findAllMediaContentByOrderNumber(orderEntity.getOrderNumber()));
     }
 }

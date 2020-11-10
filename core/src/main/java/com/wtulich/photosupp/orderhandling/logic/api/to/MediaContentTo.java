@@ -14,15 +14,15 @@ public class MediaContentTo {
     private String url;
 
     @NotNull
-    private Long orderId;
+    private String orderNumber;
 
     public MediaContentTo() {
     }
 
-    public MediaContentTo(MediaType type, String url, Long orderId) {
+    public MediaContentTo(MediaType type, String url, String orderNumber) {
         this.type = type;
         this.url = url;
-        this.orderId = orderId;
+        this.orderNumber = orderNumber;
     }
 
     public MediaType getType() {
@@ -41,12 +41,12 @@ public class MediaContentTo {
         this.url = url;
     }
 
-    public Long getOrderId() {
-        return orderId;
+    public String getOrderNumber() {
+        return orderNumber;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     @Override
@@ -56,11 +56,11 @@ public class MediaContentTo {
         MediaContentTo that = (MediaContentTo) o;
         return type.equals(that.type) &&
                 url.equals(that.url) &&
-                orderId.equals(that.orderId);
+                orderNumber.equals(that.orderNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, url, orderId);
+        return Objects.hash(type, url, orderNumber);
     }
 }

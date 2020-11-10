@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -54,7 +55,7 @@ public class ServiceRestServiceTest {
     private static String SERVICE_URL = "/service/v1/service";
     private static String BOOKING_URL = "/service/v1/booking";
     private static String INDICATOR_URL = "/service/v1/indicator";
-    private static String CONFIRM_BOOKING = "/service/v1/booking/confirm";
+    private static String CONFIRM_BOOKING = "/service/v1/booking/{id}/confirm";
     private static String CALCULATE_SERVICE_URL = "/service/v1/service/calculate";
 
     @MockBean
@@ -76,6 +77,8 @@ public class ServiceRestServiceTest {
     private List<PriceIndicatorTo> priceIndicatorToList;
     private CalculateTo calculateTo;
     private CalculateCto calculateCto;
+    private UserEto userEto;
+    private BookingEtoWithOrderNumber bookingEtoWithOrderNumber;
 
     @BeforeEach
     void setUp() {
@@ -89,13 +92,14 @@ public class ServiceRestServiceTest {
         permissionEtoList.add(new PermissionEto(1L, ApplicationPermissions.A_CRUD_SUPER, "DESC1"));
         RoleEto roleEto = new RoleEto(1L, "ADMIN", "DESC1", permissionEtoList);
         AccountEto accountEto = new AccountEto(1L, "TEST", "PASS", "TEST@test.com", false);
-        UserEto userEto = new UserEto(1L, "NAME1", "SURNAME1", accountEto, roleEto);
+        userEto = new UserEto(1L, "NAME1", "SURNAME1", accountEto, roleEto);
 
         bookingEto = new BookingEto(1L, "Film dla TestCompany", "Film produktowy z dojazdem", serviceEto, addressEto, userEto, false, 900D,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)),
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
                 priceIndicatorEtoList);
+
         PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorEto, bookingEto.getId(), 400, 10);
         priceIndicatorEtoList = new ArrayList<>();
         priceIndicatorEtoList.add(priceIndicatorEto);
@@ -914,39 +918,50 @@ public class ServiceRestServiceTest {
                 .andReturn();
     }
 
-//    @Test
-//    @DisplayName("PUT /service/v1/booking/confirm/1 - OK")
-//    void testConfirmBookingOk() throws Exception {
-//        //Arrange
-////        when(serviceOrdering.confirmBooking(bookingEto.getId())).thenReturn(Optional.of(bookingEto));
-//
-//        //Act
-//        MvcResult result = mockMvc.perform(put(BOOKING_ID_URL, bookingEto.getId())
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .content(objectMapper.writeValueAsString(bookingTo)))
-//
-//                //Assert
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andReturn();
-//
-//        assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), BookingEto.class))
-//                .isEqualToComparingFieldByField(bookingEto);
-//    }
-//
-//    @Test
-//    @DisplayName("PUT /service/v1/booking/confirm/1 - Not Found")
-//    void testConfirmBookingNotFound() throws Exception {
-//        //Arrange
-////        when(serviceOrdering.updateBooking(bookingTo, bookingEto.getId())).thenThrow(EntityDoesNotExistException.class);
-//
-//        //Act
-//        mockMvc.perform(put(BOOKING_ID_URL, bookingEto.getId())
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .content(objectMapper.writeValueAsString(bookingTo)))
-//
-//                //Assert
-//                .andExpect(status().isNotFound())
-//                .andReturn();
-//    }
+    @Test
+    @DisplayName("PUT /service/v1/booking/1/confirm - OK")
+    void testConfirmBookingOk() throws Exception {
+        //Arrange
+        bookingEtoWithOrderNumber = new BookingEtoWithOrderNumber(1L, "Film dla TestCompany", "Film produktowy z dojazdem", serviceEto, addressEto, false, 900D,
+                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
+                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)),
+                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
+                priceIndicatorEtoList, "INVIU_00001");
+
+        PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorEto, bookingEto.getId(), 400, 10);
+        priceIndicatorEtoList = new ArrayList<>();
+        priceIndicatorEtoList.add(priceIndicatorEto);
+
+
+        when(serviceOrdering.confirmBooking(bookingEto.getId(), userEto.getId())).thenReturn(Optional.of(bookingEtoWithOrderNumber));
+
+        //Act
+        MvcResult result = mockMvc.perform(put(CONFIRM_BOOKING, bookingEto.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(1L)))
+
+                //Assert
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), BookingEtoWithOrderNumber.class))
+                .isEqualToComparingFieldByField(bookingEtoWithOrderNumber);
+    }
+
+    @Test
+    @DisplayName("PUT /service/v1/booking/1/confirm - Not Found")
+    void testConfirmBookingNotFound() throws Exception {
+        //Arrange
+        when(serviceOrdering.confirmBooking(bookingEto.getId(), userEto.getId())).thenThrow(EntityDoesNotExistException.class);
+
+        //Act
+        mockMvc.perform(put(CONFIRM_BOOKING, bookingEto.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(1L)))
+
+                //Assert
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
 }

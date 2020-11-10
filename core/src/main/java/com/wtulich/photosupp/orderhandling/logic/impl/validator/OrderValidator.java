@@ -17,9 +17,9 @@ public class OrderValidator {
     @Inject
     private OrderDao orderDao;
 
-    public void verifyIfBookingHasAssignedOrders(BookingEntity bookingEntity) throws EntityAlreadyExistsException {
-        if(orderDao.existsByBooking_Id(bookingEntity.getId())){
-            throw new EntityAlreadyExistsException("Booking with id " + bookingEntity.getId() + " has already assigned Order.");
+    public void verifyIfBookingHasAssignedOrders(Long bookingId) throws EntityAlreadyExistsException {
+        if(orderDao.existsByBooking_Id(bookingId)){
+            throw new EntityAlreadyExistsException("Booking with id " + bookingId + " has already assigned Order.");
         }
     }
 

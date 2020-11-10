@@ -29,6 +29,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +76,6 @@ public class UcFindCommentTest {
         userEntity.setId(2L);
 
         orderEntity = new OrderEntity("INVIU_00001", OrderStatus.IN_PROGRESS, 1000D, LocalDate.now(), userEntity, userEntity,  null );
-        orderEntity.setId(1L);
 
         CommentEntity commentEntity = new CommentEntity("Perfect, thanks!", userEntity, orderEntity, LocalDate.now());
         commentEntity.setId(1L);
@@ -85,8 +85,8 @@ public class UcFindCommentTest {
         AccountEto accountEto2 = new AccountEto(2L, "user2", "passw0rd", "user2@test.com", true);
         UserEto userEto2 = new UserEto(2L, "NAME2", "SURNAME2", accountEto2, null);
 
-        CommentEto commentEto = new CommentEto(1L, "Perfect, thanks!", 1L, userEto2,
-                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format(LocalDate.now()));
+        CommentEto commentEto = new CommentEto(1L, "Perfect, thanks!", "INVIU_00001", userEto2,
+                DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format(LocalDateTime.now()));
 
         commentEtos = new ArrayList<>();
         commentEtos.add(commentEto);
@@ -96,11 +96,11 @@ public class UcFindCommentTest {
     @DisplayName("Test findAllComments Success")
     void testFindAllCommentsSuccess() throws EntityDoesNotExistException {
         //Arrange
-        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
-        when(commentDao.findAllByOrder_Id(orderEntity.getId())).thenReturn(commentEntities);
+        when(orderDao.findByOrderNumber(orderEntity.getOrderNumber())).thenReturn(Optional.ofNullable(orderEntity));
+        when(commentDao.findAllByOrder_OrderNumber(orderEntity.getOrderNumber())).thenReturn(commentEntities);
 
         //Act
-        Optional<List<CommentEto>> result = ucFindComment.findAllCommentsByOrderId(orderEntity.getId());
+        Optional<List<CommentEto>> result = ucFindComment.findAllCommentsByOrderNumber(orderEntity.getOrderNumber());
 
         // Assert
         Assertions.assertTrue(result.isPresent());
@@ -113,11 +113,11 @@ public class UcFindCommentTest {
     @DisplayName("Test findAllComments No content")
     void testFindAllCommentsNoContent() throws EntityDoesNotExistException {
         //Arrange
-        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(orderEntity));
-        when(commentDao.findAllByOrder_Id(orderEntity.getId())).thenReturn(new ArrayList<>());
+        when(orderDao.findByOrderNumber(orderEntity.getOrderNumber())).thenReturn(Optional.ofNullable(orderEntity));
+        when(commentDao.findAllByOrder_OrderNumber(orderEntity.getOrderNumber())).thenReturn(new ArrayList<>());
 
         //Act
-        Optional<List<CommentEto>> result = ucFindComment.findAllCommentsByOrderId(orderEntity.getId());
+        Optional<List<CommentEto>> result = ucFindComment.findAllCommentsByOrderNumber(orderEntity.getOrderNumber());
 
         // Assert
         Assertions.assertTrue(result.isPresent());
@@ -128,10 +128,10 @@ public class UcFindCommentTest {
     @DisplayName("Test findAllComments Not Found")
     void testFindAllCommentsNotFound() {
         //Arrange
-        when(orderDao.findById(orderEntity.getId())).thenReturn(Optional.ofNullable(null));
+        when(orderDao.findByOrderNumber(orderEntity.getOrderNumber())).thenReturn(Optional.ofNullable(null));
 
         //Act Assert
         Assertions.assertThrows(EntityDoesNotExistException.class, () ->
-                ucFindComment.findAllCommentsByOrderId(orderEntity.getId()));
+                ucFindComment.findAllCommentsByOrderNumber(orderEntity.getOrderNumber()));
     }
 }
