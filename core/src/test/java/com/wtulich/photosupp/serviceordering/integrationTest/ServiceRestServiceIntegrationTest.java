@@ -1,7 +1,6 @@
 package com.wtulich.photosupp.serviceordering.integrationTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
 import com.wtulich.photosupp.serviceordering.logic.api.to.*;
 import com.wtulich.photosupp.userhandling.logic.api.to.AccountEto;
@@ -25,17 +24,15 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith({SpringExtension.class})
 @SpringBootTest()
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ServiceRestServiceIntegrationTest {
     private static String GET_ALL_MEDIA_CONTENT_BY_ORDER_NUMBER_URL = "/order/v1/order/{orderNumber}/mediaContent";
@@ -43,6 +40,7 @@ public class ServiceRestServiceIntegrationTest {
     private static String GET_ALL_CITIES_URL = "/service/v1/address/cities";
     private static String GET_ALL_STREETS_URL = "/service/v1/address/streets";
     private static String GET_ALL_BOOKINGS_URL =  "/service/v1/bookings";
+    private static String GET_ALL_BOOKINGS_BY_USER_ID_URL =  "/service/v1/bookings/{userId}";
     private static String GET_ALL_SERVICES_URL =  "/service/v1/services";
     private static String GET_ALL_INDICATORS_URL =  "/service/v1/indicators";
     private static String GET_BOOKING_BY_ID_URL = "/service/v1/booking/{id}";
@@ -63,6 +61,7 @@ public class ServiceRestServiceIntegrationTest {
     private ServiceEto serviceEto2;
     private AddressEto addressEto;
     private BookingEto bookingEto;
+    private UserEto userEto;
     private IndicatorEto indicatorEto;
     private List<PriceIndicatorEto> priceIndicatorEtoList;
     private AddressTo addressTo;
@@ -86,7 +85,7 @@ public class ServiceRestServiceIntegrationTest {
         permissionEtoList.add(new PermissionEto(6L, ApplicationPermissions.AUTH_USER, "Standard user with no special permissions."));
         RoleEto roleEto = new RoleEto(2L, "USER", "Standard user with no special permissions", permissionEtoList);
         AccountEto accountEto = new AccountEto(1L, "user1", "passw0rd", "user1@test.com", false);
-        UserEto userEto = new UserEto(1L, "NAME", "SURNAME", accountEto, roleEto);
+        userEto = new UserEto(1L, "NAME", "SURNAME", accountEto, roleEto);
 
         priceIndicatorEtoList = new ArrayList<>();
         bookingEto = new BookingEto(1L, "Film dla TestCompany", "Film produktowy z dojazdem", serviceEto, addressEto, userEto, false, 1400D,
@@ -184,6 +183,50 @@ public class ServiceRestServiceIntegrationTest {
 
                 //Assert
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("GET /service/v1/bookings/{userId} - Found")
+    void testGetAllBookingsByUserFound() throws Exception {
+        //Arrange
+        ArrayList<BookingEto> bookings = new ArrayList<>();
+        bookings.add(bookingEto);
+
+        //Act
+        MvcResult result = mockMvc.perform(get(GET_ALL_BOOKINGS_BY_USER_ID_URL, userEto.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                //Assert
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        BookingEto[] bookingEtos = objectMapper.readValue(result.getResponse().getContentAsString(), BookingEto[].class);
+        assertThat(bookingEtos).isEqualTo(bookings.toArray());
+    }
+
+    @Test
+    @DisplayName("GET /service/v1/bookings/{userId} - No Content")
+    void testGetAllBookingsByUserNoContent() throws Exception {
+        //Arrange
+        mockMvc.perform(delete(BOOKING_ID_URL, bookingEto.getId()));
+
+        //Act
+        mockMvc.perform(get(GET_ALL_BOOKINGS_BY_USER_ID_URL, 1L))
+
+                //Assert
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("GET /service/v1/bookings/{userId} - Not Found")
+    void testGetAllBookingsByUserNotFound() throws Exception {
+
+        //Act
+        mockMvc.perform(get(GET_ALL_BOOKINGS_BY_USER_ID_URL, 3L))
+
+                //Assert
+                .andExpect(status().isNotFound());
     }
 
     @Test

@@ -92,6 +92,11 @@ public class ServiceOrderingImpl implements ServiceOrdering {
     }
 
     @Override
+    public Optional<List<BookingEto>> findAllBookingsByUserId(Long userId) throws EntityDoesNotExistException {
+        return ucFindBooking.findAllBookingsByUserId(userId);
+    }
+
+    @Override
     public Optional<List<IndicatorEto>> findAllIndicators() {
         return ucFindIndicator.findAllIndicators();
     }

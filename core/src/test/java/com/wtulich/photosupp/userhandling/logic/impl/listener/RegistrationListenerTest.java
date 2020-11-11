@@ -52,6 +52,6 @@ public class RegistrationListenerTest {
 
         //Act Assert
         Assertions.assertDoesNotThrow(() -> registrationListener.onApplicationEvent(
-                new OnRegistrationCompleteEvent(accountEntity, request.getLocale(), request.getContextPath())));
+                new OnRegistrationCompleteEvent(accountEntity, accountEntity.getPassword(), request.getLocale(), request.getContextPath())));
     }
 }

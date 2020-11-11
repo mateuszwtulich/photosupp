@@ -131,8 +131,8 @@ public class UcManageUserTest {
     void testCreateUserSuccess() throws EntityDoesNotExistException, AccountAlreadyExistsException, AddressException {
         //Arrange
         when(roleDao.findById(roleEntity.getId())).thenReturn(Optional.of(roleEntity));
-        when(accountDao.save(accountEntity)).thenReturn(accountEntity);
-        when(userDao.save(userEntity)).thenReturn(userEntity);
+        when(accountDao.save(any())).thenReturn(accountEntity);
+        when(userDao.save(any())).thenReturn(userEntity);
 
         //Act
         Optional<UserEto> result = ucManageUser.createUserAndAccountEntities(userTo, mock(HttpServletRequest.class), null);

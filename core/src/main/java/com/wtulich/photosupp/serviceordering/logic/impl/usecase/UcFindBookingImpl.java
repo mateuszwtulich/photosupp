@@ -1,6 +1,7 @@
 package com.wtulich.photosupp.serviceordering.logic.impl.usecase;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
+import com.wtulich.photosupp.orderhandling.logic.api.to.OrderEto;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.BookingDao;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.BookingEntity;
 import com.wtulich.photosupp.serviceordering.logic.api.mapper.AddressMapper;
@@ -10,6 +11,7 @@ import com.wtulich.photosupp.serviceordering.logic.api.mapper.ServiceMapper;
 import com.wtulich.photosupp.serviceordering.logic.api.to.BookingEto;
 import com.wtulich.photosupp.serviceordering.logic.api.to.PriceIndicatorEto;
 import com.wtulich.photosupp.serviceordering.logic.api.usecase.UcFindBooking;
+import com.wtulich.photosupp.userhandling.dataaccess.api.dao.UserDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.AccountMapper;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.PermissionsMapper;
@@ -36,9 +38,13 @@ public class UcFindBookingImpl implements UcFindBooking {
     private static final String ID_CANNOT_BE_NULL = "id cannot be a null value";
     private static final String GET_BOOKING_LOG = "Get Booking with id {} from database.";
     private static final String GET_ALL_BOOKINGS_LOG = "Get all Bookings from database.";
+    private static final String GET_ALL_BOOKINGS_BY_USER_ID_LOG = "Get all Bookings by user id {} from database.";
 
     @Inject
     private BookingDao bookingDao;
+
+    @Inject
+    private UserDao userDao;
 
     @Inject
     private BookingMapper bookingMapper;
@@ -80,6 +86,18 @@ public class UcFindBookingImpl implements UcFindBooking {
         LOG.debug(GET_ALL_BOOKINGS_LOG);
 
         return Optional.of(bookingDao.findAll().stream()
+                .map(bookingEntity -> toBookingEto(bookingEntity))
+                .collect(Collectors.toList()));
+    }
+
+    @Override
+    public Optional<List<BookingEto>> findAllBookingsByUserId(Long userId) throws EntityDoesNotExistException {
+        LOG.debug(GET_ALL_BOOKINGS_BY_USER_ID_LOG, userId);
+
+        UserEntity userEntity = userDao.findById(userId).orElseThrow(() ->
+                new EntityDoesNotExistException("Order with user id " + userId + " does not exist."));
+
+        return Optional.of(bookingDao.findAllByUser_Id(userEntity.getId()).stream()
                 .map(bookingEntity -> toBookingEto(bookingEntity))
                 .collect(Collectors.toList()));
     }

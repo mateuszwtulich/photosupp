@@ -55,7 +55,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
         StringBuilder message = new StringBuilder();
         message.append(messages.getMessage("message.regSucc", null, event.getLocale()));
-        message.append("\n\nLogin: " + account.getUsername()+ "\nPassword: " + account.getPassword() + "\n\n");
+        message.append("\n\nLogin: " + account.getUsername()+ "\nPassword: " + event.getPassword() + "\n\n");
         message.append(messages.getMessage("message.regReminder", null, event.getLocale()));
         message.append("\r\n\n" + messages.getMessage("api", null, event.getLocale()) + confirmationUrl.toString());
 

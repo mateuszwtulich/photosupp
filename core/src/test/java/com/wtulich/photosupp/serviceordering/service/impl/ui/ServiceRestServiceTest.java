@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith({SpringExtension.class})
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class ServiceRestServiceTest {
     private static String GET_ALL_CITIES_URL = "/service/v1/address/cities";
     private static String GET_ALL_STREETS_URL = "/service/v1/address/streets";

@@ -4,6 +4,7 @@ import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsExce
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.general.logic.api.exception.EntityHasAssignedEntitiesException;
 import com.wtulich.photosupp.general.logic.api.exception.UnprocessableEntityException;
+import com.wtulich.photosupp.orderhandling.logic.api.to.OrderEto;
 import com.wtulich.photosupp.serviceordering.logic.api.to.*;
 import com.wtulich.photosupp.serviceordering.logic.impl.ServiceOrderingImpl;
 import com.wtulich.photosupp.serviceordering.service.api.ui.ServiceRestService;
@@ -57,6 +58,20 @@ public class ServiceRestServiceImpl implements ServiceRestService {
             }
             return bookings;
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    @Override
+    public List<BookingEto> getAllBookingsByUserId(Long userId) {
+        try {
+            return serviceOrdering.findAllBookingsByUserId(userId).map( bookings -> {
+                if(bookings.isEmpty()) {
+                    throw new ResponseStatusException(HttpStatus.NO_CONTENT, BOOKINGS_NOT_EXIST);
+                }
+                return bookings;
+            }).orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+        } catch (EntityDoesNotExistException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @Override

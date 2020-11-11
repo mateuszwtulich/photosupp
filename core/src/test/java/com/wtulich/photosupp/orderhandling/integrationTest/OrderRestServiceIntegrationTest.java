@@ -31,11 +31,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith({SpringExtension.class})
 @SpringBootTest()
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class OrderRestServiceIntegrationTest {
     private static String GET_ALL_MEDIA_CONTENT_BY_ORDER_NUMBER_URL = "/order/v1/order/{orderNumber}/mediaContent";
     private static String GET_ALL_ORDERS_URL =  "/order/v1/orders";
+    private static String GET_ALL_ORDERS_BY_USER_ID_URL =  "/order/v1/orders/{userId}";
     private static String GET_ALL_COMMENTS_ORDER_NUMBER_URL =  "/order/v1/order/{orderNumber}/comments";
     private static String MEDIA_CONTENT_ID_URL = "/order/v1/order/mediaContent/{id}";
     private static String ORDER_NUMBER_URL = "/order/v1/order/{orderNumber}";
@@ -60,6 +61,7 @@ public class OrderRestServiceIntegrationTest {
     private OrderEto orderEto;
     private MediaContentEto mediaContentEto;
     private CommentEto commentEto;
+    private UserEto userEto;
     private OrderTo orderTo;
     private CommentTo commentTo;
     private MediaContentTo mediaContentTo;
@@ -69,7 +71,7 @@ public class OrderRestServiceIntegrationTest {
         objectMapper = new ObjectMapper();
 
         AccountEto accountEto = new AccountEto(1L, "user1", "passw0rd", "user1@test.com", false);
-        UserEto userEto = new UserEto(1L, "NAME", "SURNAME", accountEto, null);
+        userEto = new UserEto(1L, "NAME", "SURNAME", accountEto, null);
 
         AccountEto accountEto2 = new AccountEto(2L, "user2", "passw0rd", "user2@test.com", true);
         UserEto userEto2 = new UserEto(2L, "NAME2", "SURNAME2", accountEto2, null);
@@ -115,6 +117,51 @@ public class OrderRestServiceIntegrationTest {
 
                 //Assert
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("GET /order/v1/orders/{userId} - Found")
+    void testGetAllOrdersByUserIdFound() throws Exception {
+        //Arrange
+        ArrayList<OrderEto> orders = new ArrayList<>();
+        orders.add(orderEto);
+
+        //Act
+        MvcResult result = mockMvc.perform(get(GET_ALL_ORDERS_BY_USER_ID_URL, userEto.getId())
+                .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE))
+
+                //Assert
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(org.springframework.http.MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), OrderEto[].class))
+                .isEqualTo(orders.toArray());
+    }
+
+    @Test
+    @DisplayName("GET /order/v1/orders/{userId} - No content")
+    void testGetAllOrdersByUserIdNoContent() throws Exception {
+        //Arrange
+        mockMvc.perform(delete(GET_ALL_MEDIA_CONTENT_BY_ORDER_NUMBER_URL, orderEto.getOrderNumber()));
+        mockMvc.perform(delete(ORDER_NUMBER_URL, orderEto.getOrderNumber()));
+
+        //Act
+        mockMvc.perform(get(GET_ALL_ORDERS_BY_USER_ID_URL, userEto.getId()))
+
+                //Assert
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("GET /order/v1/orders/{userId} - Not found")
+    void testGetAllOrdersByUserIdNotFound() throws Exception {
+
+        //Act
+        mockMvc.perform(get(GET_ALL_ORDERS_BY_USER_ID_URL, 3L))
+
+                //Assert
+                .andExpect(status().isNotFound());
     }
 
     @Test

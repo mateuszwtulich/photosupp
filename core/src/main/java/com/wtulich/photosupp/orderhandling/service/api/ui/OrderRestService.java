@@ -1,6 +1,8 @@
 package com.wtulich.photosupp.orderhandling.service.api.ui;
 
 import com.wtulich.photosupp.general.common.api.RestService;
+import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
+import com.wtulich.photosupp.general.utils.annotations.PermissionRestrict;
 import com.wtulich.photosupp.orderhandling.logic.api.to.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -27,7 +29,24 @@ public interface OrderRestService extends RestService {
     })
     @GetMapping(value = "/orders",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS})
     List<OrderEto> getAllOrders();
+
+
+    @ApiOperation(value = "Get all orders by user.",
+            tags = {"order"},
+            response = OrderEto.class, responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request"),
+            @ApiResponse(code = 204, message = "No content found"),
+            @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
+            @ApiResponse(code = 429, message = "Too many requests"),
+    })
+    @GetMapping(value = "/orders/{userId}",
+            produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS,
+                        ApplicationPermissions.AUTH_USER})
+    List<OrderEto> getAllOrdersByUserId(@PathVariable(name = "userId") Long userId);
 
 
     @ApiOperation(value = "Get order by number.",
@@ -41,6 +60,8 @@ public interface OrderRestService extends RestService {
     })
     @GetMapping(value = "/order/{orderNumber}",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS,
+            ApplicationPermissions.AUTH_USER})
     ResponseEntity<OrderEto> getOrder(@PathVariable(value = "orderNumber") String orderNumber);
 
 
@@ -55,6 +76,8 @@ public interface OrderRestService extends RestService {
     })
     @GetMapping(value = "/order/{orderNumber}/comments",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS,
+            ApplicationPermissions.AUTH_USER})
     List<CommentEto> getAllCommentsByOrderId(@PathVariable(name = "orderNumber") String orderNumber);
 
 
@@ -69,6 +92,8 @@ public interface OrderRestService extends RestService {
     })
     @GetMapping(value = "/order/{orderNumber}/mediaContent",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS,
+            ApplicationPermissions.AUTH_USER})
     List<MediaContentEto> getAllMediaContentByOrderId(@PathVariable(name = "orderNumber") String orderNumber);
 
 
@@ -86,6 +111,7 @@ public interface OrderRestService extends RestService {
     @PostMapping(value = "/order",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS })
     ResponseEntity<OrderEto> createOrder(@Validated @RequestBody OrderTo orderTo);
 
 
@@ -103,6 +129,8 @@ public interface OrderRestService extends RestService {
     @PostMapping(value = "/order/comment",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS,
+            ApplicationPermissions.AUTH_USER })
     ResponseEntity<CommentEto> createComment(@Validated @RequestBody CommentTo commentTo);
 
 
@@ -120,6 +148,7 @@ public interface OrderRestService extends RestService {
     @PostMapping(value = "/order/mediaContent",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS })
     ResponseEntity<MediaContentEto> addMediaContent(@Validated @RequestBody MediaContentTo mediaContentTo);
 
 
@@ -137,6 +166,7 @@ public interface OrderRestService extends RestService {
     @PutMapping(value = "/order/{orderNumber}",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS })
     ResponseEntity<OrderEto> updateOrder(@Validated @RequestBody OrderTo orderTo, @PathVariable(value = "orderNumber") String orderNumber);
 
 
@@ -154,6 +184,8 @@ public interface OrderRestService extends RestService {
     @PutMapping(value = "/order/comment/{id}",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS,
+            ApplicationPermissions.AUTH_USER })
     ResponseEntity<CommentEto> updateComment(@Validated @RequestBody CommentTo commentTo, @PathVariable(value = "id") Long id);
 
 
@@ -168,6 +200,7 @@ public interface OrderRestService extends RestService {
     })
     @DeleteMapping(value = "/order/{orderNumber}",
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS })
     ResponseEntity<?> deleteOrder(@PathVariable(value = "orderNumber") String orderNumber);
 
 
@@ -182,6 +215,8 @@ public interface OrderRestService extends RestService {
     })
     @DeleteMapping(value = "/order/comment/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS,
+            ApplicationPermissions.AUTH_USER })
     ResponseEntity<?> deleteComment(@PathVariable(value = "id") Long id);
 
 
@@ -196,6 +231,7 @@ public interface OrderRestService extends RestService {
     })
     @DeleteMapping(value = "/order/mediaContent/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS })
     ResponseEntity<?> deleteMediaContent(@PathVariable(value = "id") Long id);
 
 
@@ -210,6 +246,7 @@ public interface OrderRestService extends RestService {
     })
     @DeleteMapping(value = "/order/{orderNumber}/mediaContent",
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS })
     ResponseEntity<?> deleteAllMediaContent(@PathVariable(value = "orderNumber") String orderNumber);
 
 
@@ -227,6 +264,8 @@ public interface OrderRestService extends RestService {
     @PutMapping(value = "/order/{orderNumber}/finish",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS,
+            ApplicationPermissions.AUTH_USER })
     ResponseEntity<OrderEto> finishOrder(@PathVariable(value = "orderNumber") String orderNumber);
 
 
@@ -244,6 +283,7 @@ public interface OrderRestService extends RestService {
     @PutMapping(value = "/order/{orderNumber}/accept",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS })
     ResponseEntity<OrderEto> acceptOrder(@PathVariable(value = "orderNumber") String orderNumber);
 
 
@@ -261,5 +301,6 @@ public interface OrderRestService extends RestService {
     @PutMapping(value = "/order/{orderNumber}/verification",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ORDERS })
     ResponseEntity<OrderEto> sentToVerificationOrder(@PathVariable(value = "orderNumber") String orderNumber);
 }

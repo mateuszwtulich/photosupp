@@ -1,6 +1,8 @@
 package com.wtulich.photosupp.userhandling.service.api.ui;
 
 import com.wtulich.photosupp.general.common.api.RestService;
+import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
+import com.wtulich.photosupp.general.utils.annotations.PermissionRestrict;
 import com.wtulich.photosupp.userhandling.logic.api.to.AccountEto;
 import com.wtulich.photosupp.userhandling.logic.api.to.AccountTo;
 import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
@@ -10,6 +12,7 @@ import com.wtulich.photosupp.userhandling.logic.api.to.UserTo;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -21,7 +24,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -43,6 +45,7 @@ public interface UserRestService extends RestService {
     })
     @GetMapping(value = "/user/{id}",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_USERS})
     ResponseEntity<UserEto> getUser(@PathVariable(value = "id") Long id);
 
 
@@ -57,6 +60,7 @@ public interface UserRestService extends RestService {
     })
     @GetMapping(value = "/users",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_USERS})
     List<UserEto> getAllUsers();
 
 
@@ -71,6 +75,7 @@ public interface UserRestService extends RestService {
     })
     @GetMapping(value = "/users/accounts",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_USERS})
     List<AccountEto> getAllAccounts();
 
 
@@ -85,6 +90,7 @@ public interface UserRestService extends RestService {
     })
     @GetMapping(value = "/users/role/{id}",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_USERS})
     List<UserEto> getAllUsersByRoleId(@PathVariable(value = "id") Long roleId);
 
 
@@ -113,8 +119,8 @@ public interface UserRestService extends RestService {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 429, message = "Too many requests"),
     })
-    @GetMapping(value = "user/account/registrationConfirm/{token}")
-    RedirectView confirmRegistration(@PathVariable(value = "token") String token);
+    @GetMapping(value = "user/account/registrationConfirm")
+    RedirectView confirmRegistration(@Param(value = "token") String token);
 
 
     @ApiOperation(value = "Updates user",
@@ -131,6 +137,8 @@ public interface UserRestService extends RestService {
     @PutMapping(value = "/user/{id}",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_USERS,
+                        ApplicationPermissions.AUTH_USER})
     ResponseEntity<UserEto> updateUser(@PathVariable(value = "id") Long id, @Validated @RequestBody  UserTo userTo);
 
 
@@ -148,6 +156,8 @@ public interface UserRestService extends RestService {
     @PutMapping(value = "/user/{id}/account",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_USERS,
+            ApplicationPermissions.AUTH_USER})
     ResponseEntity<AccountEto> updateUserAccount(@PathVariable(value = "id") Long userId, @Validated @RequestBody AccountTo accountTo);
 
 
@@ -162,6 +172,7 @@ public interface UserRestService extends RestService {
     })
     @DeleteMapping(value = "/user/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_USERS })
     ResponseEntity<?> deleteUser(@PathVariable(value = "id") Long id);
 
 
@@ -176,6 +187,7 @@ public interface UserRestService extends RestService {
     })
     @GetMapping(value = "/role/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ROLES })
     ResponseEntity<RoleEto> getRole(@PathVariable(value = "id") Long id);
 
 
@@ -190,6 +202,7 @@ public interface UserRestService extends RestService {
     })
     @GetMapping(value = "/roles",
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ROLES })
     List<RoleEto> getAllRoles();
 
 
@@ -207,6 +220,7 @@ public interface UserRestService extends RestService {
     @PostMapping(value = "/role",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ROLES })
     ResponseEntity<RoleEto> createRole(@Validated @RequestBody RoleTo roleTo);
 
 
@@ -224,6 +238,7 @@ public interface UserRestService extends RestService {
     @PutMapping(value = "/role/{id}",
             consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ROLES })
     ResponseEntity<RoleEto> updateRole(@PathVariable(value = "id") Long id, @Validated @RequestBody RoleTo roleTo);
 
 
@@ -238,5 +253,6 @@ public interface UserRestService extends RestService {
     })
     @DeleteMapping(value = "/role/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ROLES })
     ResponseEntity<?> deleteRole(@PathVariable(value = "id") Long id);
 }

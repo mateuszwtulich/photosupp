@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith({SpringExtension.class})
 @SpringBootTest()
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class UserRestServiceIntegrationTest {
 
@@ -42,7 +42,7 @@ public class UserRestServiceIntegrationTest {
     private static String USER_ID_URL = "/user/v1/user/{id}";
     private static String ROLE_URL = "/user/v1/role";
     private static String USER_URL = "/user/v1/user";
-    private static String ACCOUNT_REGISTRATION_URL = "/user/v1/user/account/registrationConfirm/{token}";
+    private static String ACCOUNT_REGISTRATION_URL = "/user/v1/user/account/registrationConfirm";
 
     @Autowired
     private MockMvc mockMvc;
@@ -250,7 +250,7 @@ public class UserRestServiceIntegrationTest {
                 .andReturn();
 
         assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), UserEto.class))
-                .isEqualToComparingFieldByField(userCreated);
+                .isEqualToIgnoringGivenFields(userCreated, "accountEto");
     }
 
     @Test
@@ -501,7 +501,7 @@ public class UserRestServiceIntegrationTest {
                 .andReturn();
 
         assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), AccountEto.class))
-                .isEqualToComparingFieldByField(accountCreated);
+                .isEqualToIgnoringGivenFields(accountCreated, "password");
     }
 
     @Test
@@ -556,7 +556,8 @@ public class UserRestServiceIntegrationTest {
         String token = "token";
 
         //Act
-        mockMvc.perform(get(ACCOUNT_REGISTRATION_URL, token)
+        mockMvc.perform(get(ACCOUNT_REGISTRATION_URL)
+                .param("token", token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 //Assert
@@ -570,7 +571,8 @@ public class UserRestServiceIntegrationTest {
         String token = "sth";
 
         //Act
-        mockMvc.perform(get(ACCOUNT_REGISTRATION_URL, token)
+        mockMvc.perform(get(ACCOUNT_REGISTRATION_URL)
+                .param("token", token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 //Assert

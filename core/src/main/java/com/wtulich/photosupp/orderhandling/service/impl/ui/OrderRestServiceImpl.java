@@ -38,6 +38,20 @@ public class OrderRestServiceImpl implements OrderRestService {
     }
 
     @Override
+    public List<OrderEto> getAllOrdersByUserId(Long userId) {
+        try {
+            return orderHandling.findAllOrdersByUserId(userId).map( orders -> {
+            if(orders.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, ORDERS_NOT_EXIST);
+            }
+            return orders;
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+        } catch (EntityDoesNotExistException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @Override
     public ResponseEntity<OrderEto> getOrder(String orderNumber) {
         try {
             return ResponseEntity

@@ -11,4 +11,6 @@ import java.util.List;
 public interface UserDao extends JpaRepository<UserEntity, Long> {
 
     List<UserEntity> findAllByRole_Id(Long roleId);
+
+    Optional<UserEntity> findByAccount_Username(String username);
 }

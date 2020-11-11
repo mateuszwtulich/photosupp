@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith({SpringExtension.class})
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class UserRestServiceTest {
     private static String GET_USER_BY_ID_URL = "/user/v1/user/{id}";
     private static String GET_ALL_USERS_URL = "/user/v1/users";
@@ -49,7 +49,7 @@ public class UserRestServiceTest {
     private static String USER_ID_URL = "/user/v1/user/{id}";
     private static String ROLE_URL = "/user/v1/role";
     private static String USER_URL = "/user/v1/user";
-    private static String ACCOUNT_REGISTRATION_URL = "/user/v1/user/account/registrationConfirm/{token}";
+    private static String ACCOUNT_REGISTRATION_URL = "/user/v1/user/account/registrationConfirm";
 
     @MockBean
     private UserHandlingImpl userHandling;
@@ -749,7 +749,8 @@ public class UserRestServiceTest {
         when(userHandling.confirmRegistration(token)).thenReturn(Optional.of(redirectView));
 
         //Act
-        mockMvc.perform(get(ACCOUNT_REGISTRATION_URL, token)
+        mockMvc.perform(get(ACCOUNT_REGISTRATION_URL)
+                .param("token", token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 //Assert
@@ -764,7 +765,8 @@ public class UserRestServiceTest {
         when(userHandling.confirmRegistration(token)).thenThrow(EntityDoesNotExistException.class);
 
         //Act
-        mockMvc.perform(get(ACCOUNT_REGISTRATION_URL, token)
+        mockMvc.perform(get(ACCOUNT_REGISTRATION_URL)
+                .param("token", token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 //Assert
@@ -779,7 +781,8 @@ public class UserRestServiceTest {
         when(userHandling.confirmRegistration(token)).thenReturn(Optional.empty());
 
         //Act
-        mockMvc.perform(get(ACCOUNT_REGISTRATION_URL, token)
+        mockMvc.perform(get(ACCOUNT_REGISTRATION_URL)
+                .param("token", token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 //Assert

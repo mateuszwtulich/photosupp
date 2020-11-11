@@ -13,6 +13,7 @@ import com.wtulich.photosupp.serviceordering.logic.api.mapper.IndicatorMapper;
 import com.wtulich.photosupp.serviceordering.logic.api.mapper.ServiceMapper;
 import com.wtulich.photosupp.serviceordering.logic.api.to.BookingEto;
 import com.wtulich.photosupp.serviceordering.logic.api.to.PriceIndicatorEto;
+import com.wtulich.photosupp.userhandling.dataaccess.api.dao.UserDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.AccountMapper;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.UserMapper;
@@ -35,9 +36,13 @@ public class UcFindOrderImpl implements UcFindOrder {
     private static final String ID_CANNOT_BE_NULL = "id cannot be a null value";
     private static final String GET_ORDER_LOG = "Get Order with order number {} from database.";
     private static final String GET_ALL_ORDERS_LOG = "Get all Orders from database.";
+    private static final String GET_ALL_ORDERS_BY_USER_ID_LOG = "Get all Orders from database with user id {} from database.";
 
     @Inject
     private OrderDao orderDao;
+
+    @Inject
+    private UserDao userDao;
 
     @Inject
     private OrderMapper orderMapper;
@@ -77,6 +82,18 @@ public class UcFindOrderImpl implements UcFindOrder {
         LOG.debug(GET_ORDER_LOG);
 
         return Optional.of(toOrderEto(orderEntity));
+    }
+
+    @Override
+    public Optional<List<OrderEto>> findAllOrdersByUserId(Long userId) throws EntityDoesNotExistException {
+        LOG.debug(GET_ALL_ORDERS_BY_USER_ID_LOG, userId);
+
+        UserEntity userEntity = userDao.findById(userId).orElseThrow(() ->
+                new EntityDoesNotExistException("Order with user id " + userId + " does not exist."));
+
+        return Optional.of(orderDao.findAllByUser_Id(userEntity.getId()).stream()
+                .map(orderEntity -> toOrderEto(orderEntity))
+                .collect(Collectors.toList()));
     }
 
     private OrderEto toOrderEto(OrderEntity orderEntity) {

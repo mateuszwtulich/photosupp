@@ -86,6 +86,11 @@ public class OrderHandlingImpl implements OrderHandling {
     }
 
     @Override
+    public Optional<List<OrderEto>> findAllOrdersByUserId(Long userId) throws EntityDoesNotExistException {
+        return ucFindOrder.findAllOrdersByUserId(userId);
+    }
+
+    @Override
     public Optional<MediaContentEto> addMediaContent(MediaContentTo mediaContentTo) throws EntityDoesNotExistException {
         return ucManageMediaContent.addMediaContent(mediaContentTo);
     }

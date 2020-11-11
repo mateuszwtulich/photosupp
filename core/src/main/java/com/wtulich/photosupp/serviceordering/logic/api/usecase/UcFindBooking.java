@@ -11,4 +11,6 @@ public interface UcFindBooking {
     Optional<BookingEto> findBooking(Long id) throws EntityDoesNotExistException;
 
     Optional<List<BookingEto>> findAllBookings();
+
+    Optional<List<BookingEto>> findAllBookingsByUserId(Long userId) throws EntityDoesNotExistException;
 }

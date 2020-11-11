@@ -11,4 +11,6 @@ public interface UcFindOrder {
     Optional<List<OrderEto>> findAllOrders();
 
     Optional<OrderEto> findOrder(String orderNumber) throws EntityDoesNotExistException;
+
+    Optional<List<OrderEto>> findAllOrdersByUserId(Long userId) throws EntityDoesNotExistException;
 }

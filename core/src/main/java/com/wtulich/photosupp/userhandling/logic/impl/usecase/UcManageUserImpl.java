@@ -23,6 +23,10 @@ import com.wtulich.photosupp.userhandling.logic.impl.validator.AccountValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 
@@ -30,6 +34,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.mail.internet.AddressException;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.Optional;
@@ -73,19 +78,32 @@ public class UcManageUserImpl implements UcManageUser {
     @Inject
     private ApplicationEventPublisher applicationEventPublisher;
 
+    @Named("messageSource")
+    @Inject
+    private MessageSource messages;
+
+    @Inject
+    private JavaMailSender mailSender;
+
+    @Inject
+    private PasswordEncoder passwordEncoder;
+
 
     @Override
     public Optional<UserEto> createUserAndAccountEntities(UserTo userTo, HttpServletRequest request, Errors errors)
             throws AccountAlreadyExistsException, AddressException, EntityDoesNotExistException {
         LOG.debug(CREATE_USER_LOG, userTo.getSurname());
         AccountEntity accountEntity = createAccountEntities(userTo.getAccountTo());
-        sendMailOfAccountCreation(accountEntity, request, errors);
 
         UserEntity userEntity = userMapper.toUserEntity(userTo);
         userEntity.setRole(getRoleById(userTo.getRoleId()));
         userEntity.setAccount(accountEntity);
 
-        return toUserEto(userDao.save(userEntity));
+        UserEntity userSaved = userDao.save(userEntity);
+        ;
+        sendMailOfAccountCreation(accountEntity, userTo.getAccountTo().getPassword(), request, errors);
+
+        return toUserEto(userSaved);
     }
 
     @Override
@@ -106,14 +124,18 @@ public class UcManageUserImpl implements UcManageUser {
         LOG.debug(UPDATE_ACCOUNT_LOG, userId);
         UserEntity userEntity = getUserById(userId);
 
-        if(!userEntity.getAccount().getEmail().equals(accountTo.getEmail())){
+        AccountEntity accountEntity = userEntity.getAccount();
+
+        if(!accountEntity.getEmail().equals(accountTo.getEmail())){
             verifyAccount(accountTo);
+            accountEntity.setEmail(accountTo.getEmail());
+            accountEntity.setUsername(extractUsername(accountTo.getEmail()));
         }
 
-        AccountEntity accountEntity = userEntity.getAccount();
-        accountEntity.setPassword(accountTo.getPassword());
-        accountEntity.setEmail(accountTo.getEmail());
-        accountEntity.setUsername(extractUsername(accountTo.getEmail()));
+        if(!accountEntity.getPassword().equals(accountTo.getPassword())){
+            accountEntity.setPassword(passwordEncoder.encode(accountTo.getPassword()));
+            sendMailWithNewPassword(accountEntity);
+        }
 
         userEntity.setAccount(accountEntity);
         return Optional.of(accountMapper.toAccountEto(accountEntity));
@@ -123,6 +145,7 @@ public class UcManageUserImpl implements UcManageUser {
         verifyAccount(accountTo);
 
         AccountEntity accountEntity = toAccountEntity(accountTo);
+        accountEntity.setPassword(passwordEncoder.encode(accountTo.getPassword()));
         LOG.debug(CREATE_ACCOUNT_LOG, accountEntity.getUsername());
 
         return accountDao.save(accountEntity);
@@ -133,11 +156,12 @@ public class UcManageUserImpl implements UcManageUser {
             accountValidator.verifyIfValidEmailAddress(accountTo.getEmail());
     }
 
-    private void sendMailOfAccountCreation(AccountEntity accountEntity, HttpServletRequest request, Errors errors) {
+    private void sendMailOfAccountCreation(AccountEntity accountEntity, String password,
+                                           HttpServletRequest request, Errors errors) {
         String appUrl = request.getContextPath();
 
         LOG.debug(SEND_EMAIL_FOR_VERIFICATION, accountEntity.getUsername());
-        applicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(accountEntity,
+        applicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(accountEntity, password,
                 request.getLocale(), appUrl));
     }
 
@@ -179,5 +203,22 @@ public class UcManageUserImpl implements UcManageUser {
 
     private String extractUsername(String email){
         return email.split("@")[0];
+    }
+
+    private void sendMailWithNewPassword(AccountEntity account){
+        String recipientAddress = account.getEmail();
+        String subject = messages.getMessage("message.passwordTitle", null, Locale.getDefault());
+        StringBuilder generatePasswordMessage = new StringBuilder();
+        StringBuilder message = new StringBuilder();
+        message.append(messages.getMessage("message.passwordSucc", null, Locale.getDefault()));
+        message.append("\n\nPassword: " + account.getPassword() + "\n");
+        message.append(messages.getMessage("message.regReminder", null, Locale.getDefault()));
+        message.append("\r\n\n" + messages.getMessage("frontend", null, Locale.getDefault()) + "/login" + generatePasswordMessage.toString());
+
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo(recipientAddress);
+        email.setSubject(subject);
+        email.setText(message.toString());
+        mailSender.send(email);
     }
 }

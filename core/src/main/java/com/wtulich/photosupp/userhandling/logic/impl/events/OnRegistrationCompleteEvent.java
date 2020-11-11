@@ -9,14 +9,16 @@ public class OnRegistrationCompleteEvent extends ApplicationEvent {
     private String appUrl;
     private Locale locale;
     private AccountEntity account;
+    private String password;
 
     public OnRegistrationCompleteEvent(
-            AccountEntity account, Locale locale, String appUrl) {
+            AccountEntity account, String password, Locale locale, String appUrl) {
         super(account);
 
         this.account = account;
         this.locale = locale;
         this.appUrl = appUrl;
+        this.password = password;
     }
 
     public String getAppUrl() {
@@ -41,5 +43,13 @@ public class OnRegistrationCompleteEvent extends ApplicationEvent {
 
     public void setAccount(AccountEntity account) {
         this.account = account;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

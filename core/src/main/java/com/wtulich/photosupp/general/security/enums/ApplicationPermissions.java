@@ -6,6 +6,7 @@ public enum ApplicationPermissions {
     A_CRUD_ROLES,
     A_CRUD_SERVICES,
     A_CRUD_BOOKINGS,
+    A_CRUD_INDICATORS,
     A_CRUD_ORDERS,
     AUTH_USER,
 }
