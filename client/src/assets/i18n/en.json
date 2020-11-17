@@ -1,0 +1,45 @@
+{
+  "welcomeMessage": "Welcome in",
+  "system": "Photosupp",
+  "subtitleMessage": "We make cooperation with inviu.pl easier",
+  "login": {
+    "username": "Enter your user name",
+    "password": "Password here"
+  },
+  "pricing": {
+    "title": "Estimate your service now!",
+    "1st-step": "Choose service",
+    "2nd-step": "Factor everything in",
+    "3rd-step": "Calculate the cost"
+  },
+  "company": {
+    "owner": {
+      "quot": {
+        "1st-part": "Quality of services is our highest priority. Photosupp system underlines our presence in the world of the newest technologies.",
+        "2nd-part": "We can help you with choosing a service that suits you the most, without registration!"
+      },
+      "name": "Piotr Łodziński",
+      "title": "The owner of inviu"
+    }
+  },
+  "system-statement": {
+    "title": "Photosupp system provides System Photosupp guidance while taking advantage of inviu's services:",
+    "advantage": {
+      "1st": "Help with choosing apriopriate service for your needs and enables you to book a meeting.",
+      "2nd": "Provides access to order realisation and verification.",
+      "3rd": "Shares the posibility to simply download your product after acceptance from your side!"
+    }
+  },
+  "registration": {
+    "title": "Registration",
+    "hint": "Maximum is 10 characters",
+    "subtitle": "If you have not done it yet, register in order to take advantage of all the possibilities provided by photosupp.",
+    "name": "Your name",
+    "surname": "Your surname",
+    "email": "E-mail address",
+    "password-1st": "Password",
+    "password-2nd": "Retype password",
+    "button": "Register",
+    "login-message": "Log in, in case you are already registered."
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "welcomeMessage": "Witamy w systemie",
+  "system": "Photosupp",
+  "subtitleMessage": "Udogadniamy współpracę z inviu.pl",
+  "login": {
+    "username": "Wprowadź swój login",
+    "password": "Wprowadź hasło"
+  },
+  "pricing": {
+    "title": "Oblicz cenę swojej usługi już teraz!",
+    "1st-step": "Wybierz usługę",
+    "2nd-step": "Uwzględnij czynniki",
+    "3rd-step": "Sprawdź koszt"
+  },
+  "company": {
+    "owner": {
+      "quot": {
+        "1st-part": "Jakość świadczonych usług jest naszym najwyższym priorytetem. System photosupp podkreśla naszą obecność w świecie najnowszych rozwiązań i technologii.",
+        "2nd-part": "Już teraz pomożemy Ci wybrać najlepszą usługę dla Ciebie bez konieczności rejestracji!"
+      },
+      "name": "Piotr Łodziński",
+      "title": "Właściciel firmy inviu"
+    }
+  },
+  "system-statement": {
+    "title": "System Photosupp zapewni Ci opiękę w trakcie korzystania z usług firmy inviu:",
+    "advantage": {
+      "1st": "Pomoże Ci wybrać odpowiednią usługę i pozwoli ustalić termin realizacji.",
+      "2nd": "Zapewni Ci dostęp do postępów realizacji i weryfikacji zlecenia.",
+      "3rd": "Udostępni Ci możliwość pobrania materiałów po ich zaakceptowaniu."
+    }
+  },
+  "registration": {
+    "title": "Rejestracja",
+    "hint": "Maksymalnie 10 znaków",
+    "subtitle": "Jeśli jeszcze tego nie zroobiłeś, zarejestuj się, aby skorzystać ze wszystkich możliwości które zapewnia Photosupp.",
+    "name": "Twoje imię",
+    "surname": "Twoje nazwisko",
+    "email": "Adres e-mail",
+    "password-1st": "Hasło",
+    "password-2nd": "Powtórz hasło",
+    "button": "Zarejestruj się",
+    "login-message": "Jeśli posiadasz już konto, zaloguj się."
+  },
+  "sidenav": {
+    "login": "Zaloguj się",
+    "account_box": "Zarejestruj się",
+    "calculate": "Oblicz cenę"
+  }
+}
