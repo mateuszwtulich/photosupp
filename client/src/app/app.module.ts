@@ -6,7 +6,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import { SharedModule } from './shared/shared.module';
-import { LoginModule } from './login/login.module';
 import { CoreModule } from './core/core.module';
 import { OrderModule } from './order/order.module';
 import { CalendarModule } from './calendar/calendar.module';
@@ -20,6 +19,8 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { Injector, APP_INITIALIZER } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,6 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
     HttpClientModule,
     ReactiveFormsModule,
     SharedModule,
-    LoginModule,
     CoreModule,
     OrderModule,
     CalendarModule,
@@ -52,6 +52,12 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
   bootstrap: [AppComponent],
   providers: [
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializerFactory,
+      deps: [TranslateService, Injector],
+      multi: true
+    }
   ]
 })
 export class AppModule { }
@@ -61,4 +67,13 @@ platformBrowserDynamic().bootstrapModule(AppModule)
 
   export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http);
+}
+
+function appInitializerFactory(translateService: TranslateService) {
+  return () => {
+    translateService.addLangs(['en', 'pl'])
+    translateService.setDefaultLang('pl');
+    console.info(`Successfully initialized language.'`);
+    return translateService.use('pl').toPromise();
+  };
 }

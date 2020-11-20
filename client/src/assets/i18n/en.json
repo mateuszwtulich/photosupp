@@ -1,10 +1,14 @@
 {
+  "pl": "Polish",
+  "en": "English",
   "welcomeMessage": "Welcome in",
   "system": "Photosupp",
   "subtitleMessage": "We make cooperation with inviu.pl easier",
   "login": {
-    "username": "Enter your user name",
-    "password": "Password here"
+    "username": "Username",
+    "title": "Signing in",
+    "button": "Sign in",
+    "password-message": "If you forget the password, we will send reminder on your e-mail."
   },
   "pricing": {
     "title": "Estimate your service now!",
@@ -40,6 +44,17 @@
     "password-1st": "Password",
     "password-2nd": "Retype password",
     "button": "Register",
-    "login-message": "Log in, in case you are already registered."
+    "login-message": "Log in, in case you are already registered.",
+    "email-null": "You must enter a value",
+    "email-invalid": "Not a valid email"
+  },
+  "sidenav": {
+    "login": "Sign in",
+    "account_box": "Register",
+    "calculate": "Calculate price"
+  },
+  "password": {
+    "title": "Remind the password",
+    "button": "Send the reminder"
   }
 }

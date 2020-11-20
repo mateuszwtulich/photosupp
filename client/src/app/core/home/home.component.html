@@ -106,7 +106,8 @@
                             </mat-form-field>
                             <button mat-raised-button color="accent" id="registration-button"> {{ 'registration.button' | translate }} </button>
                         </div>
-                        <mat-card-subtitle id="login-message"> {{ 'registration.login-message' | translate }}
+                        <mat-card-subtitle id="login-message">
+                            <a id="text" routerLink="/login"> {{ 'registration.login-message' | translate }} </a> 
                         </mat-card-subtitle>
                     </mat-card-content>
                 </mat-card>

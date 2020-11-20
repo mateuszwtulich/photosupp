@@ -52,10 +52,12 @@ import { CoreRoutingModule } from './core-routing.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { PricingModule } from '../pricing/pricing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LoginComponent } from './login/login.component';
+import { ForgottenPasswordComponent } from './forgotten-password/forgotten-password.component';
 
 
 @NgModule({
-  declarations: [HeaderComponent, ClientPanelComponent, HomeComponent, ManagerPanelComponent],
+  declarations: [HeaderComponent, ClientPanelComponent, HomeComponent, ManagerPanelComponent, LoginComponent, ForgottenPasswordComponent],
   imports: [
     PricingModule,
     FormsModule,
@@ -109,7 +111,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ScrollingModule,
     CoreRoutingModule
   ],
-  exports: [HeaderComponent, ClientPanelComponent, HomeComponent, ManagerPanelComponent],
+  exports: [HeaderComponent, ClientPanelComponent, HomeComponent, ManagerPanelComponent, LoginComponent, ForgottenPasswordComponent],
 })
 
 export class CoreModule { }

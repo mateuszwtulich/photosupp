@@ -1,10 +1,14 @@
 {
+  "pl": "polski",
+  "en": "angielski",
   "welcomeMessage": "Witamy w systemie",
   "system": "Photosupp",
   "subtitleMessage": "Udogadniamy współpracę z inviu.pl",
   "login": {
-    "username": "Wprowadź swój login",
-    "password": "Wprowadź hasło"
+    "username": "Nazwa użytkownika",
+    "title": "Logowanie",
+    "button": "Zaloguj się",
+    "password-message": "Jeśli zapomniałeś hasła, wyślij przypomnienie na adres e-mail."
   },
   "pricing": {
     "title": "Oblicz cenę swojej usługi już teraz!",
@@ -40,11 +44,17 @@
     "password-1st": "Hasło",
     "password-2nd": "Powtórz hasło",
     "button": "Zarejestruj się",
-    "login-message": "Jeśli posiadasz już konto, zaloguj się."
+    "login-message": "Jeśli posiadasz już konto, zaloguj się.",
+    "email-null": "Musisz podać adres e-mail",
+    "email-invalid": "To nie jest poprawny adres e-mail"
   },
   "sidenav": {
     "login": "Zaloguj się",
     "account_box": "Zarejestruj się",
     "calculate": "Oblicz cenę"
+  },
+  "password": {
+    "title": "Przypomnij hasło",
+    "button": "Wyślij przypomnienie"
   }
 }
