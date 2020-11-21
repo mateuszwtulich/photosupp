@@ -14,7 +14,12 @@
     "title": "Estimate your service now!",
     "1st-step": "Choose service",
     "2nd-step": "Factor everything in",
-    "3rd-step": "Calculate the cost"
+    "3rd-step": "Calculate the cost",
+    "calculation": "Preliminary calculation: ",
+    "warning": "REMEMBER! This is estimated cost. In order to settle final price you need to contact ",
+    "next": "Next",
+    "back": "Back",
+    "reset": "Reset"
   },
   "company": {
     "owner": {

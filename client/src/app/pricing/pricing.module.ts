@@ -57,7 +57,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
      ReactiveFormsModule ,
     TranslateModule,
-    CommonModule,
     BrowserModule,
     A11yModule,
     ClipboardModule,

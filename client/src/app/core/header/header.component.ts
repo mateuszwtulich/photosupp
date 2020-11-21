@@ -2,6 +2,7 @@ import {MediaMatcher} from '@angular/cdk/layout';
 import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { SidenavTo } from '../to/SidenavTo';
 
 @Component({
@@ -14,6 +15,7 @@ export class HeaderComponent implements OnDestroy {
   filterNav: SidenavTo[];
   languages: string[];
   langDefault: string[] = ["pl", "en"];
+  subscription: Subscription = new Subscription();
 
   homeNav = [ 
     new SidenavTo("calculate", "calculate", null),
@@ -53,13 +55,14 @@ export class HeaderComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
+    this.subscription.unsubscribe();
   }
 
   changeLanguage(lang: string){
-    this.translate.use(lang).subscribe(() => {
+    this.subscription.add(this.translate.use(lang).subscribe(() => {
       this.languages = this.langDefault;
       this.refreshSidenavText();
-    });
+    }));
   }
 }
 

@@ -14,7 +14,12 @@
     "title": "Oblicz cenę swojej usługi już teraz!",
     "1st-step": "Wybierz usługę",
     "2nd-step": "Uwzględnij czynniki",
-    "3rd-step": "Sprawdź koszt"
+    "3rd-step": "Sprawdź koszt",
+    "calculation": "Wstępna kalkulacja",
+    "warning": "PAMIĘTAJ! To jest szacunkowy kosz usługi. Aby ustalić ostateczną cenę proszę ",
+    "next": "Następny",
+    "back": "Poprzedni",
+    "reset": "Zacznij od nowa"
   },
   "company": {
     "owner": {
