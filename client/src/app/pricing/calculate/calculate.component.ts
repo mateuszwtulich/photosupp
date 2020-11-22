@@ -208,7 +208,6 @@ subscription: Subscription = new Subscription();
   }
 
   calculateThePredictedCost(): number{
-    console.log(this.priceIndicators);
     let sum = this.firstFormGroup.controls['firstCtrl'].value.basePrice;
     this.priceIndicators.forEach(priceIndicator => sum += priceIndicator.price);
     return sum;

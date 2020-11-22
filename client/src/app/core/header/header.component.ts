@@ -23,6 +23,25 @@ export class HeaderComponent implements OnDestroy {
     new SidenavTo("/login", "login", null)
   ];
 
+  clientNav = [
+    new SidenavTo("client", "home", null),
+    new SidenavTo("client/order/planning", "book_online", null),
+    new SidenavTo("client/orders", "list_alt", null),
+    new SidenavTo("client/scheduler", "calendar_today", null),
+    new SidenavTo("client/user/details", "account_circle", null),
+    new SidenavTo("home", "power_settings_new", null)
+  ];
+
+  managerNav = [
+    new SidenavTo("manager", "home", null),
+    new SidenavTo("manager/orders", "list_alt", null),
+    new SidenavTo("manager/services", "design_services", null),
+    new SidenavTo("manager/scheduler", "calendar_today", null),
+    new SidenavTo("manager/user/details", "account_circle", null),
+    new SidenavTo("manager/user/overview", "supervised_user_circle", null),
+    new SidenavTo("home", "power_settings_new", null)
+  ]
+
   private _mobileQueryListener: () => void;
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private translate: TranslateService, private router: Router) {
@@ -32,25 +51,27 @@ export class HeaderComponent implements OnDestroy {
   }
 
   ngOnInit(): void {
-    this.filterNav = this.homeNav;
+    if(window.location.pathname.startsWith("/client")){
+      this.filterNav = this.clientNav;
+    } else if(window.location.pathname.startsWith("/manager")){
+      this.filterNav = this.managerNav;
+    } else {
+      this.filterNav = this.homeNav;
+    }
 
     this.refreshSidenavText();
   }
 
-  refreshSidenavText(): void {
-    this.filterNav.forEach(nav => {
-      nav.text = this.translate.instant('sidenav.' + nav.icon);
-    });
-
-    this.languages = this.langDefault.filter(lang => lang != this.translate.currentLang);
-  }
-
-  navigate(url: string) {
-    this.router.navigateByUrl(url);
-  }
-
   navigateToHome() {
-    this.router.navigateByUrl("/home");
+    if(window.location.pathname.startsWith("/client")){
+      this.navigate("/client");
+    } else if(window.location.pathname.startsWith("/manager")){
+      this.navigate("/manager");
+    } else {
+      this.navigate("/home");
+      this.filterNav = this.homeNav;
+      this.refreshSidenavText();
+    }
   }
 
   ngOnDestroy(): void {
@@ -63,6 +84,18 @@ export class HeaderComponent implements OnDestroy {
       this.languages = this.langDefault;
       this.refreshSidenavText();
     }));
+  }
+  
+  refreshSidenavText(): void {
+    this.filterNav.forEach(nav => {
+      nav.text = this.translate.instant('sidenav.' + nav.icon);
+    });
+
+    this.languages = this.langDefault.filter(lang => lang != this.translate.currentLang);
+  }
+
+  navigate(url: string) {
+    this.router.navigateByUrl(url);
   }
 }
 

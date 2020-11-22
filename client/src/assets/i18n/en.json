@@ -56,10 +56,31 @@
   "sidenav": {
     "login": "Sign in",
     "account_box": "Register",
-    "calculate": "Calculate price"
+    "calculate": "Calculate price",
+    "home": "Main panel",
+    "book_online": "Book a service",
+    "list_alt": "Orders",
+    "calendar_today": "Scheduler",
+    "account_circle": "Settings",
+    "power_settings_new": "Sign out",
+    "design_services": "Services",
+    "supervised_user_circle": "Users"
   },
   "password": {
     "title": "Remind the password",
     "button": "Send the reminder"
+  },
+  "client": {
+    "booking": "Thanks to this functionality you can estimate cost of service that you are interested in and make an appointment in suitable time.",
+    "orders": "This funcionality provides preview of all your orders: finished, planned or in progress. When you choose specific order you can check current state of the order, comment on this, verify the product or download the final version of it.",
+    "scheduler": "Preview of the calendar allows you to edit time of planned appointments, previewing all currently unavailable dates.",
+    "settings": "Here you can update your personal data, e-mail address or change the password."
+  },
+  "manager": {
+    "orders": "This funcionality provides preview of all your orders: finished, planned or in progress. When you choose specific order you can update state of order, comment the progress, add the preliminary version of product or share the full version of it.",
+    "scheduler": "Preview of the calendar allows you to edit time of planned appointments, previewing all currently unavailable dates.",
+    "settings": "Here you can update your personal data, e-mail address or change the password.",
+    "users": "This functionality allows you to preview all currently registrated users, update role or edit it.",
+    "services": "Here you can manage all of yours services and create indicators that affects order final price."
   }
 }
