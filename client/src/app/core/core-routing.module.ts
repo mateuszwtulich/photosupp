@@ -26,7 +26,7 @@ const routes: Routes = [
     { path: 'client/order/planning', component: BookingsPlanningComponent },
     { path: 'client/scheduler', component: SchedulerComponent },
     { path: 'manager/scheduler', component: SchedulerComponent },
-    { path: 'manager/orders', component: BookingsOverviewComponent },
+    { path: 'manager/orders', component: OrdersOverviewComponent },
     { path: 'client/orders', component: OrdersOverviewComponent },
     { path: 'client/order/details', component: DetailsComponent },
     { path: 'manager/order/details', component: DetailsComponent },

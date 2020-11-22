@@ -73,12 +73,12 @@
                         <mat-card-title id="registration-title"> {{ 'registration.title' | translate }} </mat-card-title>
                         <mat-card-subtitle id="registration-subtitle"> {{ 'registration.subtitle' | translate }} </mat-card-subtitle>
                         <div id="mat-form-container">
-                            <mat-form-field hintLabel="Maksymalnie 10 znaków" appearance="outline" color="accent" #formField="matFormField"> 
+                            <mat-form-field hintLabel="" appearance="outline" color="accent" #formField1="matFormField"> 
                                 <mat-label> {{ 'registration.name' | translate }} </mat-label>
                                 <input matInput #input maxlength="10" placeholder="">
                                 <mat-hint align="end">{{input.value?.length || 0}}/10</mat-hint>
                             </mat-form-field>
-                            <mat-form-field hintLabel="Maksymalnie 10 znaków" appearance="outline" color="accent" #formField="matFormField">
+                            <mat-form-field hintLabel="" appearance="outline" color="accent" #formField2="matFormField">
                                 <mat-label> {{ 'registration.surname' | translate }} </mat-label>
                                 <input matInput #input maxlength="10" placeholder="">
                                 <mat-hint align="end">{{input.value?.length || 0}}/10</mat-hint>

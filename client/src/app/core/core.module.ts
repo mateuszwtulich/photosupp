@@ -54,11 +54,13 @@ import { PricingModule } from '../pricing/pricing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { ForgottenPasswordComponent } from './forgotten-password/forgotten-password.component';
+import { OrderModule } from '../order/order.module';
 
 
 @NgModule({
   declarations: [HeaderComponent, ClientPanelComponent, HomeComponent, ManagerPanelComponent, LoginComponent, ForgottenPasswordComponent],
   imports: [
+    OrderModule,
     PricingModule,
     FormsModule,
     ReactiveFormsModule,
