@@ -1,6 +1,6 @@
 export enum OrderStatus {
-    NEW = "New",
-    IN_PROGRESS ="In progress",
-    TO_VERIFY = "To verify",
-    FINISHED = "Finished"
+    NEW = "NEW",
+    IN_PROGRESS ="IN_PROGRESS",
+    TO_VERIFY = "TO_VERIFY",
+    FINISHED = "FINISHED"
 }

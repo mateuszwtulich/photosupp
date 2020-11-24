@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { OrderRoutingModule } from './order-routing.module';
 import { BookingsOverviewComponent } from './bookings-overview/bookings-overview.component';
-import { DetailsComponent } from './details/details.component';
 import { OrdersOverviewComponent } from './orders-overview/orders-overview.component';
 import {A11yModule} from '@angular/cdk/a11y';
 import {ClipboardModule} from '@angular/cdk/clipboard';
@@ -51,9 +50,11 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import { BrowserModule } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { OrderDetailsComponent } from './order-details/order-details.component';
+import { BookingDetailsComponent } from './booking-details/booking-details.component';
 
 @NgModule({
-  declarations: [BookingsOverviewComponent, DetailsComponent, OrdersOverviewComponent],
+  declarations: [BookingsOverviewComponent, OrdersOverviewComponent, OrderDetailsComponent, BookingDetailsComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -106,6 +107,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ScrollingModule,
     OrderRoutingModule
   ],
-  exports: [BookingsOverviewComponent, DetailsComponent, OrdersOverviewComponent]
+  exports: [BookingsOverviewComponent, OrdersOverviewComponent, OrderDetailsComponent, BookingDetailsComponent]
 })
 export class OrderModule { }

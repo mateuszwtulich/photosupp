@@ -82,5 +82,86 @@
     "settings": "Here you can update your personal data, e-mail address or change the password.",
     "users": "This functionality allows you to preview all currently registrated users, update role or edit it.",
     "services": "Here you can manage all of yours services and create indicators that affects order final price."
-  }
+  },
+  "table": {
+    "actions": "Actions",
+    "filter": "Filter...",
+    "pagination": "Items per page",
+    "filter-null": "No data matching filter: ",
+    "filter-example": "Example value",
+    "pl": "Polish",
+    "en": "English",
+    "all": "All",
+    "language": "Language",
+    "name": "Name"
+  },
+  "orders": {
+    "plural": "Orders",
+    "orderNumber": "Order number",
+    "coordinator": "Coordinator",
+    "user": "User",
+    "status": "Status",
+    "booking": "Booking",
+    "booking-null": "No value",
+    "price": "Price",
+    "createdAt": "Created at",
+    "all": "All",
+    "NEW": "New",
+    "IN_PROGRESS": "In progress",
+    "TO_VERIFY": "To verify",
+    "FINISHED": "Finished"
+  },
+  "bookings": {
+    "plural": "Bookings",
+    "name": "Name",
+    "service": "Service",
+    "user": "User",
+    "isConfirmed": "Is confirmed",
+    "start": "Start",
+    "end": "End",
+    "address": "Address",
+    "predictedPrice": "Predicted price",
+    "true": "Yes",
+    "fales": "No",
+    "all": "All",
+    "confirmed": "Confirmed",
+    "unconfirmed": "Unconfirmed"
+  },
+  "services": {
+    "plural": "Services",
+    "basePrice": "Base price",
+    "indicators": "Indicators affecting the price"
+  },
+  "indicators": {
+    "plural": "Indicators",
+    "description": "Description",
+    "baseAmount": "Free amount from extra charge",
+    "doublePrice": "Extra price for double amount"
+},
+"users": {
+  "plural": "Users",
+  "name": "Name",
+  "surname": "Surname",
+  "username": "Username",
+  "email": "E-mail address",
+  "isActivated": "Is activated",
+  "role": "Role",
+  "manager": "Manager",
+  "user": "User"
+},
+"roles": {
+  "plural": "Roles",
+  "description": "Description",
+  "permissions": "Permissions"
+},
+"permissions": {
+  "A_CRUD_SUPER": "Administrator",
+  "A_CRUD_USERS": "User management",
+  "A_CRUD_ROLES":"User roles",
+  "A_CRUD_SERVICES": "User services",
+  "A_CRUD_BOOKINGS": "User bookings",
+  "A_CRUD_INDICATORS": "User indicators",
+  "A_CRUD_ORDERS": "User orders",
+  "AUTH_USER": "Client"
+}
 }

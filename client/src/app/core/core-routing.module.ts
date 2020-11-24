@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { SchedulerComponent } from '../calendar/scheduler/scheduler.component';
+import { BookingDetailsComponent } from '../order/booking-details/booking-details.component';
 import { BookingsOverviewComponent } from '../order/bookings-overview/bookings-overview.component';
-import { DetailsComponent } from '../order/details/details.component';
+import { OrderDetailsComponent } from '../order/order-details/order-details.component';
 import { OrdersOverviewComponent } from '../order/orders-overview/orders-overview.component';
 import { BookingsPlanningComponent } from '../pricing/bookings-planning/bookings-planning.component';
 import { CalculateComponent } from '../pricing/calculate/calculate.component';
@@ -28,12 +29,15 @@ const routes: Routes = [
     { path: 'manager/scheduler', component: SchedulerComponent },
     { path: 'manager/orders', component: OrdersOverviewComponent },
     { path: 'client/orders', component: OrdersOverviewComponent },
-    { path: 'client/order/details', component: DetailsComponent },
-    { path: 'manager/order/details', component: DetailsComponent },
+    { path: 'client/order/details', component: OrderDetailsComponent },
+    { path: 'manager/order/details', component: OrderDetailsComponent },
+    { path: 'client/booking/details', component: BookingDetailsComponent },
+    { path: 'manager/booking/details', component: BookingDetailsComponent },
     { path: 'manager/services', component: ServicesOverviewComponent },
     { path: 'client/user/details', component: UserDetailsComponent },
     { path: 'manager/user/details', component: UserDetailsComponent },
     { path: 'manager/user/overview', component: UsersOverviewComponent },
+    { path: 'manager/role/overview', component: RolesOverviewComponent },
     { path: 'calculate', component: CalculateComponent },
     { path: 'forgotten-password', component: ForgottenPasswordComponent }
 ];

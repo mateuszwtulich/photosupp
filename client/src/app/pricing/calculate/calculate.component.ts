@@ -4,9 +4,9 @@ import { MatAccordion } from '@angular/material/expansion';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { Combined } from 'src/app/core/to/Combined';
-import { IndicatorEto } from 'src/app/core/to/IndicatorEto';
+import { IndicatorEto } from 'src/app/servicehandling/to/IndicatorEto';
 import { PriceIndicatorTo } from 'src/app/core/to/PriceIndicatorTo';
-import { ServiceEto } from 'src/app/core/to/ServiceEto';
+import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
 
 @Component({
   selector: 'cf-calculate',

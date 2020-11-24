@@ -1,5 +1,5 @@
 import { PriceIndicatorEto } from 'src/app/core/to/PriceIndicatorEto';
-import { ServiceEto } from 'src/app/core/to/ServiceEto';
+import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
 import { UserEto } from 'src/app/usermanagement/shared/to/UserEto';
 import { AddressEto } from './AddressEto';
 

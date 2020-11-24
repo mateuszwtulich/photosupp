@@ -1,7 +1,7 @@
 import { PermissionEto } from './PermissionEto';
 
-export class RoleEto{
+export class RoleEto {
     name: string;
     description: string;
-    permissions: PermissionEto;
+    permissions: PermissionEto[];
 }

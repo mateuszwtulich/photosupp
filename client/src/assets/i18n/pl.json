@@ -82,5 +82,88 @@
     "settings": "Tutaj możesz zmienić dane osobowe, address e-mail czy zmienić hasło dostępu do systemu.",
     "users": "Funkcjonalność pozwoli Ci przeglądać dane aktualnie zarejestrowanych użytkowników, zmieniać ich rolę oraz edytować je.",
     "services": "Tutaj możesz zarządzać swoimi usługami oraz tworzyć czynniki wpływające na ich cenę."
+  },
+  "table": {
+    "actions": "Czynności",
+    "filter": "Filtruj...",
+    "pagination": "Elementów na stronie",
+    "filter-null": "Brak danych odpowiadących filtrowi: ",
+    "filter-example": "Przykładowa wartość",
+    "pl": "polski",
+    "en": "angielski",
+    "all": "Wszystkie",
+    "language": "Język",
+    "name": "Nazwa"
+  },
+  "orders": {
+    "plural": "Zamówienia",
+    "orderNumber": "Numer zamówienia",
+    "coordinator": "Koordynator",
+    "user": "Użytkownik",
+    "status": "Status",
+    "booking": "Rezerwacja",
+    "booking-null": "Brak",
+    "price": "Cena",
+    "createdAt": "Data utworzenia",
+    "all": "Wszystkie",
+    "NEW": "Nowy",
+    "IN_PROGRESS": "W realizacji",
+    "TO_VERIFY": "Do weryfikacji",
+    "FINISHED": "Ukończony"
+  },
+  "bookings": {
+    "plural": "Rezerwacje",
+    "name": "Nazwa",
+    "service": "Usługa",
+    "user": "Użytkownik",
+    "isConfirmed": "Czy potwierdzona",
+    "start": "Rozpoczęcie",
+    "end": "Zakończenie",
+    "address": "Adres",
+    "predictedPrice": "Przewidywana cena",
+    "true": "Tak",
+    "fales": "Nie",
+    "all": "Wszystkie",
+    "confirmed": "Potwierdzone",
+    "unconfirmed": "Niepotwierdzone"
+  },
+  "services": {
+      "plural": "Usługi",
+      "basePrice": "Cena podstawowa",
+      "indicators": "Czynniki podwyższające cenę"
+  },
+  "indicators": {
+      "plural": "Czynniki",
+      "description": "Opis",
+      "baseAmount": "Ilość wolna od dopłaty",
+      "doublePrice": "Dodatkowa cena za podwojenie ilości"
+  },
+  "users": {
+    "plural": "Użytkownicy",
+    "name": "Imię",
+    "surname": "Nazwisko",
+    "username": "Nazwa użytkownika",
+    "email": "Adres e-mail",
+    "isActivated": "Czy aktywowany",
+    "role": "Rola",
+    "manager": "Menedżer",
+    "user": "Użytkownik",
+    "false": "Tak",
+    "true": "Nie"
+  },
+  "roles": {
+    "plural": "Role",
+    "description": "Opis",
+    "permissions": "Uprawnienia"
+  },
+  "permissions": {
+    "A_CRUD_SUPER": "Administrator",
+    "A_CRUD_USERS": "Zarządzanie użytkownikami",
+    "A_CRUD_ROLES":"Zarządzanie rolami",
+    "A_CRUD_SERVICES": "Zarządzanie usługami",
+    "A_CRUD_BOOKINGS": "Zarządzanie rezerwacjami",
+    "A_CRUD_INDICATORS": "Zarządzanie czynnikami",
+    "A_CRUD_ORDERS": "Zarządzanie zamówieniami",
+    "AUTH_USER": "Klient"
   }
 }

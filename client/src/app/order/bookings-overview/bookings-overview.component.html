@@ -1,89 +1,94 @@
 <div id="header">
-    <mat-chip-list aria-label="Status selection" id="fast-filters">
-        <mat-chip color="accent" selected>ALL</mat-chip>
-        <mat-chip color="accent" selected>CONFIRMED</mat-chip>
-        <mat-chip color="accent" selected>UNCONFIRMED</mat-chip>
-      </mat-chip-list>
-      <button id="add-booking" mat-mini-fab color="primary" aria-label="Add booking button">
-        <mat-icon>add</mat-icon>
-    </button>
+  <mat-chip-list aria-label="Status selection" id="fast-filters">
+    <mat-chip color="accent" selected (click)="filterStatus('all')">{{ 'bookings.all' | translate}}</mat-chip>
+    <mat-chip color="accent" selected (click)="filterStatus('confirmed')"> {{'bookings.confirmed' | translate}} </mat-chip>
+    <mat-chip color="accent" selected (click)="filterStatus('unconfirmed')">{{'bookings.unconfirmed' | translate}} </mat-chip>
+  </mat-chip-list>
+  <button id="add-booking" mat-mini-fab color="primary" aria-label="Add booking button">
+    <mat-icon>add</mat-icon>
+  </button>
 </div>
 <div id="bookings-table">
   <div *ngIf="isSpinnerDisplayed" class="spinner-wrapper">
     <mat-spinner color="accent"></mat-spinner>
-</div>
-<mat-form-field>
-    <mat-label>Filter</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
+  </div>
+  <mat-form-field>
+    <mat-label>{{'table.filter' | translate}}</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="{{'table.filter-example' | translate}}" #input>
   </mat-form-field>
   <div id="table-wrapper" class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($element)">
-  
-    <ng-container matColumnDef="orderNumber">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Order number </th>
-      <td mat-cell *matCellDef="let element"> {{element.orderNumber}} </td>
-    </ng-container>
-    
-    <ng-container matColumnDef="user">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> User </th>
-      <td mat-cell *matCellDef="let element"> {{element.user.name}} {{element.user.surname}} </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="coordinator">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Coordinator </th>
-      <td mat-cell *matCellDef="let element"> {{element.coordinator.name}} {{element.coordinator.surname}} </td>
-    </ng-container>
+    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
 
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-      <td mat-cell *matCellDef="let element"> {{element.status}} </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="booking">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Booking </th>
-      <td mat-cell *matCellDef="let element">
-        <ng-container *ngIf="element.booking;else defaultValue">
-          {{element.booking.name}} 
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'bookings.name' | translate}} </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="service">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'bookings.service' | translate}} </th>
+        <td mat-cell *matCellDef="let element"> {{element.service.name}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="address">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'bookings.address' | translate}} </th>
+        <td mat-cell *matCellDef="let element"> {{element.address.city}}, {{element.address.street}} {{element.address.buildingNumber}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'bookings.user' | translate}} </th>
+        <td mat-cell *matCellDef="let element"> {{element.user.name}} {{element.user.surname}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="isConfirmed">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'bookings.isConfirmed' | translate}} </th>
+        <td mat-cell *matCellDef="let element">
+        <ng-container *ngIf="element.isConfirmed;else defaultValue">
+          {{'bookings.confirmed' | translate}}
         </ng-container>
       </td>
       <ng-template #defaultValue>
-        No value
+        {{'bookings.unconfirmed' | translate}}
       </ng-template>
-    </ng-container>
-
-    <ng-container matColumnDef="price">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
-        <td mat-cell *matCellDef="let element"> {{element.price}} </td>
       </ng-container>
-    
-      <ng-container matColumnDef="createdAt">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Created at </th>
-        <td mat-cell *matCellDef="let element"> {{element.createdAt}} </td>
+
+      <ng-container matColumnDef="predictedPrice">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'bookings.predictedPrice' | translate}} </th>
+        <td mat-cell *matCellDef="let element"> {{element.predictedPrice}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="start">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'bookings.start' | translate}} </th>
+        <td mat-cell *matCellDef="let element"> {{element.start}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="end">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'bookings.end' | translate}} </th>
+        <td mat-cell *matCellDef="let element"> {{element.end}} </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <th mat-header-cell *matHeaderCellDef>{{'table.actions' | translate}}</th>
         <td mat-cell *matCellDef="let element" class="actions-container">
+          <div>
             <div>
-                <div>
-                    <button mat-icon-button color="primary" (click)="modifyOrder(element)">
-                        <mat-icon>edit</mat-icon>
-                    </button>
-                    <button mat-icon-button color="warn" (click)="deleteOrder(element)">
-                        <mat-icon>clear</mat-icon>
-                    </button>
-                </div>
+              <button mat-icon-button color="primary" (click)="modifyBooking(element)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteBooking(element)">
+                <mat-icon>clear</mat-icon>
+              </button>
             </div>
+          </div>
         </td>
-    </ng-container> 
-  
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
-    </tr>
-  </table>
-  <mat-paginator [pageSizeOptions]="[5, 10]"></mat-paginator>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">{{ 'table.filter-null' | translate}} "{{input.value}}"</td>
+      </tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10]"></mat-paginator>
   </div>
 </div>

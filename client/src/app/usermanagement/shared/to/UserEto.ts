@@ -5,6 +5,6 @@ import { RoleEto } from './RoleEto';
 export class UserEto {
     name: string;
     surname: string;
-    accountEto: AccountEto;
-    roleEto: RoleEto;
+    account: AccountEto;
+    role: RoleEto;
 }
