@@ -151,11 +151,7 @@ subscription: Subscription = new Subscription();
     this.subscription.add(this.translate.onLangChange.subscribe((event: LangChangeEvent) =>{
       this.filterServices(event.lang);
     }));
-  }
-
-  ngAfterViewChecked() {
     this.filterServices(this.translate.currentLang);
-  
   }
 
   filterServices(lang: string){

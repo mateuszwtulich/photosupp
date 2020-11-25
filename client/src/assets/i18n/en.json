@@ -16,7 +16,7 @@
     "2nd-step": "Factor everything in",
     "3rd-step": "Calculate the cost",
     "calculation": "Preliminary calculation: ",
-    "warning": "REMEMBER! This is estimated cost. In order to settle final price you need to contact ",
+    "warning": "REMEMBER! This is estimated cost. In order to settle final price you need to contact with the owner of Inviu",
     "next": "Next",
     "back": "Back",
     "reset": "Reset"
@@ -63,6 +63,7 @@
     "calendar_today": "Scheduler",
     "account_circle": "Settings",
     "power_settings_new": "Sign out",
+    "exit_to_app": "Sign out",
     "design_services": "Services",
     "supervised_user_circle": "Users"
   },
@@ -125,7 +126,9 @@
     "fales": "No",
     "all": "All",
     "confirmed": "Confirmed",
-    "unconfirmed": "Unconfirmed"
+    "unconfirmed": "Unconfirmed",
+    "1st-step": "Choose free meeting date",
+    "last-step": "Create booking"
   },
   "services": {
     "plural": "Services",
@@ -147,7 +150,18 @@
   "isActivated": "Is activated",
   "role": "Role",
   "manager": "Manager",
-  "user": "User"
+  "user": "User",
+  "false": "Yes",
+  "true": "No",
+  "personal-data": "Personal data",
+  "password-update": "Password update",
+  "email-update": "E-mail address update",
+  "new-password-1st": "New password",
+  "new-password-2nd": "Retype new password",
+  "email-1st": "New e-mail address",
+  "email-2nd": "Retype e-mail address",
+  "password-button": "Update password",
+  "email-button": "Update e-mail address"
 },
 "roles": {
   "plural": "Roles",

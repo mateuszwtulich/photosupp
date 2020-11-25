@@ -1,1 +1,60 @@
-<p>booking-details works!</p>
+<mat-tab-group mat-align-tabs="start" color="accent">
+    <mat-tab label="{{ 'users.personal-data' | translate}}" color="accent">
+ <div id="header">
+              <button id="modify-account" mat-mini-fab color="primary" aria-label="Add user button">
+                <mat-icon id="icon">edit</mat-icon>
+            </button>
+            <button id="delete-account" mat-mini-fab color="warn" aria-label="Add user button">
+                <mat-icon id="icon">clear</mat-icon>
+            </button>
+        </div>
+        
+        <div class="update-container">
+            <mat-card class="update-card margin-top-0">
+                <mat-card-title class="card-title"> {{ 'users.personal-data' | translate}} </mat-card-title>
+                <mat-divider></mat-divider>
+                <mat-card-content id="content">
+                    <mat-list>
+                        <mat-list-item>
+                          <div class="title">
+                            <mat-chip-list [formControl]="userControl">
+                                <mat-chip>{{ 'users.name' | translate}}:</mat-chip>
+                                </mat-chip-list>
+                            </div>
+                          <div class="field"> {{user.name}} </div>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item>
+                            <div class="title">
+                                <mat-chip-list [formControl]="userControl">
+                                    <mat-chip>{{ 'users.surname' | translate}}:</mat-chip>
+                                    </mat-chip-list>
+                                </div>
+                            <div class="field"> {{user.surname}} </div>
+                          </mat-list-item>
+                          <mat-divider></mat-divider>
+                          <mat-list-item>
+                            <div class="title">
+                            <mat-chip-list [formControl]="userControl">
+                                <mat-chip>{{ 'users.username' | translate}}:
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </div>
+                            <div class="field"> {{user.account.username}} </div>
+                          </mat-list-item>
+                          <mat-divider></mat-divider>
+                          <mat-list-item>
+                            <div class="title">
+                            <mat-chip-list [formControl]="userControl">
+                                <mat-chip>{{ 'users.email' | translate}}:
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </div>
+                            <div class="field"> {{user.account.email}} </div>
+                          </mat-list-item>
+              </mat-list>
+                </mat-card-content>
+            </mat-card>
+            </div>
+        </mat-tab>
+    </mat-tab-group>

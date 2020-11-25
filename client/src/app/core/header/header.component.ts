@@ -18,9 +18,9 @@ export class HeaderComponent implements OnDestroy {
   subscription: Subscription = new Subscription();
 
   homeNav = [ 
-    new SidenavTo("calculate", "calculate", null),
-    new SidenavTo("/home", "account_box", null),
-    new SidenavTo("/login", "login", null)
+    new SidenavTo("home/calculate", "calculate", null),
+    new SidenavTo("home", "account_box", null),
+    new SidenavTo("home/login", "login", null)
   ];
 
   clientNav = [
@@ -29,7 +29,6 @@ export class HeaderComponent implements OnDestroy {
     new SidenavTo("client/orders", "list_alt", null),
     new SidenavTo("client/scheduler", "calendar_today", null),
     new SidenavTo("client/user/details", "account_circle", null),
-    new SidenavTo("home", "power_settings_new", null)
   ];
 
   managerNav = [
@@ -39,7 +38,6 @@ export class HeaderComponent implements OnDestroy {
     new SidenavTo("manager/scheduler", "calendar_today", null),
     new SidenavTo("manager/user/details", "account_circle", null),
     new SidenavTo("manager/user/overview", "supervised_user_circle", null),
-    new SidenavTo("home", "power_settings_new", null)
   ]
 
   private _mobileQueryListener: () => void;
@@ -96,6 +94,16 @@ export class HeaderComponent implements OnDestroy {
 
   navigate(url: string) {
     this.router.navigateByUrl(url);
+  }
+
+  logout() {
+    this.filterNav = this.homeNav;
+    this.refreshSidenavText();
+    this.router.navigateByUrl("/home");
+  }
+
+  getRouterLink(): boolean{
+    return this.router.url.startsWith("/home");
   }
 }
 

@@ -5,8 +5,11 @@
     </button>
     <img src='../../../assets/photosupp_logo.png' alt="photosupp logo" width="240" height="80"
       (click)="navigateToHome()">
-    <button id="login" mat-icon-button routerLink="/login">
+    <button id="login" *ngIf="getRouterLink()" mat-icon-button routerLink="/home/login">
       <mat-icon>login</mat-icon>
+    </button>
+    <button id="login" *ngIf="!getRouterLink()" mat-icon-button (click)="logout()">
+      <mat-icon>exit_to_app</mat-icon>
     </button>
   </mat-toolbar>
 
@@ -16,6 +19,9 @@
       <mat-nav-list>
         <a mat-list-item id="sidenav-item" *ngFor="let nav of filterNav" (click)="navigate(nav.routerLink)">
           <mat-icon id="nav-icon">{{nav.icon}}</mat-icon>{{nav.text}}
+        </a>
+        <a mat-list-item id="sidenav-item"  *ngIf="!getRouterLink()" (click)="logout(lang)">
+          <mat-icon id="nav-icon">exit_to_app</mat-icon> {{ 'sidenav.exit_to_app' | translate }}
         </a>
         <a mat-list-item id="sidenav-item" *ngFor="let lang of languages" (click)="changeLanguage(lang)">
           <mat-icon id="nav-icon">language</mat-icon> {{ lang | translate }}

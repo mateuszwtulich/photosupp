@@ -48,6 +48,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import { TranslateModule } from '@ngx-translate/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CalendarModule } from '../calendar/calendar.module';
 
 @NgModule({
   declarations: [BookingsPlanningComponent, CalculateComponent],
@@ -102,6 +103,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     OverlayModule,
     PortalModule,
     ScrollingModule,
+    CalendarModule
   ],
   exports: [BookingsPlanningComponent, CalculateComponent]
 })

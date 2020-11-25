@@ -23,23 +23,23 @@ const routes: Routes = [
     { path: 'home', component: HomeComponent },
     { path: 'manager', component: ManagerPanelComponent },
     { path: 'client', component: ClientPanelComponent },
-    { path: 'login', component: LoginComponent },
+    { path: 'home/login', component: LoginComponent },
     { path: 'client/order/planning', component: BookingsPlanningComponent },
     { path: 'client/scheduler', component: SchedulerComponent },
     { path: 'manager/scheduler', component: SchedulerComponent },
     { path: 'manager/orders', component: OrdersOverviewComponent },
     { path: 'client/orders', component: OrdersOverviewComponent },
-    { path: 'client/order/details', component: OrderDetailsComponent },
-    { path: 'manager/order/details', component: OrderDetailsComponent },
-    { path: 'client/booking/details', component: BookingDetailsComponent },
-    { path: 'manager/booking/details', component: BookingDetailsComponent },
+    { path: 'client/orders/details/:orderNumber', component: OrderDetailsComponent },
+    { path: 'manager/orders/details/:orderNumber', component: OrderDetailsComponent },
+    { path: 'client/orders/booking/details/:id', component: BookingDetailsComponent },
+    { path: 'manager/orders/booking/details/:id', component: BookingDetailsComponent },
     { path: 'manager/services', component: ServicesOverviewComponent },
     { path: 'client/user/details', component: UserDetailsComponent },
     { path: 'manager/user/details', component: UserDetailsComponent },
     { path: 'manager/user/overview', component: UsersOverviewComponent },
     { path: 'manager/role/overview', component: RolesOverviewComponent },
-    { path: 'calculate', component: CalculateComponent },
-    { path: 'forgotten-password', component: ForgottenPasswordComponent }
+    { path: 'home/calculate', component: CalculateComponent },
+    { path: 'home/forgotten-password', component: ForgottenPasswordComponent }
 ];
 
 @NgModule({

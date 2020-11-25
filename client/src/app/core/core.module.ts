@@ -115,6 +115,5 @@ import { OrderModule } from '../order/order.module';
   ],
   exports: [HeaderComponent, ClientPanelComponent, HomeComponent, ManagerPanelComponent, LoginComponent, ForgottenPasswordComponent],
 })
-
 export class CoreModule { }
 

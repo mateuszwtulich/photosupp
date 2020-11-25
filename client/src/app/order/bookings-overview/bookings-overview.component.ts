@@ -109,10 +109,10 @@ const ADDRESS: AddressEto = {
 }
 
 const BOOKINGS: BookingEto[] = [
-  {name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
-  {name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
-  {name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}, 
-  {name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}
+  {id: 1, name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
+  {id: 2, name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
+  {id: 3, name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}, 
+  {id: 4, name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}
 ];
 
 @Component({

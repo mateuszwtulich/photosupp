@@ -4,6 +4,7 @@ import { UserEto } from 'src/app/usermanagement/shared/to/UserEto';
 import { AddressEto } from './AddressEto';
 
 export class BookingEto{
+    id: number;
     name: string;
     description: string;
     service: ServiceEto;

@@ -16,7 +16,7 @@
     "2nd-step": "Uwzględnij czynniki",
     "3rd-step": "Sprawdź koszt",
     "calculation": "Wstępna kalkulacja: ",
-    "warning": "PAMIĘTAJ! To jest szacunkowy kosz usługi. Aby ustalić ostateczną cenę proszę ",
+    "warning": "PAMIĘTAJ! To jest szacunkowy kosz usługi. Aby ustalić ostateczną cenę proszę skontaktuj się z właścicielem Inviu",
     "next": "Następny",
     "back": "Poprzedni",
     "reset": "Zacznij od nowa"
@@ -63,6 +63,7 @@
     "calendar_today": "Terminarz",
     "account_circle": "Ustawienia",
     "power_settings_new": "Wyloguj się",
+    "exit_to_app": "Wyloguj się",
     "design_services": "Usługi",
     "supervised_user_circle": "Użytkownicy"
   },
@@ -125,7 +126,9 @@
     "fales": "Nie",
     "all": "Wszystkie",
     "confirmed": "Potwierdzone",
-    "unconfirmed": "Niepotwierdzone"
+    "unconfirmed": "Niepotwierdzone",
+    "1st-step": "Wybierz wolny termin",
+    "last-step": "Utwórz rezerwację"
   },
   "services": {
       "plural": "Usługi",
@@ -149,7 +152,16 @@
     "manager": "Menedżer",
     "user": "Użytkownik",
     "false": "Tak",
-    "true": "Nie"
+    "true": "Nie",
+    "personal-data": "Dane osobowe",
+    "password-update": "Zmiana hasła",
+    "email-update": "Zmiana adresu e-mail",
+    "new-password-1st": "Nowe hasło",
+    "new-password-2nd": "Powtórz nowe hasło",
+    "email-1st": "Nowy adress e-mail",
+    "email-2nd": "Powtórz nowy adres e-mail",
+    "password-button": "Zmień hasło",
+    "email-button": "Zmień adres e-mail"
   },
   "roles": {
     "plural": "Role",
