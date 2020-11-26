@@ -141,7 +141,10 @@
     "description":"Opis",
     "indicators":"Czynniki podwyższające cenę",
     "indicator-amount": "Ilość",
-    "indicator-price": "Cena dodatkowa"
+    "indicator-price": "Cena dodatkowa",
+    "start-booking": "Przyjmij zlecenie",
+    "information": "Podaj informacje",
+    "save": "Utwórz rezerwacje"
   },
   "services": {
       "plural": "Usługi",
@@ -196,5 +199,12 @@
     "name": "Nazwa",
     "IMAGE": "Zdjęcie",
     "VIDEO": "Film"
+  },
+  "address": {
+    "city": "Miasto",
+    "street": "Ulica",
+    "building-number": "Numer budynku",
+    "apartment-number": "Numer mieszkania",
+    "postalCode": "Kod pocztowy"
   }
 }

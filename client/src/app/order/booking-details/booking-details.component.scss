@@ -63,6 +63,35 @@
             padding-bottom: 3%;
             justify-content: center;
         }
+
+        .mat-form-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          padding-left: 8%;
+          padding-right: 8%;
+
+          .start-button{
+            background-color:  #0e2636;
+            color: white;
+            margin-top: 4%;
+            margin-bottom: 2%;
+            width: 60%;
+            height: 3rem;
+        }
+  
+          ::ng-deep .mat-form-field{
+              width: 100%;
+              margin-top: 2%;
+          }
+  
+          ::ng-deep .mat-form-field-outline-start, 
+          ::ng-deep.mat-form-field-outline-gap,
+          ::ng-deep.mat-form-field-outline-end{
+              background-color: white;
+          }
+        }
     }
 }
 

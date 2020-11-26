@@ -141,7 +141,10 @@
     "description":"Description",
     "indicators":"Indicators increasing the price",
     "indicator-amount": "Amount",
-    "indicator-price": "Extra price"
+    "indicator-price": "Extra price",
+    "start-booking": "Accept the booking",
+    "information": "Give an information",
+    "save": "Create the booking"
   },
   "services": {
     "plural": "Services",
@@ -196,5 +199,12 @@
   "name": "Name",
   "IMAGE": "Image",
   "VIDEO": "Video"
-}
+},
+  "address": {
+    "city": "City",
+    "street": "Street",
+    "building-number": "Building number",
+    "apartment-number": "Apartment number",
+    "postalCode": "Postal code"
+  }
 }

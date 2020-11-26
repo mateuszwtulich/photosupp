@@ -4,6 +4,8 @@ import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { CalendarEvent } from '../to/CalendarEvent';
 import { Router } from '@angular/router';
+import { SchedulerService } from '../services/scheduler.service';
+import { BookingEto } from 'src/app/order/shared/to/BookingEto';
 
 const EVENTS = [
 {
@@ -70,7 +72,7 @@ export class SchedulerComponent implements OnInit {
   };
 
   @ViewChild('calendar') calendarComponent: FullCalendarComponent;
-  constructor(private translate: TranslateService, private router: Router) { }
+  constructor(private translate: TranslateService, private router: Router, private schedulerService: SchedulerService) { }
 
   ngOnInit(): void {
     this.calendarEvents = EVENTS;
@@ -92,6 +94,11 @@ export class SchedulerComponent implements OnInit {
   }
 
   private selectedFields(info){
+    let booking = new BookingEto();
+    booking.start = info.startStr;
+    booking.end = info.endStr;
+
+    this.schedulerService.datesDataSource.next(booking);
     console.log(info.startStr + " " + info.endStr)
   }
 

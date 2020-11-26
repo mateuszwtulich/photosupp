@@ -1,186 +1,187 @@
 <mat-tab-group mat-align-tabs="start" color="accent">
-    <mat-tab label="{{ 'orders.details' | translate}}" color="accent">
-        <div id="header">
-              <button id="modify-account" mat-mini-fab color="primary" aria-label="Add user button">
-                <mat-icon id="icon">edit</mat-icon>
-            </button>
-            <button id="delete-account" mat-mini-fab color="warn" aria-label="Add user button">
-                <mat-icon id="icon">clear</mat-icon>
-            </button>
-        </div>
-        
-        <div class="update-container">
-            <mat-card class="update-card margin-top-0">
-                <mat-card-title class="card-title"> {{ 'orders.details' | translate}} </mat-card-title>
-                <mat-divider></mat-divider>
-                <mat-card-content id="content">
-                    <mat-list>
-                        <mat-list-item>
-                          <div class="title">
-                            <mat-chip-list [formControl]="orderControl">
-                                <mat-chip>{{ 'orders.orderNumber' | translate}}:</mat-chip>
-                                </mat-chip-list>
-                            </div>
-                          <div class="field"> {{order.orderNumber}} </div>
-                        </mat-list-item>
-                        <mat-divider></mat-divider>
-                        <mat-list-item>
-                            <div class="title">
-                                <mat-chip-list [formControl]="orderControl">
-                                    <mat-chip>{{ 'orders.coordinator' | translate}}:</mat-chip>
-                                    </mat-chip-list>
-                                </div>
-                            <div class="field"> {{order.coordinator.name}} {{order.coordinator.surname}} </div>
-                          </mat-list-item>
-                          <mat-divider></mat-divider>
-                          <mat-list-item>
-                            <div class="title">
-                            <mat-chip-list [formControl]="orderControl">
-                                <mat-chip>{{ 'orders.user' | translate}}:
-                                    </mat-chip>
-                                </mat-chip-list>
-                            </div>
-                            <div class="field"> {{order.user.name}} {{order.user.surname}} </div>
-                          </mat-list-item>
-                          <mat-divider></mat-divider>
-                          <mat-list-item>
-                            <div class="title">
-                            <mat-chip-list [formControl]="orderControl">
-                                <mat-chip>{{ 'orders.status' | translate}}:
-                                    </mat-chip>
-                                </mat-chip-list>
-                            </div>
-                            <div class="field"> {{order.status}} </div>
-                          </mat-list-item>
-                          <mat-divider></mat-divider>
-                        <mat-list-item>
-                            <div class="title">
-                                <mat-chip-list [formControl]="orderControl">
-                                    <mat-chip>{{ 'orders.booking' | translate}}:</mat-chip>
-                                    </mat-chip-list>
-                                </div>
-                            <div class="field" *ngIf="order.booking;else defaultValue" (click)="navigateToBookingDetails(order.booking.id)">
-                                {{ order.booking.name }}</div>
-                            <ng-template #defaultValue>{{ 'orders.booking-null' | translate}}</ng-template>
-                          </mat-list-item>
-                          <mat-divider></mat-divider>
-                          <mat-list-item>
-                            <div class="title">
-                            <mat-chip-list [formControl]="orderControl">
-                                <mat-chip>{{ 'orders.price' | translate}}:
-                                    </mat-chip>
-                                </mat-chip-list>
-                            </div>
-                            <div class="field"> {{order.price}} PLN</div>
-                          </mat-list-item>
-                          <mat-divider></mat-divider>
-                          <mat-list-item>
-                            <div class="title">
-                            <mat-chip-list [formControl]="orderControl">
-                                <mat-chip>{{ 'orders.createdAt' | translate}}:
-                                    </mat-chip>
-                                </mat-chip-list>
-                            </div>
-                            <div class="field"> {{order.createdAt}} </div>
-                          </mat-list-item>
-                          <mat-divider></mat-divider>
-              </mat-list>
-              <div class="mat-form-container">
-                <button mat-raised-button color="accent" class="verify-button">
-                    {{ 'orders.verify' | translate }} </button>
-            </div>
-                </mat-card-content>
-            </mat-card>
-            </div>
-    </mat-tab>
-    <mat-tab label="{{ 'orders.content' | translate}}" color="accent">
-        <div class="content-container">
-            <div id="content-header">
-                  <button id="add-mediaContent" mat-mini-fab color="primary" aria-label="Add mediaContent button">
-                    <mat-icon id="icon">add</mat-icon>
-                </button>
-            </div>
-            <mat-card class="content-card">
-                <mat-card-title class="card-title">{{ 'orders.gallery' | translate}}</mat-card-title>
-                  <img mat-card-image src="../../../assets/img6.jpg" (click)="showGallery(1)" alt="Photo of a Shiba Inu">
-            </mat-card>
-             <div id="table-header">
-                <button id="download-mediaContent" mat-mini-fab color="primary" aria-label="Dwonload all mediaContent button">
-                  <mat-icon id="icon">download</mat-icon>
-                </button>
-              </div>
-              <div id="mediaContent-table">
-                <div *ngIf="isSpinnerDisplayed" class="spinner-wrapper">
-                  <mat-spinner color="accent"></mat-spinner>
-                </div>
-                <div id="table-wrapper" class="mat-elevation-z8">
-                  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
-              
-                    <ng-container matColumnDef="type">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'mediaContent.type' | translate}} </th>
-                        <td mat-cell *matCellDef="let element"> {{'mediaContent.' + element.type | translate }} </td>
-                      </ng-container>
+  <mat-tab label="{{ 'orders.details' | translate}}" color="accent">
+    <div id="header">
+      <button id="modify-account" mat-mini-fab color="primary" aria-label="Add user button">
+        <mat-icon id="icon">edit</mat-icon>
+      </button>
+      <button id="delete-account" mat-mini-fab color="warn" aria-label="Add user button">
+        <mat-icon id="icon">clear</mat-icon>
+      </button>
+    </div>
 
-                    <ng-container matColumnDef="name">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'mediaContent.name' | translate}} </th>
-                      <td mat-cell *matCellDef="let element"> {{element.url}} </td>
-                    </ng-container>
-              
-                    <ng-container matColumnDef="actions">
-                      <th mat-header-cell *matHeaderCellDef>{{ 'table.actions' | translate}}</th>
-                      <td mat-cell *matCellDef="let element" class="actions-container">
-                        <div>
-                          <div>
-                            <button mat-icon-button color="primary" (click)="downloadMediaContent(element)">
-                              <mat-icon>download</mat-icon>
-                            </button>
-                            <button mat-icon-button color="warn" (click)="deleteMediaContent(element)">
-                              <mat-icon>clear</mat-icon>
-                            </button>
-                          </div>
-                        </div>
-                      </td>
-                    </ng-container>
-              
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-              
-                    <tr class="mat-row" *matNoDataRow>
-                      <td class="mat-cell" colspan="4">{{ 'table.filter-null' | translate}} "{{input.value}}"</td>
-                    </tr>
-                  </table>
-                  <mat-paginator [pageSizeOptions]="[5, 10]"></mat-paginator>
-                </div>
+    <div class="update-container">
+      <mat-card class="update-card margin-top-0">
+        <mat-card-title class="card-title"> {{ 'orders.details' | translate}} </mat-card-title>
+        <mat-divider></mat-divider>
+        <mat-card-content id="content">
+          <mat-list>
+            <mat-list-item>
+              <div class="title">
+                <mat-chip-list [formControl]="orderControl">
+                  <mat-chip>{{ 'orders.orderNumber' | translate}}:</mat-chip>
+                </mat-chip-list>
               </div>
-
+              <div class="field"> {{order.orderNumber}} </div>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+              <div class="title">
+                <mat-chip-list [formControl]="orderControl">
+                  <mat-chip>{{ 'orders.coordinator' | translate}}:</mat-chip>
+                </mat-chip-list>
+              </div>
+              <div class="field"> {{order.coordinator.name}} {{order.coordinator.surname}} </div>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+              <div class="title">
+                <mat-chip-list [formControl]="orderControl">
+                  <mat-chip>{{ 'orders.user' | translate}}:
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+              <div class="field"> {{order.user.name}} {{order.user.surname}} </div>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+              <div class="title">
+                <mat-chip-list [formControl]="orderControl">
+                  <mat-chip>{{ 'orders.status' | translate}}:
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+              <div class="field"> {{order.status}} </div>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+              <div class="title">
+                <mat-chip-list [formControl]="orderControl">
+                  <mat-chip>{{ 'orders.booking' | translate}}:</mat-chip>
+                </mat-chip-list>
+              </div>
+              <div class="field" *ngIf="order.booking;else defaultValue"
+                (click)="navigateToBookingDetails(order.booking.id)">
+                {{ order.booking.name }}</div>
+              <ng-template #defaultValue>{{ 'orders.booking-null' | translate}}</ng-template>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+              <div class="title">
+                <mat-chip-list [formControl]="orderControl">
+                  <mat-chip>{{ 'orders.price' | translate}}:
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+              <div class="field"> {{order.price}} PLN</div>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+              <div class="title">
+                <mat-chip-list [formControl]="orderControl">
+                  <mat-chip>{{ 'orders.createdAt' | translate}}:
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+              <div class="field"> {{order.createdAt}} </div>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+          </mat-list>
+          <div class="mat-form-container">
+            <button mat-raised-button color="accent" class="verify-button">
+              {{ 'orders.verify' | translate }} </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-tab>
+  <mat-tab label="{{ 'orders.content' | translate}}" color="accent">
+    <div class="content-container">
+      <div id="content-header">
+        <button id="add-mediaContent" mat-mini-fab color="primary" aria-label="Add mediaContent button">
+          <mat-icon id="icon">add</mat-icon>
+        </button>
+      </div>
+      <mat-card class="content-card">
+        <mat-card-title class="card-title">{{ 'orders.gallery' | translate}}</mat-card-title>
+        <img mat-card-image src="../../../assets/img6.jpg" (click)="showGallery(1)" alt="Photo of a Shiba Inu">
+      </mat-card>
+      <div id="table-header">
+        <button id="download-mediaContent" mat-mini-fab color="primary" aria-label="Dwonload all mediaContent button">
+          <mat-icon id="icon">download</mat-icon>
+        </button>
+      </div>
+      <div id="mediaContent-table">
+        <div *ngIf="isSpinnerDisplayed" class="spinner-wrapper">
+          <mat-spinner color="accent"></mat-spinner>
         </div>
-    </mat-tab>
-    <mat-tab label="{{ 'orders.comments' | translate}}" color="accent">
-        <div class="update-container">
-            <mat-card class="width-card">
-                <mat-card-title class="card-title"> {{ 'orders.add-comment' | translate }} </mat-card-title>
-                    <mat-card-content id="content">
-                        <mat-list *ngFor="let comment of comments">
-                            <mat-list-item class="comment-item">
-                              <div class="title-comment">
-                                <mat-chip-list>
-                                    <mat-chip> {{comment.user.name}} {{comment.user.surname}}:</mat-chip>
-                                    </mat-chip-list>
-                                </div>
-                              <div class="field-comment"> {{comment.content}} </div>
-                            </mat-list-item>
-                            <mat-divider></mat-divider>
-                            </mat-list>
-                    <div class="mat-form-container">
-                        <mat-form-field appearance="outline" color="accent">
-                            <mat-label>{{ 'orders.comment-write' | translate }}</mat-label>
-                            <textarea matInput ></textarea>
-                          </mat-form-field>
-                        <button mat-raised-button color="accent" class="update-button">
-                            {{ 'orders.comment-button' | translate }} </button>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-            </div>
-    </mat-tab>
+        <div id="table-wrapper" class="mat-elevation-z8">
+          <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'mediaContent.type' | translate}} </th>
+              <td mat-cell *matCellDef="let element"> {{'mediaContent.' + element.type | translate }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'mediaContent.name' | translate}} </th>
+              <td mat-cell *matCellDef="let element"> {{element.url}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>{{ 'table.actions' | translate}}</th>
+              <td mat-cell *matCellDef="let element" class="actions-container">
+                <div>
+                  <div>
+                    <button mat-icon-button color="primary" (click)="downloadMediaContent(element)">
+                      <mat-icon>download</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="deleteMediaContent(element)">
+                      <mat-icon>clear</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">{{ 'table.filter-null' | translate}} "{{input.value}}"</td>
+            </tr>
+          </table>
+          <mat-paginator [pageSizeOptions]="[5, 10]"></mat-paginator>
+        </div>
+      </div>
+
+    </div>
+  </mat-tab>
+  <mat-tab label="{{ 'orders.comments' | translate}}" color="accent">
+    <div class="update-container">
+      <mat-card class="width-card">
+        <mat-card-title class="card-title"> {{ 'orders.add-comment' | translate }} </mat-card-title>
+        <mat-card-content id="content">
+          <mat-list *ngFor="let comment of comments">
+            <mat-list-item class="comment-item">
+              <div class="title-comment">
+                <mat-chip-list>
+                  <mat-chip> {{comment.user.name}} {{comment.user.surname}}:</mat-chip>
+                </mat-chip-list>
+              </div>
+              <div class="field-comment"> {{comment.content}} </div>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+          </mat-list>
+          <div class="mat-form-container">
+            <mat-form-field appearance="outline" color="accent">
+              <mat-label>{{ 'orders.comment-write' | translate }}</mat-label>
+              <textarea matInput></textarea>
+            </mat-form-field>
+            <button mat-raised-button color="accent" class="update-button">
+              {{ 'orders.comment-button' | translate }} </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-tab>
 </mat-tab-group>
