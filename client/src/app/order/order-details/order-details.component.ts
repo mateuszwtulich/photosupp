@@ -1,13 +1,23 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort, Sort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
+import { Gallery } from 'angular-gallery';
 import { Subscription } from 'rxjs';
+import { SortUtil } from 'src/app/core/utils/SortUtil';
+import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
 import { ApplicationPermissions } from 'src/app/usermanagement/shared/enum/ApplicationPermissions';
 import { AccountEto } from 'src/app/usermanagement/shared/to/AccountEto';
 import { PermissionEto } from 'src/app/usermanagement/shared/to/PermissionEto';
 import { RoleEto } from 'src/app/usermanagement/shared/to/RoleEto';
 import { UserEto } from 'src/app/usermanagement/shared/to/UserEto';
+import { MediaType } from '../shared/enum/MediaType';
+import { OrderStatus } from '../shared/enum/OrderStatus';
+import { AddressEto } from '../shared/to/AddressEto';
 
 const BASIC_PERM: PermissionEto[] = [{
   name: ApplicationPermissions.AUTH_USER,
@@ -34,64 +44,127 @@ const USER: UserEto = {
   role: ROLE1
 }
 
+const COORDINATOR: UserEto = {
+  name: "John",
+  surname: "Smith",
+  account: null,
+  role: null
+}
+
+const SERVICE: ServiceEto = {
+  id: 1,
+  name: "foto",
+  description: "opis",
+  locale: "pl",
+  basePrice: 300,
+  indicators: null
+};
+
+const ADDRESS: AddressEto = {
+  city: "Wroclaw",
+  street: "Wroblewskiego",
+  buildingNumber: "20A",
+  apartmentNumber: null,
+  postalCode: "60-324",
+}
+
+const ORDER = { orderNumber: "INVIU0001", coordinator: COORDINATOR, user: USER, status: OrderStatus.NEW,
+ booking: {id: 1, name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
+  price: 1000, createdAt: "22-11-2020" }
+
+  const COMMENTS = [{
+    id: 1,
+    orderNumber: "Sd",
+    content: "Mr Sgsd adsgfsdop sdgosd jopsdg opsdgpojdog sdpogjdsdsg sdopgjsdop jsd ospdgjf sspog jspo gso jgdp sdogpfj. sgojps gj. sgjopdfjg",
+    user: USER,
+    createdAt: "22-11-2020"
+  },
+  { 
+    id: 2,
+    orderNumber: "Sd",
+    content: "Mr Sgsd adsgfsdop sdgosd jopsdg opsdgpojdog sdpogjdsdsg sdopgjsdodsfds sdf sdf sdf sd re yrthj ykyiuy lki7yolul iu tyr grdfgfd tt tyhrt p jsd ospdgjf sspog jspo gso jgdp sdogpfj. sgojps gj. sgjopdfjg",
+    user: COORDINATOR,
+    createdAt: "22-11-2020"
+  }
+]
+
+const MEDIA_CONTENT = [{
+  id: 2,
+  type: MediaType.IMAGE,
+  url: "url",
+  orderNumber: "SAd"
+},
+{
+  id: 2,
+  type: MediaType.VIDEO,
+  url: "urlasdasasdasasdasdassa",
+  orderNumber: "SAd"
+}]
+
 @Component({
   selector: 'cf-order-details',
   templateUrl: './order-details.component.html',
   styleUrls: ['./order-details.component.scss']
 })
 export class OrderDetailsComponent implements OnInit {
-  public email1st: FormControl;
-  public email2nd: FormControl;
-  public password1st: FormControl;
-  public password2nd: FormControl;
+  displayedColumns: string[] = ['type', 'name', 'actions'];
+  dataSource = new MatTableDataSource(MEDIA_CONTENT);
+  isSpinnerDisplayed = false;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
-  public hide: boolean;
   subscritpion: Subscription = new Subscription();
-  user = USER;
-  @ViewChild('formField1') formField1: MatFormField;
-  @ViewChild('formField2') formField2: MatFormField;
-  @Input()
-  public userControl: FormControl;
+  order = ORDER;
 
-  constructor(private translate: TranslateService) {
-    this.hide = true;
-    this.email1st = new FormControl('', [Validators.required, Validators.email])
-    this.email2nd = new FormControl('', [Validators.required, Validators.email])
-    this.password1st = new FormControl('', Validators.required)
-    this.password2nd = new FormControl('', Validators.required)
-    this.userControl = new FormControl(USER);
+  @Input()
+  public orderControl: FormControl;
+  public comments = COMMENTS;
+
+  constructor(private translate: TranslateService, private router: Router, private gallery: Gallery, private route: ActivatedRoute) {
    }
 
   ngOnInit(): void {
-    this.subscritpion.add(this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.changeHintLabel();
-    }));
-  }
-
-  ngAfterViewInit(): void {
-    this.changeHintLabel();
-  }
-
-  private changeHintLabel(){
-  }
-
-  getErrorMessage1st() {
-    if (this.email1st.hasError('required')) {
-      return this.translate.instant('registration.email-null');
-    }
-
-    return this.email1st.hasError('email') ? this.translate.instant('registration.email-invalid') : '';
-  }
-
-  getErrorMessage2nd() {
-    if (this.email2nd.hasError('required')) {
-      return this.translate.instant('registration.email-null');
-    }
-
-    return this.email2nd.hasError('email') ? this.translate.instant('registration.email-invalid') : '';
+    this.orderControl = new FormControl(ORDER);
+    this.route.snapshot.paramMap.get('id');
   }
 
   ngOnDestroy() {
     this.subscritpion.unsubscribe();
   }
+
+  navigateToBookingDetails(id: number){
+    let currentHeadLink = this.router.url.substring(0,this.router.url.indexOf("o"));
+    
+    this.router.navigateByUrl(currentHeadLink + "orders/booking/details/" + id.toFixed());
+  }
+
+  showGallery(index: number) {
+    let prop = {
+        images: [
+            {path: '../../../assets/img6.jpg'},
+            {path: '../../../assets/img6.jpg'},
+            {path: '../../../assets/img6.jpg'}
+        ],
+        index 
+    };
+    this.gallery.load(prop);
+}
+
+sortData(sort: Sort) {
+  const data = this.dataSource.data.slice();
+  if (!sort.active || sort.direction === "") {
+    this.dataSource.data = data;
+  }
+  this.dataSource.data = data.sort((a, b) => {
+    const isAsc = sort.direction === "asc";
+    switch (sort.active) {
+      case "name":
+        return SortUtil.compare(a.url, b.url, isAsc);
+      case "type":
+        return SortUtil.compare(a.type, b.type, isAsc);
+      default:
+        return 0;
+    }
+  });
+}
 }

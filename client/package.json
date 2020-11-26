@@ -27,7 +27,9 @@
     "@fullcalendar/interaction": "^5.4.0",
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
+    "angular-gallery": "^1.0.2",
     "rxjs": "~6.6.0",
+    "screenfull": "^3.3.3",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },

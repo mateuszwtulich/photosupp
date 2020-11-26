@@ -110,7 +110,15 @@
     "NEW": "New",
     "IN_PROGRESS": "In progress",
     "TO_VERIFY": "To verify",
-    "FINISHED": "Finished"
+    "FINISHED": "Finished",
+    "details": "Order details",
+    "comments": "Comments",
+    "content": "Content",
+    "gallery": "Gallery",
+    "add-comment": "Comments",
+    "comment-button": "Add comment",
+    "comment-write": "Write comment",
+    "verify": "Verify the order"
   },
   "bookings": {
     "plural": "Bookings",
@@ -128,7 +136,12 @@
     "confirmed": "Confirmed",
     "unconfirmed": "Unconfirmed",
     "1st-step": "Choose free meeting date",
-    "last-step": "Create booking"
+    "last-step": "Create booking",
+    "details":"Booking details",
+    "description":"Description",
+    "indicators":"Indicators increasing the price",
+    "indicator-amount": "Amount",
+    "indicator-price": "Extra price"
   },
   "services": {
     "plural": "Services",
@@ -177,5 +190,11 @@
   "A_CRUD_INDICATORS": "User indicators",
   "A_CRUD_ORDERS": "User orders",
   "AUTH_USER": "Client"
+},
+"mediaContent": {
+  "type": "Type",
+  "name": "Name",
+  "IMAGE": "Image",
+  "VIDEO": "Video"
 }
 }

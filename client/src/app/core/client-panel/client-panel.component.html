@@ -1,6 +1,7 @@
-<mat-grid-list id="client-panel" cols="2" rowHeight="2:1">
+<mat-grid-list id="client-panel" [cols]="breakpoint" [rowHeight]="ratio" (window:resize)="onResize($event)">
     <mat-grid-tile>
-        <mat-card class="left-card top-card" routerLink="order/planning">
+        <div class="mat-container left-card top-card">
+        <mat-card routerLink="order/planning">
             <mat-card-header>
                 <div class="header">
                     <mat-icon>book_online</mat-icon>
@@ -13,9 +14,11 @@
                 </p>
             </mat-card-content>
         </mat-card>
+        </div>
     </mat-grid-tile>
     <mat-grid-tile>
-        <mat-card class="right-card top-card" routerLink="orders">
+        <div class="mat-container right-card top-card">
+        <mat-card routerLink="orders">
             <mat-card-header>
                 <div class="header">
                     <mat-icon>list_alt</mat-icon>
@@ -28,9 +31,11 @@
                 </p>
             </mat-card-content>
         </mat-card>
+        </div>
     </mat-grid-tile>
     <mat-grid-tile>
-        <mat-card class="left-card bottom-card" routerLink="scheduler">
+        <div class="mat-container left-card bottom-card">
+        <mat-card routerLink="scheduler">
             <mat-card-header>
                 <div class="header">
                     <mat-icon>calendar_today</mat-icon>
@@ -43,8 +48,10 @@
                 </p>
             </mat-card-content>
         </mat-card>
+        </div>
     </mat-grid-tile>
     <mat-grid-tile>
+        <div class="mat-container right-card bottom-card">
         <mat-card class="right-card bottom-card" routerLink="user/details">
             <mat-card-header>
                 <div class="header">
@@ -58,5 +65,6 @@
                 </p>
             </mat-card-content>
         </mat-card>
+        </div>
     </mat-grid-tile>
 </mat-grid-list>

@@ -1,5 +1,5 @@
 <mat-tab-group mat-align-tabs="start" color="accent">
-    <mat-tab label="{{ 'users.personal-data' | translate}}" color="accent">
+    <mat-tab label="{{ 'bookings.details' | translate}}" color="accent">
  <div id="header">
               <button id="modify-account" mat-mini-fab color="primary" aria-label="Add user button">
                 <mat-icon id="icon">edit</mat-icon>
@@ -11,50 +11,163 @@
         
         <div class="update-container">
             <mat-card class="update-card margin-top-0">
-                <mat-card-title class="card-title"> {{ 'users.personal-data' | translate}} </mat-card-title>
+                <mat-card-title class="card-title"> {{ 'bookings.details' | translate}} </mat-card-title>
                 <mat-divider></mat-divider>
                 <mat-card-content id="content">
                     <mat-list>
                         <mat-list-item>
                           <div class="title">
-                            <mat-chip-list [formControl]="userControl">
-                                <mat-chip>{{ 'users.name' | translate}}:</mat-chip>
+                            <mat-chip-list [formControl]="bookingControl">
+                                <mat-chip>{{ 'bookings.name' | translate}}:</mat-chip>
                                 </mat-chip-list>
                             </div>
-                          <div class="field"> {{user.name}} </div>
+                          <div class="field"> {{booking.name}} </div>
                         </mat-list-item>
                         <mat-divider></mat-divider>
                         <mat-list-item>
                             <div class="title">
-                                <mat-chip-list [formControl]="userControl">
-                                    <mat-chip>{{ 'users.surname' | translate}}:</mat-chip>
+                                <mat-chip-list [formControl]="bookingControl">
+                                    <mat-chip>{{ 'bookings.description' | translate}}:</mat-chip>
                                     </mat-chip-list>
                                 </div>
-                            <div class="field"> {{user.surname}} </div>
+                            <div class="field"> {{booking.description}} </div>
                           </mat-list-item>
                           <mat-divider></mat-divider>
                           <mat-list-item>
                             <div class="title">
-                            <mat-chip-list [formControl]="userControl">
-                                <mat-chip>{{ 'users.username' | translate}}:
+                            <mat-chip-list [formControl]="bookingControl">
+                                <mat-chip>{{ 'bookings.service' | translate}}:
                                     </mat-chip>
                                 </mat-chip-list>
                             </div>
-                            <div class="field"> {{user.account.username}} </div>
+                            <div class="field"> {{booking.service.name}} </div>
                           </mat-list-item>
                           <mat-divider></mat-divider>
                           <mat-list-item>
                             <div class="title">
-                            <mat-chip-list [formControl]="userControl">
-                                <mat-chip>{{ 'users.email' | translate}}:
+                            <mat-chip-list [formControl]="bookingControl">
+                                <mat-chip>{{ 'bookings.address' | translate}}:
                                     </mat-chip>
                                 </mat-chip-list>
                             </div>
-                            <div class="field"> {{user.account.email}} </div>
+                            <div class="field"> {{booking.address.street}} {{booking.address.buildingNumber}}, {{booking.address.postalCode}} {{booking.address.city}} </div>
+                          </mat-list-item>
+                          <mat-divider></mat-divider>
+                          <mat-list-item>
+                            <div class="title">
+                            <mat-chip-list [formControl]="bookingControl">
+                                <mat-chip>{{ 'bookings.user' | translate}}:
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </div>
+                            <div class="field"> {{booking.user.name}} {{booking.user.surname}} </div>
+                          </mat-list-item>
+                          <mat-divider></mat-divider>
+                          <mat-list-item>
+                            <div class="title">
+                            <mat-chip-list [formControl]="bookingControl">
+                                <mat-chip>{{ 'bookings.isConfirmed' | translate}}:
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </div>
+                            <div class="field" *ngIf="booking.isConfirmed;else defaultValue">
+                                {{'bookings.confirmed' | translate}}
+                              </div>
+                            <ng-template #defaultValue>{{'bookings.unconfirmed' | translate}}</ng-template>
+                          </mat-list-item>
+                          <mat-divider></mat-divider>
+                          <mat-list-item>
+                            <div class="title">
+                            <mat-chip-list [formControl]="bookingControl">
+                                <mat-chip>{{ 'bookings.predictedPrice' | translate}}:
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </div>
+                            <div class="field"> {{booking.predictedPrice}} PLN </div>
+                          </mat-list-item>
+                          <mat-divider></mat-divider>
+                          <mat-list-item>
+                            <div class="title">
+                            <mat-chip-list [formControl]="bookingControl">
+                                <mat-chip>{{ 'bookings.start' | translate}}:
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </div>
+                            <div class="field"> {{booking.start}} </div>
+                          </mat-list-item>
+                          <mat-divider></mat-divider>
+                          <mat-list-item>
+                            <div class="title">
+                            <mat-chip-list [formControl]="bookingControl">
+                                <mat-chip>{{ 'bookings.end' | translate}}:
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </div>
+                            <div class="field"> {{booking.end}} </div>
                           </mat-list-item>
               </mat-list>
                 </mat-card-content>
             </mat-card>
             </div>
+        </mat-tab>
+        <mat-tab label="{{ 'bookings.indicators' | translate}}" color="accent">
+            <div id="table-header">
+                <button id="add-indicator" mat-mini-fab color="primary" aria-label="Add indicator button">
+                  <mat-icon id="icon">add</mat-icon>
+                </button>
+              </div>
+              <div id="indicators-table">
+                <div *ngIf="isSpinnerDisplayed" class="spinner-wrapper">
+                  <mat-spinner color="accent"></mat-spinner>
+                </div>
+                <div id="table-wrapper" class="mat-elevation-z8">
+                  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+              
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'table.name' | translate}} </th>
+                      <td mat-cell *matCellDef="let element"> {{element.indicator.name}} </td>
+                    </ng-container>
+              
+                    <ng-container matColumnDef="description">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'indicators.description' | translate}} </th>
+                      <td mat-cell *matCellDef="let element"> {{element.indicator.description}}</td>
+                    </ng-container>
+              
+                    <ng-container matColumnDef="amount">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'bookings.indicator-amount' | translate}} </th>
+                      <td mat-cell *matCellDef="let element"> {{element.amount}}</td>
+                    </ng-container>
+              
+                    <ng-container matColumnDef="price">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'bookings.indicator-price' | translate}} </th>
+                      <td mat-cell *matCellDef="let element"> {{element.price}} PLN</td>
+                    </ng-container>
+              
+                    <ng-container matColumnDef="actions">
+                      <th mat-header-cell *matHeaderCellDef>{{ 'table.actions' | translate}}</th>
+                      <td mat-cell *matCellDef="let element" class="actions-container">
+                        <div>
+                          <div>
+                            <button mat-icon-button color="primary" (click)="modifyPriceIndicator(element)">
+                              <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" (click)="deletePriceIndicator(element)">
+                              <mat-icon>clear</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </td>
+                    </ng-container>
+              
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              
+                    <tr class="mat-row" *matNoDataRow>
+                      <td class="mat-cell" colspan="4">{{ 'table.filter-null' | translate}} "{{input.value}}"</td>
+                    </tr>
+                  </table>
+                  <mat-paginator [pageSizeOptions]="[5, 10]"></mat-paginator>
+                </div>
+              </div>
         </mat-tab>
     </mat-tab-group>

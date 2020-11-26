@@ -62,3 +62,7 @@ h1.app-name {
     padding-right: 4%;
   }
 }
+
+::ng-deep .mat-sidenav-container{
+  margin: 0 !important;
+}

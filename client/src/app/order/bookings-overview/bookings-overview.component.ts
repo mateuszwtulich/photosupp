@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SortUtil } from 'src/app/core/utils/SortUtil';
 import { IndicatorEto } from 'src/app/servicehandling/to/IndicatorEto';
@@ -128,7 +129,7 @@ export class BookingsOverviewComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private translate: TranslateService) {
+  constructor(private translate: TranslateService, private router: Router) {
    }
 
    ngOnInit(): void {
@@ -198,5 +199,11 @@ export class BookingsOverviewComponent implements OnInit {
           return 0;
       }
     });
+  }
+
+  navigateToBookingDetails(id: number){
+    let currentHeadLink = this.router.url.substring(0,this.router.url.indexOf("o"));
+    
+    this.router.navigateByUrl(currentHeadLink + "orders/booking/details/" + id.toFixed());
   }
 }

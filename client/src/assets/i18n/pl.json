@@ -110,7 +110,15 @@
     "NEW": "Nowy",
     "IN_PROGRESS": "W realizacji",
     "TO_VERIFY": "Do weryfikacji",
-    "FINISHED": "Ukończony"
+    "FINISHED": "Ukończony",
+    "details": "Szczegóły zamówienia",
+    "comments": "Sekcja komentarzy",
+    "content": "Aktualna zawartość zamówienia",
+    "gallery": "Galeria z aktualnymi zdjęciami",
+    "add-comment": "Komentarze",
+    "comment-button": "Dodaj komentarz",
+    "comment-write": "Napisz komentarz",
+    "verify": "Zatwierdź zlecenie"
   },
   "bookings": {
     "plural": "Rezerwacje",
@@ -128,7 +136,12 @@
     "confirmed": "Potwierdzone",
     "unconfirmed": "Niepotwierdzone",
     "1st-step": "Wybierz wolny termin",
-    "last-step": "Utwórz rezerwację"
+    "last-step": "Utwórz rezerwację",
+    "details":"Szczegóły rezerwacji",
+    "description":"Opis",
+    "indicators":"Czynniki podwyższające cenę",
+    "indicator-amount": "Ilość",
+    "indicator-price": "Cena dodatkowa"
   },
   "services": {
       "plural": "Usługi",
@@ -177,5 +190,11 @@
     "A_CRUD_INDICATORS": "Zarządzanie czynnikami",
     "A_CRUD_ORDERS": "Zarządzanie zamówieniami",
     "AUTH_USER": "Klient"
+  },
+  "mediaContent": {
+    "type": "Rodzaj",
+    "name": "Nazwa",
+    "IMAGE": "Zdjęcie",
+    "VIDEO": "Film"
   }
 }

@@ -52,10 +52,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OrderDetailsComponent } from './order-details/order-details.component';
 import { BookingDetailsComponent } from './booking-details/booking-details.component';
+import {IvyGalleryModule} from 'angular-gallery';
+
 
 @NgModule({
   declarations: [BookingsOverviewComponent, OrdersOverviewComponent, OrderDetailsComponent, BookingDetailsComponent],
   imports: [
+    IvyGalleryModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
