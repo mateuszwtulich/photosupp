@@ -135,7 +135,7 @@ public class ServiceOrderingImpl implements ServiceOrdering {
     }
 
     @Override
-    public Optional<ServiceEto> createService(ServiceTo serviceTo) throws EntityAlreadyExistsException {
+    public Optional<ServiceEto> createService(ServiceTo serviceTo) throws EntityAlreadyExistsException, EntityDoesNotExistException {
         return ucManageService.createService(serviceTo);
     }
 

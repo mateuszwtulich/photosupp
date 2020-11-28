@@ -45,7 +45,7 @@ public class BookingValidatorTest {
     void setUp() {
         AddressTo addressTo = new AddressTo("Wrocław", "Wróblewskiego", "27", null, "51-627");
 
-        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, 1L, 10);
+        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, 1L, 20, 0);
         List<PriceIndicatorTo> priceIndicatorToList = new ArrayList<>();
         priceIndicatorToList.add(priceIndicatorTo);
 
@@ -88,7 +88,7 @@ public class BookingValidatorTest {
     void verifyIfBookingAlreadyCreatedAtThatDateSuccess() {
         //Arrange
         AddressEntity addressEntity =  new AddressEntity("Wroclaw", "Wroblewskiego", "27", null, "51-627");
-        ServiceEntity serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
+        ServiceEntity serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl");
 
         BookingEntity bookingEntity1 = new BookingEntity("Film dla TestCompany", "Film produktowy z dojazdem", 900D,
                 addressEntity, new UserEntity(), serviceEntity, false, getCurrentDate(LocalDate.now(),1),
@@ -114,7 +114,7 @@ public class BookingValidatorTest {
     void verifyIfBookingAlreadyCreatedAtThatDateFailure() {
         //Arrange
         AddressEntity addressEntity =  new AddressEntity("Wroclaw", "Wroblewskiego", "27", null, "51-627");
-        ServiceEntity serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
+        ServiceEntity serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl");
 
         BookingEntity bookingEntity1 = new BookingEntity("Film dla TestCompany", "Film produktowy z dojazdem", 900D,
                 addressEntity, new UserEntity(), serviceEntity, false, getCurrentDate(LocalDate.now(),2),

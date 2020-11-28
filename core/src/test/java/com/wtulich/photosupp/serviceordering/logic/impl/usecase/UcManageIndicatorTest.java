@@ -44,12 +44,12 @@ public class UcManageIndicatorTest {
 
     @BeforeEach
     void setUp() {
-        indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", 40);
+        IndicatorEntity indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
         indicatorEntity.setId(1L);
 
-        indicatorEto = new IndicatorEto(1L, "Podroz sluzbowa", "Paliwo, amortyzacja", 40);
+        indicatorEto = new IndicatorEto(1L, "Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
 
-        indicatorTo = new IndicatorTo("Podroz sluzbowa", "Paliwo, amortyzacja", 40);
+        indicatorTo = new IndicatorTo("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
     }
 
     @Test

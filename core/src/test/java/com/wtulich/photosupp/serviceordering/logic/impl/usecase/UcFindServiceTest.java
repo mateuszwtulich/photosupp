@@ -42,7 +42,8 @@ public class UcFindServiceTest {
 
     @BeforeEach
     void setUp() {
-        serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
+        serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl");
+        serviceEntity.setId(1L);
 
         serviceEntities = new ArrayList<>();
         serviceEntities.add(serviceEntity);

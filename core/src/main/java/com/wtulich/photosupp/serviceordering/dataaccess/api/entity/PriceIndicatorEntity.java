@@ -1,7 +1,6 @@
 package com.wtulich.photosupp.serviceordering.dataaccess.api.entity;
 
 import com.sun.istack.NotNull;
-import com.wtulich.photosupp.userhandling.dataaccess.api.entity.UserEntity;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -24,21 +23,21 @@ public class PriceIndicatorEntity {
     private BookingEntity booking;
 
     @NotNull
-    @Column(name = "INDICATOR_PRICE", nullable = false)
-    private Integer indicatorPrice;
+    @Column(name = "PRICE", nullable = false)
+    private Integer price;
 
     @NotNull
-    @Column(name = "MULTIPLIER", nullable = false)
-    private Integer multiplier;
+    @Column(name = "AMOUNT", nullable = false)
+    private Integer amount;
 
     public PriceIndicatorEntity() {
     }
 
-    public PriceIndicatorEntity(IndicatorEntity indicator, BookingEntity booking, Integer indicatorPrice, Integer multiplier) {
+    public PriceIndicatorEntity(IndicatorEntity indicator, BookingEntity booking, Integer price, Integer amount) {
         this.indicator = indicator;
         this.booking = booking;
-        this.indicatorPrice = indicatorPrice;
-        this.multiplier = multiplier;
+        this.price = price;
+        this.amount = amount;
     }
 
     public PriceIndicatorKey getId() {
@@ -65,20 +64,20 @@ public class PriceIndicatorEntity {
         this.booking = booking;
     }
 
-    public Integer getIndicatorPrice() {
-        return indicatorPrice;
+    public Integer getPrice() {
+        return price;
     }
 
-    public void setIndicatorPrice(Integer indicatorPrice) {
-        this.indicatorPrice = indicatorPrice;
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
-    public Integer getMultiplier() {
-        return multiplier;
+    public Integer getAmount() {
+        return amount;
     }
 
-    public void setMultiplier(Integer multiplier) {
-        this.multiplier = multiplier;
+    public void setAmount(Integer amount) {
+        this.amount = amount;
     }
 
     @Override
@@ -88,12 +87,12 @@ public class PriceIndicatorEntity {
         PriceIndicatorEntity that = (PriceIndicatorEntity) o;
         return indicator.equals(that.indicator) &&
                 booking.equals(that.booking) &&
-                indicatorPrice.equals(that.indicatorPrice) &&
-                multiplier.equals(that.multiplier);
+                price.equals(that.price) &&
+                amount.equals(that.amount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(indicator, booking, indicatorPrice, multiplier);
+        return Objects.hash(indicator, booking, price, amount);
     }
 }

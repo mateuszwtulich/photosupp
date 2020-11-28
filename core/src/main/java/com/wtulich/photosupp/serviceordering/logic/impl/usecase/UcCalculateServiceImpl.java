@@ -76,7 +76,7 @@ public class UcCalculateServiceImpl implements UcCalculateService {
 
         if (calculateCto.getPriceIndicatorEtoList() != null){
             for (PriceIndicatorEto priceIndicator : calculateCto.getPriceIndicatorEtoList()) {
-                predictedPrice += priceIndicator.getIndicatorPrice();
+                predictedPrice += priceIndicator.getPrice();
             }
         }
 
@@ -100,8 +100,8 @@ public class UcCalculateServiceImpl implements UcCalculateService {
 
         PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto();
         priceIndicatorEto.setIndicatorEto(indicatorMapper.toIndicatorEto(getIndicatorById(priceIndicatorTo.getIndicatorId())));
-        priceIndicatorEto.setMultiplier(priceIndicatorTo.getMultiplier());
-        priceIndicatorEto.setIndicatorPrice(priceIndicatorTo.getMultiplier() * priceIndicatorEto.getIndicatorEto().getBaseAmount());
+        priceIndicatorEto.setPrice(priceIndicatorTo.getPrice());
+        priceIndicatorEto.setAmount(priceIndicatorTo.getAmount());
 
         return priceIndicatorEto;
     }

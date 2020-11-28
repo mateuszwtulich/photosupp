@@ -8,6 +8,7 @@ import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.IndicatorEnti
 import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.ServiceEntity;
 import com.wtulich.photosupp.serviceordering.logic.api.to.*;
 import com.wtulich.photosupp.serviceordering.logic.impl.validator.BookingValidator;
+import com.wtulich.photosupp.userhandling.logic.api.to.PermissionEto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,8 +55,10 @@ public class UcCalculateServiceTest {
 
     @BeforeEach
     void setUp() {
-        ServiceEto serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
-        IndicatorEto indicatorEto = new IndicatorEto(1L, "Podroz sluzbowa", "Paliwo, amortyzacja", 40);
+        IndicatorEto indicatorEto = new IndicatorEto(1L,"Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 30);
+        List<IndicatorEto> indicatorEtos = List.of(indicatorEto);
+
+        ServiceEto serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl", indicatorEtos);
         List<PriceIndicatorEto> priceIndicatorEtoList = new ArrayList<>();
 
         PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorEto, null, 400, 10);
@@ -66,7 +69,7 @@ public class UcCalculateServiceTest {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd").format(getCurrentDate(LocalDate.now(), 1)),
                 priceIndicatorEtoList);
 
-        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, null, 10);
+        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, 1L, 20, 0);
         List<PriceIndicatorTo> priceIndicatorToList = new ArrayList<>();
         priceIndicatorToList.add(priceIndicatorTo);
 
@@ -75,8 +78,9 @@ public class UcCalculateServiceTest {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd").format(getCurrentDate(LocalDate.now(), 1)),
                 priceIndicatorToList);
 
-        serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
-        indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", 40);
+        ServiceEntity serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl");
+        IndicatorEntity indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
+        serviceEntity.setIndicatorList(List.of(indicatorEntity));
 
     }
 

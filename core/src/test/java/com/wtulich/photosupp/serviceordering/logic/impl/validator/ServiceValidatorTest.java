@@ -15,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
+
 import static org.mockito.Mockito.when;
 
 @ExtendWith({SpringExtension.class})
@@ -33,9 +35,9 @@ public class ServiceValidatorTest {
 
     @BeforeEach
     void setUp() {
-        serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
-        serviceTo = new ServiceTo("Film produktowy", "Film produktów na białym tle i odpowiednim oświetleniu", 500D);
-    }
+        serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl");
+        List<Long> indicatorsIds = List.of(1L);
+        serviceTo = new ServiceTo("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl", indicatorsIds);    }
 
     @Test
     @DisplayName("Test verifyIfServiceAlreadyExists Success")

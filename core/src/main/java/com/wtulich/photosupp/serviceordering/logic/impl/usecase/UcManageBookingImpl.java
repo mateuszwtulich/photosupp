@@ -156,7 +156,7 @@ public class UcManageBookingImpl implements UcManageBooking {
     private Optional<BookingEto> toBookingEto(BookingEntity bookingEntity){
         BookingEto bookingEto = bookingMapper.toBookingEto(bookingEntity);
 
-        bookingEto.setServiceEto(serviceMapper.toServiceEto(bookingEntity.getService()));
+        bookingEto.setServiceEto(toServiceEto(bookingEntity.getService()));
         bookingEto.setUserEto(toUserEto(bookingEntity.getUser()));
 
         if( bookingEntity.getAddress() != null ){
@@ -170,8 +170,8 @@ public class UcManageBookingImpl implements UcManageBooking {
                                     new PriceIndicatorEto(
                                             indicatorMapper.toIndicatorEto(priceIndicatorEntity.getIndicator()),
                                             bookingEntity.getId(),
-                                            priceIndicatorEntity.getIndicatorPrice(),
-                                            priceIndicatorEntity.getMultiplier()
+                                            priceIndicatorEntity.getPrice(),
+                                            priceIndicatorEntity.getAmount()
                                     )).collect(Collectors.toList()));
         }
 
@@ -222,8 +222,8 @@ public class UcManageBookingImpl implements UcManageBooking {
 
         priceIndicatorEntity.setBooking(bookingEntity);
         priceIndicatorEntity.setIndicator(indicatorEntity);
-        priceIndicatorEntity.setMultiplier(priceIndicatorTo.getMultiplier());
-        priceIndicatorEntity.setIndicatorPrice(indicatorEntity.getBaseAmount() * priceIndicatorTo.getMultiplier());
+        priceIndicatorEntity.setAmount(priceIndicatorTo.getAmount());
+        priceIndicatorEntity.setPrice(priceIndicatorTo.getPrice());
 
         PriceIndicatorKey priceIndicatorKey = new PriceIndicatorKey();
         priceIndicatorKey.setBookingId(bookingEntity.getId());
@@ -312,7 +312,7 @@ public class UcManageBookingImpl implements UcManageBooking {
 
         if (bookingEntity.getPriceIndicatorList() != null){
             for (PriceIndicatorEntity priceIndicator : bookingEntity.getPriceIndicatorList()) {
-                predictedPrice += priceIndicator.getIndicatorPrice();
+                predictedPrice += priceIndicator.getPrice();
             }
         }
 
@@ -353,5 +353,13 @@ public class UcManageBookingImpl implements UcManageBooking {
 
         orderEntity.setCoordinator(getUserById(coordinatorId));
         return orderDao.save(orderEntity);
+    }
+
+    private ServiceEto toServiceEto(ServiceEntity serviceEntity){
+        ServiceEto serviceEto = serviceMapper.toServiceEto(serviceEntity);
+        serviceEto.setIndicatorEtoList(serviceEntity.getIndicatorList().stream()
+                .map(i -> indicatorMapper.toIndicatorEto(i))
+                .collect(Collectors.toList()));
+        return serviceEto;
     }
 }

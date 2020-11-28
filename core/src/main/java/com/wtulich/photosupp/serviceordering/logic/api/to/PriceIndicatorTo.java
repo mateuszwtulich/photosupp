@@ -12,15 +12,19 @@ public class PriceIndicatorTo {
     private Long bookingId;
 
     @NotNull
-    private Integer multiplier;
+    private Integer amount;
+
+    @NotNull
+    private Integer price;
 
     public PriceIndicatorTo() {
     }
 
-    public PriceIndicatorTo(Long indicatorId, Long bookingId, Integer multiplier) {
+    public PriceIndicatorTo(Long indicatorId, Long bookingId, Integer amount, Integer price) {
         this.indicatorId = indicatorId;
         this.bookingId = bookingId;
-        this.multiplier = multiplier;
+        this.amount = amount;
+        this.price = price;
     }
 
     public Long getIndicatorId() {
@@ -39,12 +43,20 @@ public class PriceIndicatorTo {
         this.bookingId = bookingId;
     }
 
-    public Integer getMultiplier() {
-        return multiplier;
+    public Integer getAmount() {
+        return amount;
     }
 
-    public void setMultiplier(Integer multiplier) {
-        this.multiplier = multiplier;
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
     @Override
@@ -54,11 +66,12 @@ public class PriceIndicatorTo {
         PriceIndicatorTo that = (PriceIndicatorTo) o;
         return indicatorId.equals(that.indicatorId) &&
                 bookingId.equals(that.bookingId) &&
-                multiplier.equals(that.multiplier);
+                amount.equals(that.amount) &&
+                price.equals(that.price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(indicatorId, bookingId, multiplier);
+        return Objects.hash(indicatorId, bookingId, amount, price);
     }
 }

@@ -66,17 +66,22 @@ public class UcManageServiceTest {
 
     @BeforeEach
     void setUp() {
-        serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
+        serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl");
         serviceEntity.setId(1L);
 
-        serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
+        List<Long> indicatorsIds = List.of(1L);
 
-        serviceTo = new ServiceTo("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
+        IndicatorEto indicatorEto = new IndicatorEto(1L,"Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 30);
+        List<IndicatorEto> indicatorEtos = List.of(indicatorEto);
+
+        serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl", indicatorEtos);
+
+        serviceTo = new ServiceTo("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl", indicatorsIds);
     }
 
     @Test
     @DisplayName("Test createService Success")
-    void testCreateServiceSuccess() throws EntityAlreadyExistsException {
+    void testCreateServiceSuccess() throws EntityAlreadyExistsException, EntityDoesNotExistException {
         //Arrange
         when(serviceDao.save(serviceEntity)).thenReturn(serviceEntity);
 

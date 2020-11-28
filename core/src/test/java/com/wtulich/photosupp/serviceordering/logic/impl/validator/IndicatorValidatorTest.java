@@ -33,8 +33,9 @@ public class IndicatorValidatorTest {
 
     @BeforeEach
     void setUp() {
-        indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", 40);
-        indicatorTo = new IndicatorTo("Podroz sluzbowa", "Paliwo, amortyzacja", 40);
+        IndicatorEntity indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
+        indicatorEntity.setId(1L);
+        indicatorTo = new IndicatorTo("Podróż służbowa", "Paliwo, amortyzacja", "pl", 20, 40);
     }
 
     @Test

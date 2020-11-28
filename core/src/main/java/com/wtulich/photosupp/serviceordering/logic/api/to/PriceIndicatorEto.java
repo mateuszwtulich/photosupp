@@ -12,19 +12,19 @@ public class PriceIndicatorEto {
     private Long bookingId;
 
     @NotNull
-    private Integer indicatorPrice;
+    private Integer price;
 
     @NotNull
-    private Integer multiplier;
+    private Integer amount;
 
     public PriceIndicatorEto() {
     }
 
-    public PriceIndicatorEto(IndicatorEto indicatorEto, Long bookingId, Integer indicatorPrice, Integer multiplier) {
+    public PriceIndicatorEto(IndicatorEto indicatorEto, Long bookingId, Integer price, Integer amount) {
         this.indicatorEto = indicatorEto;
         this.bookingId = bookingId;
-        this.indicatorPrice = indicatorPrice;
-        this.multiplier = multiplier;
+        this.price = price;
+        this.amount = amount;
     }
 
     public IndicatorEto getIndicatorEto() {
@@ -43,20 +43,20 @@ public class PriceIndicatorEto {
         this.bookingId = bookingId;
     }
 
-    public Integer getIndicatorPrice() {
-        return indicatorPrice;
+    public Integer getPrice() {
+        return price;
     }
 
-    public void setIndicatorPrice(Integer indicatorPrice) {
-        this.indicatorPrice = indicatorPrice;
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
-    public Integer getMultiplier() {
-        return multiplier;
+    public Integer getAmount() {
+        return amount;
     }
 
-    public void setMultiplier(Integer multiplier) {
-        this.multiplier = multiplier;
+    public void setAmount(Integer amount) {
+        this.amount = amount;
     }
 
     @Override
@@ -65,13 +65,13 @@ public class PriceIndicatorEto {
         if (o == null || getClass() != o.getClass()) return false;
         PriceIndicatorEto that = (PriceIndicatorEto) o;
         return indicatorEto.equals(that.indicatorEto) &&
-                Objects.equals(bookingId, that.bookingId) &&
-                indicatorPrice.equals(that.indicatorPrice) &&
-                multiplier.equals(that.multiplier);
+                bookingId.equals(that.bookingId) &&
+                price.equals(that.price) &&
+                amount.equals(that.amount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(indicatorEto, bookingId, indicatorPrice, multiplier);
+        return Objects.hash(indicatorEto, bookingId, price, amount);
     }
 }

@@ -170,8 +170,8 @@ public class UcManageOrderImpl implements UcManageOrder {
                                     new PriceIndicatorEto(
                                             indicatorMapper.toIndicatorEto(priceIndicatorEntity.getIndicator()),
                                             bookingEntity.getId(),
-                                            priceIndicatorEntity.getIndicatorPrice(),
-                                            priceIndicatorEntity.getMultiplier()
+                                            priceIndicatorEntity.getPrice(),
+                                            priceIndicatorEntity.getAmount()
                                     )).collect(Collectors.toList()));
         }
 

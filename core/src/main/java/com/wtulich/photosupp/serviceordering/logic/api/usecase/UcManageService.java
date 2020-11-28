@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface UcManageService {
 
-    Optional<ServiceEto> createService(ServiceTo serviceTo) throws EntityAlreadyExistsException;
+    Optional<ServiceEto> createService(ServiceTo serviceTo) throws EntityAlreadyExistsException, EntityDoesNotExistException;
 
     Optional<ServiceEto> updateService(ServiceTo serviceTo, Long id) throws EntityDoesNotExistException, EntityAlreadyExistsException;
 }

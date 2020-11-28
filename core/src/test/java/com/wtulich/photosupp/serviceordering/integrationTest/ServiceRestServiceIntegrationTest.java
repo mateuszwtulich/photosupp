@@ -77,9 +77,11 @@ public class ServiceRestServiceIntegrationTest {
         objectMapper = new ObjectMapper();
 
         addressEto = new AddressEto(1L, "Wroclaw", "Wroblewskiego", "27", null, "51-627");
-        serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
-        serviceEto2 = new ServiceEto(2L, "FOTOGRAFIA", "PRODUKTOWA", 1500D);
-        indicatorEto = new IndicatorEto(1L, "Podroz sluzbowa", "Paliwo, amortyzacja", 40);
+
+        List<IndicatorEto> indicatorEtos = List.of(indicatorEto);
+        indicatorEto = new IndicatorEto(1L,"Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 30);
+        serviceEto2 = new ServiceEto(2L, "FOTOGRAFIA", "PRODUKTOWA", 1500D, "pl", indicatorEtos);
+        serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl", indicatorEtos);
 
         List<PermissionEto> permissionEtoList = new ArrayList<>();
         permissionEtoList.add(new PermissionEto(6L, ApplicationPermissions.AUTH_USER, "Standard user with no special permissions."));
@@ -95,10 +97,11 @@ public class ServiceRestServiceIntegrationTest {
         priceIndicatorEtoList.add(priceIndicatorEto);
 
         addressTo = new AddressTo("Wroclaw", "Wroblewskiego", "27", null, "51-627");
-        serviceTo = new ServiceTo("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
-        indicatorTo = new IndicatorTo("Podroz sluzbowa", "Paliwo, amortyzacja", 40);
+        List<Long> indicatorsIds = List.of(1L);
+        serviceTo = new ServiceTo("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl", indicatorsIds);
+        indicatorTo = new IndicatorTo("Podróż służbowa", "Paliwo, amortyzacja", "pl", 20, 30);
 
-        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, 1L, 10);
+        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, 1L, 20, 0);
         priceIndicatorToList = new ArrayList<>();
         priceIndicatorToList.add(priceIndicatorTo);
         bookingTo = new BookingTo("Film dla TestCompany", "Film produktowy z dojazdem", 1L, 1L, addressTo,
@@ -571,7 +574,7 @@ public class ServiceRestServiceIntegrationTest {
     @DisplayName("PUT /service/v1/indicator/1 - Unprocessable Entity")
     void testUpdateIndicatorUnprocessableEntity() throws Exception {
         //Arrange
-        IndicatorTo indicatorTo2 = new IndicatorTo("Sprzet foto", "aparat", 200);
+        IndicatorTo indicatorTo2 = new IndicatorTo("Sprzet foto", "aparat", "pl", 30, 200);
         mockMvc.perform(post(INDICATOR_URL)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(indicatorTo2)));
@@ -620,7 +623,8 @@ public class ServiceRestServiceIntegrationTest {
     @DisplayName("PUT /service/v1/service/1 - Unprocessable Entity")
     void testUpdateServiceUnprocessableEntity() throws Exception {
         //Arrange
-        ServiceTo serviceTo2 = new ServiceTo("FOTOGRAFIA", "PRODUKTOWA", 1500D);
+        List<Long> indicatorsIds = List.of(1L);
+        ServiceTo serviceTo2 = new ServiceTo("FOTOGRAFIA", "PRODUKTOWA", 500D, "pl", indicatorsIds);
 
         //Act
         mockMvc.perform(put(SERVICE_ID_URL, serviceEto.getId())

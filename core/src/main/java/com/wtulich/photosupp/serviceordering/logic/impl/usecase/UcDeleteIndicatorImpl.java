@@ -35,7 +35,7 @@ public class UcDeleteIndicatorImpl implements UcDeleteIndicator {
 
             indicatorDao.deleteById(indicatorEntity.getId());
         } else {
-            throw new EntityHasAssignedEntitiesException("Service with id " + id + " has assigned bookings.");
+            throw new EntityHasAssignedEntitiesException("Indicator with id " + id + " has assigned bookings.");
         }
     }
 }

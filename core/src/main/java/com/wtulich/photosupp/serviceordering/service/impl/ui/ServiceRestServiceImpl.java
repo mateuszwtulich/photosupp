@@ -138,6 +138,8 @@ public class ServiceRestServiceImpl implements ServiceRestService {
                     .created(new URI(BASE_URL + "/service"))
                     .body(serviceOrdering.createService(serviceTo).orElseThrow(() ->
                             new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)));
+        } catch (EntityDoesNotExistException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (EntityAlreadyExistsException | URISyntaxException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         }

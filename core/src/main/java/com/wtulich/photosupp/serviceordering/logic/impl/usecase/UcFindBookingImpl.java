@@ -119,8 +119,8 @@ public class UcFindBookingImpl implements UcFindBooking {
                                     new PriceIndicatorEto(
                                             indicatorMapper.toIndicatorEto(priceIndicatorEntity.getIndicator()),
                                             bookingEntity.getId(),
-                                            priceIndicatorEntity.getIndicatorPrice(),
-                                            priceIndicatorEntity.getMultiplier()
+                                            priceIndicatorEntity.getPrice(),
+                                            priceIndicatorEntity.getAmount()
                                     )).collect(Collectors.toList()));
         }
 

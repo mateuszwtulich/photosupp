@@ -1,6 +1,8 @@
 package com.wtulich.photosupp.serviceordering.logic.impl.usecase;
 
 import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.ServiceDao;
+import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.ServiceEntity;
+import com.wtulich.photosupp.serviceordering.logic.api.mapper.IndicatorMapper;
 import com.wtulich.photosupp.serviceordering.logic.api.mapper.ServiceMapper;
 import com.wtulich.photosupp.serviceordering.logic.api.to.ServiceEto;
 import com.wtulich.photosupp.serviceordering.logic.api.usecase.UcFindService;
@@ -27,12 +29,23 @@ public class UcFindServiceImpl implements UcFindService {
     @Inject
     private ServiceMapper serviceMapper;
 
+    @Inject
+    private IndicatorMapper indicatorMapper;
+
     @Override
     public Optional<List<ServiceEto>> findAllServices() {
         LOG.debug(GET_ALL_SERVICES_LOG);
 
         return Optional.of(serviceDao.findAll().stream()
-                .map(serviceEntity -> serviceMapper.toServiceEto(serviceEntity))
+                .map(serviceEntity -> toServiceEto(serviceEntity))
                 .collect(Collectors.toList()));
+    }
+
+    private ServiceEto toServiceEto(ServiceEntity serviceEntity){
+        ServiceEto serviceEto = serviceMapper.toServiceEto(serviceEntity);
+        serviceEto.setIndicatorEtoList(serviceEntity.getIndicatorList().stream()
+                .map(i -> indicatorMapper.toIndicatorEto(i))
+                .collect(Collectors.toList()));
+        return serviceEto;
     }
 }

@@ -20,8 +20,16 @@ public class IndicatorEntity extends AbstractApplicationPersistenceEntity {
     private String description;
 
     @NotNull
+    @Column(name = "LOCALE")
+    private String locale;
+
+    @NotNull
     @Column(name = "BASE_AMOUNT", nullable = false)
     private Integer baseAmount;
+
+    @NotNull
+    @Column(name = "DOUBLE_PRICE", nullable = false)
+    private Integer doublePrice;
 
     @OneToMany(mappedBy = "indicator", fetch = FetchType.LAZY, targetEntity = PriceIndicatorEntity.class, orphanRemoval = true)
     private List<PriceIndicatorEntity> priceIndicatorEntityList;
@@ -30,10 +38,12 @@ public class IndicatorEntity extends AbstractApplicationPersistenceEntity {
     public IndicatorEntity() {
     }
 
-    public IndicatorEntity(String name, String description, Integer baseAmount) {
+    public IndicatorEntity(String name, String description, String locale, Integer baseAmount, Integer doublePrice) {
         this.name = name;
         this.description = description;
+        this.locale = locale;
         this.baseAmount = baseAmount;
+        this.doublePrice = doublePrice;
     }
 
     public String getName() {
@@ -60,6 +70,22 @@ public class IndicatorEntity extends AbstractApplicationPersistenceEntity {
         this.baseAmount = baseAmount;
     }
 
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    public Integer getDoublePrice() {
+        return doublePrice;
+    }
+
+    public void setDoublePrice(Integer doublePrice) {
+        this.doublePrice = doublePrice;
+    }
+
     public List<PriceIndicatorEntity> getPriceIndicatorEntityList() {
         return priceIndicatorEntityList;
     }
@@ -71,15 +97,19 @@ public class IndicatorEntity extends AbstractApplicationPersistenceEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof IndicatorEntity)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         IndicatorEntity that = (IndicatorEntity) o;
         return name.equals(that.name) &&
                 Objects.equals(description, that.description) &&
-                baseAmount.equals(that.baseAmount);
+                locale.equals(that.locale) &&
+                baseAmount.equals(that.baseAmount) &&
+                doublePrice.equals(that.doublePrice) &&
+                Objects.equals(priceIndicatorEntityList, that.priceIndicatorEntityList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, baseAmount);
+        return Objects.hash(super.hashCode(), name, description, locale, baseAmount, doublePrice, priceIndicatorEntityList);
     }
 }

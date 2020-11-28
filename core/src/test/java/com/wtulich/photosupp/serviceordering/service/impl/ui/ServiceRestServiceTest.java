@@ -85,8 +85,10 @@ public class ServiceRestServiceTest {
         objectMapper = new ObjectMapper();
 
         addressEto = new AddressEto(1L, "Wroclaw", "Wroblewskiego", "27", null, "51-627");
-        serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D);
-        indicatorEto = new IndicatorEto(1L, "Podroz sluzbowa", "Paliwo, amortyzacja", 40);
+        indicatorEto = new IndicatorEto(1L,"Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 30);
+        List<IndicatorEto> indicatorEtos = List.of(indicatorEto);
+
+        serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl", indicatorEtos);
 
         List<PermissionEto> permissionEtoList = new ArrayList<>();
         permissionEtoList.add(new PermissionEto(1L, ApplicationPermissions.A_CRUD_SUPER, "DESC1"));
@@ -105,10 +107,12 @@ public class ServiceRestServiceTest {
         priceIndicatorEtoList.add(priceIndicatorEto);
 
         addressTo = new AddressTo("Wrocław", "Wróblewskiego", "27", null, "51-627");
-        serviceTo = new ServiceTo("Film produktowy", "Film produktów na białym tle i odpowiednim oświetleniu", 500D);
-        indicatorTo = new IndicatorTo("Podróż służbowa", "Paliwo, amortyzacja", 40);
 
-        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, 1L, 10);
+        List<Long> indicatorsIds = List.of(1L);
+        serviceTo = new ServiceTo("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl", indicatorsIds);
+        indicatorTo = new IndicatorTo("Podróż służbowa", "Paliwo, amortyzacja", "pl", 20, 30);
+
+        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, 1L, 20, 0);
         priceIndicatorToList = new ArrayList<>();
         priceIndicatorToList.add(priceIndicatorTo);
         bookingTo = new BookingTo("Film dla TestCompany", "Film produktowy z dojazdem", 1L, 1L, addressTo,

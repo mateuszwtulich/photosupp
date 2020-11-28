@@ -2,21 +2,27 @@ package com.wtulich.photosupp.serviceordering.logic.impl.usecase;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsException;
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
+import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.IndicatorDao;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.ServiceDao;
+import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.IndicatorEntity;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.ServiceEntity;
+import com.wtulich.photosupp.serviceordering.logic.api.mapper.IndicatorMapper;
 import com.wtulich.photosupp.serviceordering.logic.api.mapper.ServiceMapper;
 import com.wtulich.photosupp.serviceordering.logic.api.to.ServiceEto;
 import com.wtulich.photosupp.serviceordering.logic.api.to.ServiceTo;
 import com.wtulich.photosupp.serviceordering.logic.api.usecase.UcManageService;
 import com.wtulich.photosupp.serviceordering.logic.impl.validator.ServiceValidator;
+import com.wtulich.photosupp.userhandling.dataaccess.api.entity.PermissionEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Validated
 @Named
@@ -31,18 +37,26 @@ public class UcManageServiceImpl implements UcManageService {
     private ServiceDao serviceDao;
 
     @Inject
+    private IndicatorDao indicatorDao;
+
+    @Inject
     private ServiceMapper serviceMapper;
+
+    @Inject
+    private IndicatorMapper indicatorMapper;
 
     @Inject
     private ServiceValidator serviceValidator;
 
     @Override
-    public Optional<ServiceEto> createService(ServiceTo serviceTo) throws EntityAlreadyExistsException {
+    public Optional<ServiceEto> createService(ServiceTo serviceTo) throws EntityAlreadyExistsException, EntityDoesNotExistException {
         serviceValidator.verifyIfServiceNameAlreadyExists(serviceTo.getName());
         LOG.debug(CREATE_SERVICE_LOG, serviceTo.getName());
 
         ServiceEntity serviceEntity = serviceMapper.toServiceEntity(serviceTo);
-        return Optional.of(serviceMapper.toServiceEto(serviceDao.save(serviceEntity)));
+        serviceEntity.setIndicatorList(getIndicatorsByIds(serviceTo.getIndicatorsIds()));
+
+        return Optional.of(toServiceEto(serviceDao.save(serviceEntity)));
     }
 
     @Override
@@ -62,7 +76,25 @@ public class UcManageServiceImpl implements UcManageService {
         LOG.debug(UPDATE_SERVICE_LOG, id);
         serviceEntity.setDescription(serviceTo.getDescription());
         serviceEntity.setBasePrice(serviceTo.getBasePrice());
+        serviceEntity.setIndicatorList(getIndicatorsByIds(serviceTo.getIndicatorsIds()));
 
         return Optional.of(serviceMapper.toServiceEto(serviceEntity));
+    }
+
+    private List<IndicatorEntity> getIndicatorsByIds(List<Long> indicatorsIds) throws EntityDoesNotExistException {
+        List<IndicatorEntity> indicatorEntities = indicatorDao.findAllById(indicatorsIds);
+
+        if(indicatorEntities.size() == 0){
+            throw new EntityDoesNotExistException("Indicators does not exists");
+        }
+        return indicatorEntities;
+    }
+
+    private ServiceEto toServiceEto(ServiceEntity serviceEntity){
+        ServiceEto serviceEto = serviceMapper.toServiceEto(serviceEntity);
+        serviceEto.setIndicatorEtoList(serviceEntity.getIndicatorList().stream()
+                .map(i -> indicatorMapper.toIndicatorEto(i))
+                .collect(Collectors.toList()));
+        return serviceEto;
     }
 }

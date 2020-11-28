@@ -12,15 +12,23 @@ public class IndicatorTo {
     private String description;
 
     @NotNull
+    private String locale;
+
+    @NotNull
     private Integer baseAmount;
+
+    @NotNull
+    private Integer doublePrice;
 
     public IndicatorTo() {
     }
 
-    public IndicatorTo(String name, String description, Integer baseAmount) {
+    public IndicatorTo(String name, String description, String locale, Integer baseAmount, Integer doublePrice) {
         this.name = name;
         this.description = description;
+        this.locale = locale;
         this.baseAmount = baseAmount;
+        this.doublePrice = doublePrice;
     }
 
     public String getName() {
@@ -45,6 +53,22 @@ public class IndicatorTo {
 
     public void setBaseAmount(Integer baseAmount) {
         this.baseAmount = baseAmount;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    public Integer getDoublePrice() {
+        return doublePrice;
+    }
+
+    public void setDoublePrice(Integer doublePrice) {
+        this.doublePrice = doublePrice;
     }
 
     @Override

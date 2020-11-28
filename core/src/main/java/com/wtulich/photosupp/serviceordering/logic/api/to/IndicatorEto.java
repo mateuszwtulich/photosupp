@@ -13,16 +13,24 @@ public class IndicatorEto extends AbstractApplicationEntityTransportObject {
     private String description;
 
     @NotNull
+    private String locale;
+
+    @NotNull
     private Integer baseAmount;
+
+    @NotNull
+    private Integer doublePrice;
 
     public IndicatorEto() {
     }
 
-    public IndicatorEto(Long id, String name, String description, Integer baseAmount) {
+    public IndicatorEto(Long id, String name, String description, String locale, Integer baseAmount, Integer doublePrice) {
         super(id);
         this.name = name;
         this.description = description;
+        this.locale = locale;
         this.baseAmount = baseAmount;
+        this.doublePrice = doublePrice;
     }
 
     public String getName() {
@@ -49,7 +57,21 @@ public class IndicatorEto extends AbstractApplicationEntityTransportObject {
         this.baseAmount = baseAmount;
     }
 
+    public String getLocale() {
+        return locale;
+    }
 
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    public Integer getDoublePrice() {
+        return doublePrice;
+    }
+
+    public void setDoublePrice(Integer doublePrice) {
+        this.doublePrice = doublePrice;
+    }
 
     @Override
     public boolean equals(Object o) {
