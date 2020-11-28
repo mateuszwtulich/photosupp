@@ -33,6 +33,7 @@ const ROLE2: RoleEto = {
 }
 
 const ACCOUNT1: AccountEto = {
+  id: 1,
   username: "test1",
   password: "dsf",
   email: "test1@test.com",
@@ -40,6 +41,7 @@ const ACCOUNT1: AccountEto = {
 }
 
 const ACCOUNT2: AccountEto = {
+  id: 2,
   username: "test2",
   password: "dsf",
   email: "test2@test.com",
@@ -47,6 +49,7 @@ const ACCOUNT2: AccountEto = {
 }
 
 const COORDINATOR: UserEto = {
+  id: 1,
   name: "John",
   surname: "Smith",
   account: ACCOUNT1,
@@ -54,6 +57,7 @@ const COORDINATOR: UserEto = {
 }
 
 const USER: UserEto = {
+  id: 2,
   name: "Tom",
   surname: "Willman",
   account: ACCOUNT2,

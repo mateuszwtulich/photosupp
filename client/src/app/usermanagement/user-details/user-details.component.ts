@@ -1,5 +1,6 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormField } from '@angular/material/form-field';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -21,6 +22,7 @@ const ROLE1: RoleEto = {
 }
 
 const ACCOUNT2: AccountEto = {
+  id: 2,
   username: "test2",
   password: "dsf",
   email: "test2@test.com",
@@ -28,6 +30,7 @@ const ACCOUNT2: AccountEto = {
 }
 
 const USER: UserEto = {
+  id: 2,
   name: "Tom",
   surname: "Willman",
   account: ACCOUNT2,
@@ -53,7 +56,7 @@ export class UserDetailsComponent implements OnInit {
   @Input()
   public userControl: FormControl;
 
-  constructor(private translate: TranslateService) {
+  constructor(private translate: TranslateService, public dialog: MatDialog) {
     this.hide = true;
     this.email1st = new FormControl('', [Validators.required, Validators.email])
     this.email2nd = new FormControl('', [Validators.required, Validators.email])
@@ -95,4 +98,49 @@ export class UserDetailsComponent implements OnInit {
     this.subscritpion.unsubscribe();
   }
 
+  modifyAccount(){
+    const dialogRef = this.dialog.open(UserDetailsModifyDialog, { data: this.userControl.value, height: '31%', width: '30%' });
+    dialogRef.afterClosed().subscribe((user) => {
+      if(!!user){
+        this.userControl.setValue(user);
+        this.user = user;
+      }
+    })
+  }
 }
+
+  @Component({
+    selector: 'user-details-modify-dialog',
+    templateUrl: 'user-details-modify-dialog.html',
+    styleUrls: ['./user-details.component.scss']
+  })
+  export class UserDetailsModifyDialog implements OnInit{
+    isSpinnerDisplayed = false;
+    subscription = new Subscription();
+    nameControl = new FormControl("", Validators.required);
+    surnameControl = new FormControl("", Validators.required);
+
+    constructor(
+      public dialogRef: MatDialogRef<UserDetailsModifyDialog>,
+      @Inject(MAT_DIALOG_DATA) public data: UserEto) { }
+
+  ngOnInit(): void {
+  }
+
+  modifyUser() {
+    if(this.nameControl.valid && this.surnameControl.valid) {
+      this.dialogRef.close({
+        id: this.data.id,
+        role: this.data.role,
+        account: this.data.account,
+        name: this.nameControl.value,
+        surname: this.surnameControl.value
+      })
+    }
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
+}
+}
+

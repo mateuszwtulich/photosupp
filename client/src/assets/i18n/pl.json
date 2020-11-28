@@ -118,7 +118,8 @@
     "add-comment": "Komentarze",
     "comment-button": "Dodaj komentarz",
     "comment-write": "Napisz komentarz",
-    "verify": "Zatwierdź zlecenie"
+    "verify": "Zatwierdź zlecenie",
+    "add": "Utwórz nowe zamówienie"
   },
   "bookings": {
     "plural": "Rezerwacje",
@@ -177,7 +178,8 @@
     "email-1st": "Nowy adress e-mail",
     "email-2nd": "Powtórz nowy adres e-mail",
     "password-button": "Zmień hasło",
-    "email-button": "Zmień adres e-mail"
+    "email-button": "Zmień adres e-mail",
+    "modify": "Zmień dane osobowe"
   },
   "roles": {
     "plural": "Role",
@@ -203,8 +205,12 @@
   "address": {
     "city": "Miasto",
     "street": "Ulica",
-    "building-number": "Numer budynku",
-    "apartment-number": "Numer mieszkania",
+    "buildingNumber": "Numer budynku",
+    "apartmentNumber": "Numer mieszkania",
     "postalCode": "Kod pocztowy"
+  },
+  "dialog": {
+    "modify": "Zaktualizuj",
+    "add": "Utwórz"
   }
 }

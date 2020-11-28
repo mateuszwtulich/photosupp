@@ -26,6 +26,7 @@ const ROLE1: RoleEto = {
 }
 
 const ACCOUNT2: AccountEto = {
+  id: 1,
   username: "test2",
   password: "dsf",
   email: "test2@test.com",
@@ -33,6 +34,7 @@ const ACCOUNT2: AccountEto = {
 }
 
 const USER: UserEto = {
+  id:1,
   name: "Tom",
   surname: "Willman",
   account: ACCOUNT2,
@@ -49,6 +51,7 @@ const SERVICE: ServiceEto = {
 };
 
 const ADDRESS: AddressEto = {
+  id: 1,
   city: "Wroclaw",
   street: "Wroblewskiego",
   buildingNumber: "20A",

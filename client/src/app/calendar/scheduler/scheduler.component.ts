@@ -6,17 +6,18 @@ import { CalendarEvent } from '../to/CalendarEvent';
 import { Router } from '@angular/router';
 import { SchedulerService } from '../services/scheduler.service';
 import { BookingEto } from 'src/app/order/shared/to/BookingEto';
+import { DatePipe } from '@angular/common';
 
 const EVENTS = [
-{
-  id: 1,
+  {
+    id: 1,
     type: "Order",
     title: "zamówienie",
     start: "22-11-2020",
     end: "22-11-2020",
     color: "white",
     textColor: "black"
-}
+  }
 ]
 
 @Component({
@@ -43,8 +44,8 @@ export class SchedulerComponent implements OnInit {
     eventTextColor: 'black',
     events: [
       {
-        id: '1',
-        type: 'Order',
+        id: 'INVIU00001',
+        type: 'ORDER',
         title: 'zamówienie',
         start: '2020-11-20',
         end: '2020-11-22',
@@ -53,16 +54,16 @@ export class SchedulerComponent implements OnInit {
       },
       {
         id: '2',
-        type: 'Booking',
+        type: 'BOOKING',
         title: 'rezerwacja',
         start: '2020-11-27',
         end: '2020-11-27',
         textColor: 'black',
-        color: '#e9f0f3',      
+        color: '#e9f0f3',
       },
       {
         daysOfWeek: [0], //Sundays and saturdays
-        rendering:"background",
+        rendering: "background",
         color: "#ff9f89",
         display: 'background',
         overLap: false,
@@ -72,7 +73,12 @@ export class SchedulerComponent implements OnInit {
   };
 
   @ViewChild('calendar') calendarComponent: FullCalendarComponent;
-  constructor(private translate: TranslateService, private router: Router, private schedulerService: SchedulerService) { }
+  constructor(
+    private translate: TranslateService,
+    private router: Router,
+    private schedulerService: SchedulerService,
+    private datePipe: DatePipe,
+  ) { }
 
   ngOnInit(): void {
     this.calendarEvents = EVENTS;
@@ -83,27 +89,46 @@ export class SchedulerComponent implements OnInit {
     this.checkIfPlanning();
   }
 
-  filterEvents(type: string){
+  filterEvents(type: string) {
 
   }
 
-  private checkIfPlanning(){
-    if(this.router.url!=='/client/order/planning'){
+  private checkIfPlanning() {
+    if (this.router.url !== '/client/order/planning') {
       this.calendarOptions.selectable = false;
     }
   }
 
-  private selectedFields(info){
+  private selectedFields(info) {
     let booking = new BookingEto();
-    booking.start = info.startStr;
-    booking.end = info.endStr;
+
+    let endDate = new Date(info.endStr);
+    endDate.setDate(endDate.getDate() - 1);
+
+    booking.start = this.transformDate(info.startStr);
+    booking.end = this.transformDate(endDate);
 
     this.schedulerService.datesDataSource.next(booking);
-    console.log(info.startStr + " " + info.endStr)
   }
 
+  private transformDate(date: Date): string {
+    return this.datePipe.transform(date, "yyyy-MM-dd");
+  }
 
-  eventClicked(arg){
-    console.log(arg.event.id)
+  eventClicked(arg) {
+    if (this.router.url.startsWith("/client")) {
+      this.navigateToDetailsByRole("/client", arg);
+    } else if (this.router.url.startsWith("/manager"))  {
+      this.navigateToDetailsByRole("/manager", arg);
+    }
+  }
+
+  navigateToDetailsByRole(url: string, arg) {
+    console.log(arg.event._def)
+    if (arg.event._def.extendedProps.type == "ORDER") {
+      this.router.navigateByUrl(url + "/orders/details/" + arg.event.id);
+    } else if (arg.event._def.extendedProps.type == "BOOKING") {
+      this.router.navigateByUrl(url + "/orders/booking/details/" + arg.event.id);
+    }
   }
 }

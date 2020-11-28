@@ -8,7 +8,7 @@
                 <mat-chip color="accent" selected (click)="filterStatus('TO_VERIFY')"> {{ 'orders.TO_VERIFY' | translate}} </mat-chip>
                 <mat-chip color="accent" selected (click)="filterStatus('FINISHED')"> {{ 'orders.FINISHED' | translate}} </mat-chip>
               </mat-chip-list>
-              <button id="add-order" mat-mini-fab color="primary" aria-label="Add order button">
+              <button id="add-order" mat-mini-fab color="primary" aria-label="Add order button" (click)="addOrder()">
                 <mat-icon id="icon">add</mat-icon>
             </button>
         </div>

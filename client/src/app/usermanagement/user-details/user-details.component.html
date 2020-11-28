@@ -1,11 +1,8 @@
 <mat-tab-group mat-align-tabs="start" color="accent">
     <mat-tab label="{{ 'users.personal-data' | translate}}" color="accent">
         <div id="header">
-              <button id="modify-account" mat-mini-fab color="primary" aria-label="Add user button">
+              <button id="modify-account" mat-mini-fab color="primary" aria-label="Add user button" (click)="modifyAccount()">
                 <mat-icon id="icon">edit</mat-icon>
-            </button>
-            <button id="delete-account" mat-mini-fab color="warn" aria-label="Add user button">
-                <mat-icon id="icon">clear</mat-icon>
             </button>
         </div>
         

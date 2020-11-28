@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { OrderRoutingModule } from './order-routing.module';
 import { BookingsOverviewComponent } from './bookings-overview/bookings-overview.component';
-import { OrdersOverviewComponent } from './orders-overview/orders-overview.component';
+import { OrderAddDialog, OrdersOverviewComponent } from './orders-overview/orders-overview.component';
 import {A11yModule} from '@angular/cdk/a11y';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import {DragDropModule} from '@angular/cdk/drag-drop';
@@ -56,7 +56,7 @@ import {IvyGalleryModule} from 'angular-gallery';
 
 
 @NgModule({
-  declarations: [BookingsOverviewComponent, OrdersOverviewComponent, OrderDetailsComponent, BookingDetailsComponent],
+  declarations: [BookingsOverviewComponent, OrdersOverviewComponent, OrderDetailsComponent, BookingDetailsComponent, OrderAddDialog],
   imports: [
     IvyGalleryModule,
     CommonModule,
@@ -110,6 +110,6 @@ import {IvyGalleryModule} from 'angular-gallery';
     ScrollingModule,
     OrderRoutingModule
   ],
-  exports: [BookingsOverviewComponent, OrdersOverviewComponent, OrderDetailsComponent, BookingDetailsComponent]
+  exports: [BookingsOverviewComponent, OrdersOverviewComponent, OrderDetailsComponent, BookingDetailsComponent, OrderAddDialog]
 })
 export class OrderModule { }

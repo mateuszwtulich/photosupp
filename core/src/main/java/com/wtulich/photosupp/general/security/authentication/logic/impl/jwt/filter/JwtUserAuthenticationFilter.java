@@ -63,7 +63,7 @@ public class JwtUserAuthenticationFilter extends UsernamePasswordAuthenticationF
         Long userId = ucLogin.getUserIdByUserName(authResult.getName());
         String token = Jwts.builder()
                 .setSubject(authResult.getName()).claim("authorities", authResult.getAuthorities()).claim("userId", userId)
-                .claim("payload", getPayLoad(userId)).setIssuedAt(new Date())
+//                .claim("payload", getPayLoad(userId)).setIssuedAt(new Date())
                 .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(1)))
                 //TODO: Change for secured Password and move this password to application.properties
                 .signWith(Keys.hmacShaKeyFor("SecuredpASSWOedpASSWORDSecuedpASredpASSWORDSecuredpASSWORD".getBytes())).compact();
@@ -72,7 +72,7 @@ public class JwtUserAuthenticationFilter extends UsernamePasswordAuthenticationF
         response.addHeader("Authorization", "Bearer " + token);
     }
 
-    private AuthenticationPayload getPayLoad(Long userId) {
-        return this.ucLogin.getAuthenticationPayload(userId);
-    }
+//    private AuthenticationPayload getPayLoad(Long userId) {
+//        return this.ucLogin.getAuthenticationPayload(userId);
+//    }
 }

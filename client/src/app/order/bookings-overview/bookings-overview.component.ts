@@ -95,6 +95,7 @@ const SERVICE: ServiceEto = {
 };
 
 const USER: UserEto = {
+  id: 1,
   name: "Tom",
   surname: "Willman",
   account: null,
@@ -102,6 +103,7 @@ const USER: UserEto = {
 }
 
 const ADDRESS: AddressEto = {
+  id: 1,
   city: "Wroclaw",
   street: "Wroblewskiego",
   buildingNumber: "20A",

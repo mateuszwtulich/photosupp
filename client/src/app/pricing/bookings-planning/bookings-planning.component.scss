@@ -20,8 +20,8 @@
         }
     
         .update-card {
-            margin-bottom: 5%;
-            margin-top: 5%;
+            margin-bottom: 2%;
+            margin-top: 2%;
             padding-top: 0 !important;
             background-color: #e9f0f3 !important;
     
@@ -35,13 +35,13 @@
                 display: flex;
                 padding-left: 8%;
                 padding-right: 8%;
-                padding-top: 5%;
-                padding-bottom: 3%;
+                padding-top: 3%;
+                padding-bottom: 2%;
                 justify-content: center;
             }
     
             .information-content{
-                margin-bottom: 4%;
+                margin-bottom: 2%;
             }
     
             .mat-form-container {
@@ -55,7 +55,7 @@
               .start-button{
                 background-color:  #0e2636;
                 color: white;
-                margin-top: 4%;
+                margin-top: 2%;
                 margin-bottom: 2%;
                 width: 60%;
                 height: 3rem;
@@ -63,7 +63,7 @@
       
               ::ng-deep .mat-form-field{
                   width: 100%;
-                  margin-top: 2%;
+                  margin-top: 1%;
               }
       
               ::ng-deep .mat-form-field-outline-start, 
@@ -118,16 +118,6 @@
 
     .back{
         margin-right: 1rem;
-    }
-
-    ::ng-deep .mat-list-item{
-        margin-bottom: 1rem !important;
-        padding-top: 1rem !important;
-        padding-bottom: 2rem !important;
-    
-        ::ng-deep .mat-list-text{
-    
-        }
     }
     
     #indicator{
@@ -215,5 +205,17 @@
     @media only screen and (min-width: 1000px) {
         width: 45%;
         margin-left: 20%;
+    }
+}
+
+#planning-container{
+    ::ng-deep .mat-list-item{
+        margin-bottom: 1rem !important;
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+    
+        ::ng-deep .mat-list-text{
+    
+        }
     }
 }

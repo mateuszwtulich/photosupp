@@ -6,10 +6,6 @@ public class ScopePermission {
 
     private boolean isAdmin;
 
-    private String orderNumber;
-
-    private Long bookingId;
-
     public Long getUserId() {
         return userId;
     }
@@ -24,21 +20,5 @@ public class ScopePermission {
 
     public boolean setIsAdmin() {
         return isAdmin;
-    }
-
-    public String getOrderNumber() {
-        return orderNumber;
-    }
-
-    public void setOrderNumber(String orderNumber) {
-        this.orderNumber = orderNumber;
-    }
-
-    public Long getBookingId() {
-        return bookingId;
-    }
-
-    public void setBookingId(Long bookingId) {
-        this.bookingId = bookingId;
     }
 }

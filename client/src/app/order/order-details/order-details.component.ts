@@ -1,5 +1,6 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormField } from '@angular/material/form-field';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -31,6 +32,7 @@ const ROLE1: RoleEto = {
 }
 
 const ACCOUNT2: AccountEto = {
+  id: 2,
   username: "test2",
   password: "dsf",
   email: "test2@test.com",
@@ -38,6 +40,7 @@ const ACCOUNT2: AccountEto = {
 }
 
 const USER: UserEto = {
+  id: 1,
   name: "Tom",
   surname: "Willman",
   account: ACCOUNT2,
@@ -45,6 +48,7 @@ const USER: UserEto = {
 }
 
 const COORDINATOR: UserEto = {
+  id: 2,
   name: "John",
   surname: "Smith",
   account: null,
@@ -61,6 +65,7 @@ const SERVICE: ServiceEto = {
 };
 
 const ADDRESS: AddressEto = {
+  id: 1,
   city: "Wroclaw",
   street: "Wroblewskiego",
   buildingNumber: "20A",
@@ -168,3 +173,39 @@ sortData(sort: Sort) {
   });
 }
 }
+
+
+// @Component({
+//   selector: 'order-details-modify-dialog',
+//   templateUrl: 'order-details-modify-dialog.html',
+//   styleUrls: ['./order-details.component.scss']
+// })
+// export class UserDetailsModifyDialog implements OnInit{
+//   isSpinnerDisplayed = false;
+//   subscription = new Subscription();
+//   nameControl = new FormControl("", Validators.required);
+//   surnameControl = new FormControl("", Validators.required);
+
+//   constructor(
+//     public dialogRef: MatDialogRef<UserDetailsModifyDialog>,
+//     @Inject(MAT_DIALOG_DATA) public data: UserEto) { }
+
+// ngOnInit(): void {
+// }
+
+// modifyUser() {
+//   if(this.nameControl.valid && this.surnameControl.valid) {
+//     this.dialogRef.close({
+//       id: this.data.id,
+//       role: this.data.role,
+//       account: this.data.account,
+//       name: this.nameControl.value,
+//       surname: this.surnameControl.value
+//     })
+//   }
+// }
+
+// closeDialog() {
+//   this.dialogRef.close();
+// }
+// }

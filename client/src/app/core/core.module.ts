@@ -55,6 +55,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { ForgottenPasswordComponent } from './forgotten-password/forgotten-password.component';
 import { OrderModule } from '../order/order.module';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 
 @NgModule({
@@ -111,7 +112,8 @@ import { OrderModule } from '../order/order.module';
     OverlayModule,
     PortalModule,
     ScrollingModule,
-    CoreRoutingModule
+    CoreRoutingModule,
+    NgxPermissionsModule.forChild()
   ],
   exports: [HeaderComponent, ClientPanelComponent, HomeComponent, ManagerPanelComponent, LoginComponent, ForgottenPasswordComponent],
 })

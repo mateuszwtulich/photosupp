@@ -3,6 +3,7 @@ import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { AuthenticationService } from 'src/app/authentication/services/authentication.service';
 import { SidenavTo } from '../to/SidenavTo';
 
 @Component({
@@ -42,7 +43,13 @@ export class HeaderComponent implements OnDestroy {
 
   private _mobileQueryListener: () => void;
 
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private translate: TranslateService, private router: Router) {
+  constructor(
+    changeDetectorRef: ChangeDetectorRef,
+    media: MediaMatcher,
+    private translate: TranslateService,
+    private router: Router,
+    private authService: AuthenticationService
+    ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
@@ -100,6 +107,7 @@ export class HeaderComponent implements OnDestroy {
     this.filterNav = this.homeNav;
     this.refreshSidenavText();
     this.router.navigateByUrl("/home");
+    this.authService.logout();
   }
 
   getRouterLink(): boolean{

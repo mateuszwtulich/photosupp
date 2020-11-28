@@ -6,7 +6,6 @@ public class UserAuthenticationRequest {
 
     private String username;
     private String password;
-    private List<String> permissions;
 
     public String getUsername() {
         return username;
@@ -24,11 +23,4 @@ public class UserAuthenticationRequest {
         this.password = password;
     }
 
-    public List<String> getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(List<String> permissions) {
-        this.permissions = permissions;
-    }
 }

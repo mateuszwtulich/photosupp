@@ -21,6 +21,9 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { Injector, APP_INITIALIZER } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import {MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS} from '@angular/material/snack-bar';
+import { NgxPermissionsModule } from 'ngx-permissions';
+
 
 @NgModule({
   declarations: [
@@ -41,7 +44,9 @@ import { TranslateService } from '@ngx-translate/core';
     PricingModule,
     ServicehandlingModule,
     UsermanagementModule,
+    NgxPermissionsModule.forRoot(),
     MatNativeDateModule,
+    MatSnackBarModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -57,7 +62,11 @@ import { TranslateService } from '@ngx-translate/core';
       useFactory: appInitializerFactory,
       deps: [TranslateService, Injector],
       multi: true
-    }
+    },
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } }
+  ],
+  exports: [
+    MatSnackBarModule, NgxPermissionsModule
   ]
 })
 export class AppModule { }

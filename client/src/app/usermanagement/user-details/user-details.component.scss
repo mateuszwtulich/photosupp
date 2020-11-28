@@ -5,7 +5,7 @@
     flex-direction: row;
 
     #modify-account{
-        margin-right: 2%;
+        margin-right: 0%;
         margin-left: auto;
 
         #icon {
@@ -14,19 +14,7 @@
             align-items: center;
           }
     }
-
-    #delete-account{
-        margin-right: 0%;
-
-        #icon {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-    }
 }
-
-
 
 .update-container {
     display: flex;
@@ -137,3 +125,56 @@
     width: 50%;
   }
 }
+
+#dialog{
+    display: block;
+
+    .button-wrapper {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 5px;
+      
+        button {
+          margin-left: 8px;
+          &:nth-child(1) {
+            margin-left: 0;
+          }
+        }
+      }
+      
+      #modal-top {
+        display: flex;
+        .mat-h2 {
+          justify-content: left;
+        }
+        #close {
+          justify-content: right;
+          margin-right: 0;
+          margin-left: auto;
+        }
+      }
+      
+      #content {
+        .full-width-input {
+          margin-top: 0;
+          display: block;
+          widows: 70% !important;
+          &:nth-child(1) {
+            margin-top: 0;
+          }
+        }
+      
+        .spinner-wrapper {
+          position: absolute;
+          width: inherit;
+          height: inherit !important;
+          background-color: rgba(0, 0, 0, 0.1);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+}
+
+
+  

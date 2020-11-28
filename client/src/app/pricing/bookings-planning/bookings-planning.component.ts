@@ -21,6 +21,7 @@ const ROLE1: RoleEto = {
 }
 
 const ACCOUNT2: AccountEto = {
+  id: 2,
   username: "test2",
   password: "dsf",
   email: "test2@test.com",
@@ -28,6 +29,7 @@ const ACCOUNT2: AccountEto = {
 }
 
 const USER: UserEto = {
+  id: 1,
   name: "Tom",
   surname: "Willman",
   account: ACCOUNT2,
@@ -193,9 +195,9 @@ export class BookingsPlanningComponent implements OnInit {
     }));
     this.filterServices(this.translate.currentLang);
 
-    this.schedulerService.datesData.subscribe((booking: BookingEto) => {
+    this.subscription.add(this.schedulerService.datesData.subscribe((booking: BookingEto) => {
       this.dateFormGroup.controls['dateCtrl'].setValue(booking);
-    });
+    }));
 
     this.bookingControl = new FormControl('', Validators.required);
   }
@@ -271,6 +273,7 @@ export class BookingsPlanningComponent implements OnInit {
       name: this.addressFormGroup.controls['nameCtrl'].value,
       description: this.addressFormGroup.controls['descriptionCtrl'].value,
       address: {
+        id: 1,
         city: this.addressFormGroup.controls['cityCtrl'].value,
         street: this.addressFormGroup.controls['nameCtrl'].value,
         buildingNumber: this.addressFormGroup.controls['buildingNumberCtrl'].value,
@@ -288,10 +291,10 @@ export class BookingsPlanningComponent implements OnInit {
     }
 
     this.bookingControl.setValue(this.booking);
-    console.log(this.bookingControl.value)
   }
 
   ngOnDestroy() {
+    this.schedulerService.datesDataSource.next(null);
     this.subscription.unsubscribe();
   }
 }

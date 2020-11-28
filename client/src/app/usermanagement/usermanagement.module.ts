@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { UsermanagementRoutingModule } from './usermanagement-routing.module';
 import { RolesOverviewComponent } from './roles-overview/roles-overview.component';
 import { UsersOverviewComponent } from './users-overview/users-overview.component';
-import { UserDetailsComponent } from './user-details/user-details.component';
+import { UserDetailsComponent, UserDetailsModifyDialog } from './user-details/user-details.component';
 import {A11yModule} from '@angular/cdk/a11y';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import {DragDropModule} from '@angular/cdk/drag-drop';
@@ -53,7 +53,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [RolesOverviewComponent, UsersOverviewComponent, UserDetailsComponent],
+  declarations: [RolesOverviewComponent, UsersOverviewComponent, UserDetailsComponent, UserDetailsModifyDialog],
   imports: [
     CommonModule,
     UsermanagementRoutingModule,
@@ -106,6 +106,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     PortalModule,
     ScrollingModule
   ],
-  exports: [RolesOverviewComponent, UsersOverviewComponent, UserDetailsComponent]
+  exports: [RolesOverviewComponent, UsersOverviewComponent, UserDetailsComponent, UserDetailsModifyDialog]
 })
 export class UsermanagementModule { }

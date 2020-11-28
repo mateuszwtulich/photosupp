@@ -50,6 +50,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import interactionPlugin from '@fullcalendar/interaction';
+import { DatePipe } from '@angular/common';
 
 // import interactionPlugin from '@fullcalendar/interaction';
 
@@ -113,6 +114,9 @@ FullCalendarModule.registerPlugins([
     OverlayModule,
     PortalModule,
     ScrollingModule,
+  ],
+  providers: [
+    DatePipe
   ],
   exports: [SchedulerComponent]
 })

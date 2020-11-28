@@ -69,17 +69,17 @@ public class UcLoginImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("No user found with username: " + username)).getId();
     }
 
-    public AuthenticationPayload getAuthenticationPayload(Long userId) {
-        List<String> permissions;
-
-        try {
-            permissions = getPermissions(getUserEntityById(userId).getRole().getPermissions());
-        } catch (EntityDoesNotExistException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-
-        return new AuthenticationPayload(permissions);
-    }
+//    public AuthenticationPayload getAuthenticationPayload(Long userId) {
+//        List<String> permissions;
+//
+//        try {
+//            permissions = getPermissions(getUserEntityById(userId).getRole().getPermissions());
+//        } catch (EntityDoesNotExistException e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+//        }
+//
+//        return new AuthenticationPayload(permissions);
+//    }
 
     private List<String> getPermissions(List<PermissionEntity> permissions) {
         return permissions.stream().map(permission -> permission.getName().name())
