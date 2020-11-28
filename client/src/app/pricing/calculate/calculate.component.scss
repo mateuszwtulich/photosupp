@@ -4,6 +4,17 @@
     padding-left: 5%;
     padding-right: 5%;
 
+    .spinner-wrapper {
+        position: absolute !important;
+        z-index: 3;
+        width: 100% !important;
+        height: 100% !important;
+        background-color: rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     #pricing-end{
         display: flex;
         flex-direction: row;
@@ -23,27 +34,28 @@
     }
 
     ::ng-deep .mat-list-item{
-        margin-bottom: 1rem !important;
-        padding-top: 1rem !important;
-        padding-bottom: 2rem !important;
+        margin-bottom: 1% !important;
+        padding-bottom: 2% !important;
+        padding-top: 1% !important;
     
         ::ng-deep .mat-list-text{
     
         }
     }
     
-    #indicator{
-        padding-top: 1rem !important;
-        padding-bottom: 1rem !important;
+    .top{
+        padding-bottom: 1.5% !important;
         display: flex !important;
         flex-direction: row !important;
         align-items: center !important;
 
-        #indicator-title{
+        .title{
             display: flex;
             flex-direction: row;
+            margin-left: 1%;
+            margin-right: auto;
 
-            #title{
+            #name{
                 margin-right: 3%;
             }
         }
@@ -53,45 +65,15 @@
             margin-right: auto !important;
         }
     
-        #indicator-price{
+        .price{
             margin-left: auto !important;
             margin-right: 0 !important;
         }
-    
-        #indicator-description{
-            color: #0e2636 !important;
-        }
     }
 
-    ::ng-deep .mat-expansion-panel {
-        margin-bottom: 1% !important;
-        // display: flex !important;
-        // flex-direction: row !important;
-    
-        ::ng-deep .mat-expansion-panel-header{
-            display: flex !important;
-            flex-direction: row !important;
-            height: 3rem;
-        
-            ::ng-deep .mat-radio-button {
-                justify-self: start !important;
-                padding-left: 1.5%;
-                // width: 20% !important;
-    
-                ::ng-deep .mat-radio-label-content {
-                    width: 100% !important;
-                    display: flex !important;
-                    flex-direction: row !important;
-    
-                        
-                        // ::ng-deep .mat-expansion-panel-header-description {
-                        //     display: flex !important;
-                        //     justify-content: end !important;
-                        // }
-                    
-                }
-            }
-        }
+    .description{
+        color: #0e2636 !important;
+        margin-left: 1%;
     }
 }
 

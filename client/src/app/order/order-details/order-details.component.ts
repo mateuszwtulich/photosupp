@@ -9,8 +9,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { Gallery } from 'angular-gallery';
 import { Subscription } from 'rxjs';
-import { SortUtil } from 'src/app/core/utils/SortUtil';
 import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
+import { SortUtil } from 'src/app/shared/utils/SortUtil';
 import { ApplicationPermissions } from 'src/app/usermanagement/shared/enum/ApplicationPermissions';
 import { AccountEto } from 'src/app/usermanagement/shared/to/AccountEto';
 import { PermissionEto } from 'src/app/usermanagement/shared/to/PermissionEto';
@@ -61,7 +61,7 @@ const SERVICE: ServiceEto = {
   description: "opis",
   locale: "pl",
   basePrice: 300,
-  indicators: null
+  indicatorEtoList: null
 };
 
 const ADDRESS: AddressEto = {

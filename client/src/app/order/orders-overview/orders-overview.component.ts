@@ -7,9 +7,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { SortUtil } from 'src/app/core/utils/SortUtil';
 import { IndicatorEto } from 'src/app/servicehandling/to/IndicatorEto';
 import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
+import { SortUtil } from 'src/app/shared/utils/SortUtil';
 import { UserEto } from 'src/app/usermanagement/shared/to/UserEto';
 import { OrderStatus } from '../shared/enum/OrderStatus';
 import { AddressEto } from '../shared/to/AddressEto';
@@ -97,7 +97,7 @@ const servicesStored: ServiceEto[] = [{
   description: "opis",
   locale: "pl",
   basePrice: 300,
-  indicators: fotoIndicators
+  indicatorEtoList: fotoIndicators
 },
 {
   id: 2,
@@ -105,7 +105,7 @@ const servicesStored: ServiceEto[] = [{
   description: "Description",
   locale: "en",
   basePrice: 300,
-  indicators: fotoIndicators
+  indicatorEtoList: fotoIndicators
 },
 {
   id: 3,
@@ -113,7 +113,7 @@ const servicesStored: ServiceEto[] = [{
   description: "opis filmu",
   locale: "pl",
   basePrice: 600,
-  indicators: filmIndicators
+  indicatorEtoList: filmIndicators
 },
 {
   id: 4,
@@ -121,7 +121,7 @@ const servicesStored: ServiceEto[] = [{
   description: "Description",
   locale: "en",
   basePrice: 600,
-  indicators: filmIndicators
+  indicatorEtoList: filmIndicators
 }];
 
 const COORDINATOR: UserEto = {
@@ -146,7 +146,7 @@ const SERVICE: ServiceEto = {
   description: "opis",
   locale: "pl",
   basePrice: 300,
-  indicators: fotoIndicators
+  indicatorEtoList: fotoIndicators
 };
 
 const ADDRESS: AddressEto = {

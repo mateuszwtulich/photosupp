@@ -2,7 +2,7 @@ import { BackendApiServicePath } from 'src/app/pricing/rest-service-paths/Backen
 
 export class CoreRestServicePaths{
 
-    public static AUTHENTICATE(): string{
+    public static AUTHENTICATE() : string{
         return BackendApiServicePath.BACKEND_API() + 'api/authenticate';
     }
 }

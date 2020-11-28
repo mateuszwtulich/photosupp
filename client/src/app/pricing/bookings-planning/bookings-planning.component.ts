@@ -128,7 +128,7 @@ export class BookingsPlanningComponent implements OnInit {
     description: "opis",
     locale: "pl",
     basePrice: 300,
-    indicators: this.fotoIndicators
+    indicatorEtoList: this.fotoIndicators
   },
   {
     id: 2,
@@ -136,7 +136,7 @@ export class BookingsPlanningComponent implements OnInit {
     description: "Description",
     locale: "en",
     basePrice: 300,
-    indicators: this.fotoIndicators
+    indicatorEtoList: this.fotoIndicators
   },
   {
     id: 3,
@@ -144,7 +144,7 @@ export class BookingsPlanningComponent implements OnInit {
     description: "opis filmu",
     locale: "pl",
     basePrice: 600,
-    indicators: this.filmIndicators
+    indicatorEtoList: this.filmIndicators
   },
   {
     id: 4,
@@ -152,7 +152,7 @@ export class BookingsPlanningComponent implements OnInit {
     description: "Description",
     locale: "en",
     basePrice: 600,
-    indicators: this.filmIndicators
+    indicatorEtoList: this.filmIndicators
   }];
 
   bookingControl: FormControl;
@@ -216,7 +216,7 @@ export class BookingsPlanningComponent implements OnInit {
     this.services = [];
     this.servicesStored.forEach(service => {
       if (service.locale == lang) {
-        service.indicators = service.indicators.filter(indicator => indicator.locale == lang);
+        service.indicatorEtoList = service.indicatorEtoList.filter(indicator => indicator.locale == lang);
         this.services.push(service);
       }
     })
@@ -240,7 +240,7 @@ export class BookingsPlanningComponent implements OnInit {
   refreshIndicators(service: ServiceEto) {
     this.priceIndicators = [];
 
-    service.indicators.forEach(indicator => this.priceIndicators.push({
+    service.indicatorEtoList.forEach(indicator => this.priceIndicators.push({
       indicator: indicator,
       bookingId: null,
       price: 0,

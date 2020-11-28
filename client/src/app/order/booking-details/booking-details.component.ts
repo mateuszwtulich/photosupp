@@ -4,8 +4,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
-import { SortUtil } from 'src/app/core/utils/SortUtil';
 import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
+import { SortUtil } from 'src/app/shared/utils/SortUtil';
 import { ApplicationPermissions } from 'src/app/usermanagement/shared/enum/ApplicationPermissions';
 import { AccountEto } from 'src/app/usermanagement/shared/to/AccountEto';
 import { PermissionEto } from 'src/app/usermanagement/shared/to/PermissionEto';
@@ -47,7 +47,7 @@ const SERVICE: ServiceEto = {
   description: "opis",
   locale: "pl",
   basePrice: 300,
-  indicators: null
+  indicatorEtoList: null
 };
 
 const ADDRESS: AddressEto = {

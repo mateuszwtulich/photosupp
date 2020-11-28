@@ -67,7 +67,11 @@
                 </mat-card>
             </mat-grid-tile>
             <mat-grid-tile [colspan]="3" [rowspan]="6">
+
                 <mat-card id="registration">
+                    <div *ngIf="isSpinnerDisplayed" class="spinner-wrapper">
+                        <mat-spinner color="accent"></mat-spinner>
+                    </div>
                     <form (ngSubmit)="register()">
 
                         <mat-card-content>

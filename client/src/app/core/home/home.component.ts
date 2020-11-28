@@ -5,8 +5,10 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { ServiceService } from 'src/app/servicehandling/services/service.service';
+import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
 import { UsersService } from 'src/app/usermanagement/shared/services/users.service';
-import { ApplicationPermission, BasicRole } from '../utils/ApplicationPermission';
+import { BasicRole } from '../../shared/utils/ApplicationPermission';
 
 @Component({
   selector: 'cf-home',
@@ -18,6 +20,7 @@ export class HomeComponent implements OnInit {
   public nameFormControl: FormControl;
   public surnameFormControl: FormControl;
   public passwordForm: FormGroup;
+  public isSpinnerDisplayed = false;
 
   public hide: boolean;
   subscritpion: Subscription = new Subscription();
@@ -68,11 +71,7 @@ export class HomeComponent implements OnInit {
     return this.emailFormControl.hasError('email') ? this.translate.instant('registration.email-invalid') : '';
   }
 
-  ngOnDestroy() {
-    this.subscritpion.unsubscribe();
-  }
-
-  checkPasswords(group: FormGroup) { // here we have the 'passwords' group
+  checkPasswords(group: FormGroup) {
     let pass = group.get('password').value;
     let confirmPass = group.get('confirmPassword').value;
 
@@ -81,6 +80,8 @@ export class HomeComponent implements OnInit {
 
   register() {
     if (this.nameFormControl.valid && this.surnameFormControl.valid && this.passwordForm.valid && this.emailFormControl.valid) {
+      this.isSpinnerDisplayed = true;
+
       let userTo = {
         name: this.nameFormControl.value,
         surname: this.surnameFormControl.value,
@@ -91,15 +92,19 @@ export class HomeComponent implements OnInit {
         roleId: BasicRole.getClientRoleId()
       }
 
-      console.log(userTo);
-
       this.subscritpion.add(this.userService.createUser(userTo).subscribe((userEto) => {
         this.snackbar.open(this.translate.instant('registration.check-mailbox'));
+        this.isSpinnerDisplayed = false;
       },
         (e) => {
           this.snackbar.open(this.translate.instant('registration.error' + " " + e.error.message));
+          this.isSpinnerDisplayed = false;
         }))
     }
+  }
+
+  ngOnDestroy() {
+    this.subscritpion.unsubscribe();
   }
 }
 

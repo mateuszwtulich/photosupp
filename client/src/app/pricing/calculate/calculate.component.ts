@@ -3,10 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatAccordion } from '@angular/material/expansion';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { Combined } from 'src/app/core/to/Combined';
 import { IndicatorEto } from 'src/app/servicehandling/to/IndicatorEto';
 import { PriceIndicatorTo } from 'src/app/core/to/PriceIndicatorTo';
 import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
+import { ServiceService } from 'src/app/servicehandling/services/service.service';
 
 @Component({
   selector: 'cf-calculate',
@@ -14,128 +14,22 @@ import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
   styleUrls: ['./calculate.component.scss']
 })
 export class CalculateComponent implements OnInit {
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
+  public firstFormGroup: FormGroup;
+  public secondFormGroup: FormGroup;
+  public services: ServiceEto[];
+  private servicesStored: ServiceEto[];
+  public isSpinnerDisplayed = false;
+  public priceIndicators: PriceIndicatorTo[];
+  public selectedService: ServiceEto;
+  public subscription: Subscription = new Subscription();
 
-  fuelIndicatorPL = {
-    id: 3,
-    name: "Odległość od Częstochowy",
-    description: "Proszę podać liczbę kilometrów Państwa lokalizacji od Częstochowy",
-    locale: "pl",
-    baseAmount: 20,
-    doublePrice: 20
-  }
+  @ViewChild('stepper') stepper;
+  @ViewChild(MatAccordion) accordion: MatAccordion;
 
-  fuelIndicatorEN = {
-    id: 4,
-    name: "Distance from Czestochowa",
-    description: "Kindly provide number of kilometers to your localization from Czestochowa",
-    locale: "en",
-    baseAmount: 20,
-    doublePrice: 20
-  }
-
-  fotoIndicators: IndicatorEto[] = [{
-    id: 1,
-    name: "Szacowna liczba zdjęć",
-    description: "Dla foto takiej proponujemy taką liczbę itp",
-    locale: "pl",
-    baseAmount: 50,
-    doublePrice: 200
-  },
-{
-  id: 2,
-  name: "Predicted number of photos",
-  description: "For this kind of service we propose the number",
-  locale: "en",
-  baseAmount: 50,
-  doublePrice: 200
-},
-  this.fuelIndicatorPL,
-  this.fuelIndicatorEN
-  ]
-
-  filmIndicators: IndicatorEto[] = [{
-    id: 5,
-    name: "Szacowna liczba filmów",
-    description: "Dla filmu takiego proponujemy taką liczbę filmów",
-    locale: "pl",
-    baseAmount: 1,
-    doublePrice: 150
-  },
-{
-  id: 6,
-  name: "Predicted number of clips",
-  description: "For this kind of service we propose the number",
-  locale: "en",
-  baseAmount: 1,
-  doublePrice: 150
-},
-{
-  id: 7,
-  name: "Szacowna liczba minut dla filmu",
-  description: "Dla filmu takiego typu proponujemy taką liczbę minut",
-  locale: "pl",
-  baseAmount: 2,
-  doublePrice: 40
-},
-{
-  id: 8,
-name: "Predicted number of minutes for each clip",
-description: "For this kind of service we propose the number",
-locale: "en",
-baseAmount: 2,
-doublePrice: 40
-},
-  this.fuelIndicatorPL,
-  this.fuelIndicatorEN
-  ]
-  
-  services: ServiceEto[] = [];
-  servicesStored: ServiceEto[] = [{
-    id: 1,
-    name: "foto",
-    description: "opis",
-    locale: "pl",
-    basePrice: 300,
-    indicators: this.fotoIndicators
-  },
-{
-  id: 2,
-  name: "Photo",
-  description: "Description",
-  locale: "en",
-  basePrice: 300,
-  indicators: this.fotoIndicators
-},
-{
-  id: 3,
-  name: "film",
-  description: "opis filmu",
-  locale: "pl",
-  basePrice: 600,
-  indicators: this.filmIndicators
-},
-{
-  id: 4,
-name: "Film",
-description: "Description",
-locale: "en",
-basePrice: 600,
-indicators: this.filmIndicators
-}];
-
-
-priceIndicators: PriceIndicatorTo[];
-combinedList: Combined[] = [];
-selectedService: ServiceEto;
-subscription: Subscription = new Subscription();
-@ViewChild('stepper') stepper;
-
-@ViewChild(MatAccordion) accordion: MatAccordion;
-
-
-  constructor(private _formBuilder: FormBuilder, private translate: TranslateService) {
+  constructor(
+    private _formBuilder: FormBuilder,
+    private translate: TranslateService,
+    private serviceService: ServiceService) {
   }
 
   ngOnInit() {
@@ -148,44 +42,49 @@ subscription: Subscription = new Subscription();
       secondCtrl: ['', Validators.required]
     });
 
-    this.subscription.add(this.translate.onLangChange.subscribe((event: LangChangeEvent) =>{
-      this.filterServices(event.lang);
-    }));
-    this.filterServices(this.translate.currentLang);
+    this.onLangChange();
+    this.getServices();
   }
 
-  filterServices(lang: string){
+  private onLangChange() {
+    this.subscription.add(this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.priceIndicators = [];
+      this.filterServices(event.lang);
+      this.stepper.reset();
+    }));
+  }
+
+  private getServices() {
+    this.isSpinnerDisplayed = true;
+    this.serviceService.getAllServices().then((services: ServiceEto[]) => {
+      this.servicesStored = services;
+      this.filterServices(this.translate.currentLang);
+      this.isSpinnerDisplayed = false;
+    })
+  }
+
+  filterServices(lang: string) {
     this.services = [];
     this.servicesStored.forEach(service => {
-      if(service.locale == lang){
-        service.indicators = service.indicators.filter(indicator => indicator.locale==lang);
+      if (service.locale == lang) {
+        service.indicatorEtoList = service.indicatorEtoList.filter(indicator => indicator.locale == lang);
         this.services.push(service);
       }
     })
   }
 
-  changeService(currentService: ServiceEto){
-    this.firstFormGroup.controls['firstCtrl'].setValue(
-      this.services.find(service => currentService.basePrice == service.basePrice && currentService.locale != service.locale));
+  setService(service: ServiceEto) {
+    this.refreshIndicators(service);
+    this.firstFormGroup.controls['firstCtrl'].setValue(service);
   }
 
-  setService(expanded: boolean, service: ServiceEto){
-    if(expanded == true){
-      this.refreshIndicators(service);
-      this.firstFormGroup.controls['firstCtrl'].setValue(service);
-    } else {
-      this.firstFormGroup.controls['firstCtrl'].setValue(null);
-      this.priceIndicators = [];
-    }
-  }
-
-  refreshIndicators(service: ServiceEto){
+  private refreshIndicators(service: ServiceEto) {
     this.priceIndicators = [];
 
-    service.indicators.forEach(indicator => this.priceIndicators.push({
+    service.indicatorEtoList.forEach(indicator => this.priceIndicators.push({
       indicatorId: indicator.id,
       bookingId: null,
-      price: 0,
+      price: indicator.doublePrice,
       amount: indicator.baseAmount,
     }));
   }
@@ -194,7 +93,6 @@ subscription: Subscription = new Subscription();
     if (value >= 10) {
       return Math.round(value / 1000) + 'k';
     }
-
     return value;
   }
 
@@ -203,13 +101,13 @@ subscription: Subscription = new Subscription();
     return this.priceIndicators[i].price.toFixed();
   }
 
-  calculateThePredictedCost(): number{
+  calculateThePredictedCost(): number {
     let sum = this.firstFormGroup.controls['firstCtrl'].value.basePrice;
     this.priceIndicators.forEach(priceIndicator => sum += priceIndicator.price);
     return sum;
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 }

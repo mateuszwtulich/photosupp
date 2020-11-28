@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
-import { SortUtil } from 'src/app/core/utils/SortUtil';
+import { SortUtil } from 'src/app/shared/utils/SortUtil';
 import { ApplicationPermissions } from '../shared/enum/ApplicationPermissions';
 import { PermissionEto } from '../shared/to/PermissionEto';
 import { RoleEto } from '../shared/to/RoleEto';

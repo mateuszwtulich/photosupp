@@ -4,9 +4,9 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { SortUtil } from 'src/app/core/utils/SortUtil';
 import { IndicatorEto } from 'src/app/servicehandling/to/IndicatorEto';
 import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
+import { SortUtil } from 'src/app/shared/utils/SortUtil';
 import { UserEto } from 'src/app/usermanagement/shared/to/UserEto';
 import { AddressEto } from '../shared/to/AddressEto';
 import { BookingEto } from '../shared/to/BookingEto';
@@ -91,7 +91,7 @@ const SERVICE: ServiceEto = {
   description: "opis",
   locale: "pl",
   basePrice: 300,
-  indicators: fotoIndicators
+  indicatorEtoList: fotoIndicators
 };
 
 const USER: UserEto = {

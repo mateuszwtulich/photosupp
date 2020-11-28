@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ApplicationPermission } from 'src/app/core/utils/ApplicationPermission';
-import { AuthInfo } from '../to/Authorization';
+import { AuthInfo } from 'src/app/authentication/to/Authorization';
+import { ApplicationPermission } from 'src/app/shared/utils/ApplicationPermission';
 
 @Injectable({
     providedIn: 'root'

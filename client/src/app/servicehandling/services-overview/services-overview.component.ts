@@ -3,9 +3,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
-import { SortUtil } from 'src/app/core/utils/SortUtil';
 import { IndicatorEto } from 'src/app/servicehandling/to/IndicatorEto';
 import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
+import { SortUtil } from 'src/app/shared/utils/SortUtil';
 
 const fuelIndicatorPL = {
   id: 3,
@@ -88,7 +88,7 @@ const SERVICES: ServiceEto[] = [{
   description: "opis",
   locale: "pl",
   basePrice: 300,
-  indicators: fotoIndicatorsPL
+  indicatorEtoList: fotoIndicatorsPL
 },
 {
 id: 2,
@@ -96,7 +96,7 @@ name: "Photo",
 description: "Description",
 locale: "en",
 basePrice: 300,
-indicators: fotoIndicatorsEN
+indicatorEtoList: fotoIndicatorsEN
 },
 {
 id: 3,
@@ -104,7 +104,7 @@ name: "film",
 description: "opis filmu",
 locale: "pl",
 basePrice: 600,
-indicators: filmIndicatorsPL
+indicatorEtoList: filmIndicatorsPL
 },
 {
 id: 4,
@@ -112,7 +112,7 @@ name: "Film",
 description: "Description",
 locale: "en",
 basePrice: 600,
-indicators: filmIndicatorsEN
+indicatorEtoList: filmIndicatorsEN
 }];
 
 @Component({
@@ -150,7 +150,7 @@ export class ServicesOverviewComponent implements OnInit {
 
   private prepareFilterPredicate(): (data: ServiceEto, filter: string) => boolean {
     return (data: ServiceEto, filter: string) => {
-      let inIndicators: boolean = !!data.indicators.find(indicator => indicator.name.toLocaleLowerCase().includes(filter));
+      let inIndicators: boolean = !!data.indicatorEtoList.find(indicator => indicator.name.toLocaleLowerCase().includes(filter));
 
       return data.name.toLocaleLowerCase().includes(filter) || inIndicators ||
         this.translate.instant("table." + data.locale).toLocaleLowerCase().includes(filter) || data.basePrice.toFixed().includes(filter);
@@ -180,7 +180,7 @@ export class ServicesOverviewComponent implements OnInit {
         case "basePrice":
           return SortUtil.compare(a.basePrice, b.basePrice, isAsc);
         case "indicators":
-          return SortUtil.compare(a.indicators[0].name, b.indicators[1].name, isAsc);
+          return SortUtil.compare(a.indicatorEtoList[0].name, b.indicatorEtoList[1].name, isAsc);
         default:
           return 0;
       }

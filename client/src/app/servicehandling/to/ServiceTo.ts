@@ -3,5 +3,5 @@ export class ServiceTo {
     description: string;
     locale: string;
     basePrice: number;
-    indicators: number[];
+    indicatorsIds: number[];
 }

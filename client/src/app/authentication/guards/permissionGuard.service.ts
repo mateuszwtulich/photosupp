@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot } from '@angular/router';
-import { NgxPermissionsService } from 'ngx-permissions/lib';
-import { ApplicationPermission } from '../../core/utils/ApplicationPermission';
+import { NgxPermissionsService } from 'ngx-permissions';
+import { ApplicationPermission } from 'src/app/shared/utils/ApplicationPermission';
 
 @Injectable({
     providedIn: 'root'
