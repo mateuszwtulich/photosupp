@@ -23,7 +23,8 @@ import { Injector, APP_INITIALIZER } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS} from '@angular/material/snack-bar';
 import { NgxPermissionsModule } from 'ngx-permissions';
-
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TokenInterceptor } from './authentication/tokenInterceptor';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { NgxPermissionsModule } from 'ngx-permissions';
       deps: [TranslateService, Injector],
       multi: true
     },
-    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } }
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 5000 } },
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
   ],
   exports: [
     MatSnackBarModule, NgxPermissionsModule

@@ -1,41 +1,13 @@
-import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatFormField } from '@angular/material/form-field';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { ApplicationPermissions } from '../shared/enum/ApplicationPermissions';
-import { AccountEto } from '../shared/to/AccountEto';
-import { PermissionEto } from '../shared/to/PermissionEto';
-import { RoleEto } from '../shared/to/RoleEto';
+import { AuthenticationService } from 'src/app/authentication/services/authentication.service';
+import { UsersService } from '../shared/services/users.service';
 import { UserEto } from '../shared/to/UserEto';
-
-const BASIC_PERM: PermissionEto[] = [{
-  name: ApplicationPermissions.AUTH_USER,
-  description: "Basic permissions"
-}]
-
-const ROLE1: RoleEto = {
-  name: "User",
-  description: "Description of normal user",
-  permissions: BASIC_PERM
-}
-
-const ACCOUNT2: AccountEto = {
-  id: 2,
-  username: "test2",
-  password: "dsf",
-  email: "test2@test.com",
-  isActivated: true
-}
-
-const USER: UserEto = {
-  id: 2,
-  name: "Tom",
-  surname: "Willman",
-  account: ACCOUNT2,
-  role: ROLE1
-}
+import { UserTo } from '../shared/to/UserTo';
 
 @Component({
   selector: 'cf-user-details',
@@ -43,104 +15,183 @@ const USER: UserEto = {
   styleUrls: ['./user-details.component.scss']
 })
 export class UserDetailsComponent implements OnInit {
-  public email1st: FormControl;
-  public email2nd: FormControl;
-  public password1st: FormControl;
-  public password2nd: FormControl;
-
+  public isSpinnerDisplayed = false;
+  public passwordForm: FormGroup;
+  public emailForm: FormGroup;
   public hide: boolean;
-  subscritpion: Subscription = new Subscription();
-  user = USER;
-  @ViewChild('formField1') formField1: MatFormField;
-  @ViewChild('formField2') formField2: MatFormField;
-  @Input()
+  public matcher: MyErrorStateMatcher;
+  public user: UserEto;
   public userControl: FormControl;
+  private subscritpion: Subscription = new Subscription();
 
-  constructor(private translate: TranslateService, public dialog: MatDialog) {
-    this.hide = true;
-    this.email1st = new FormControl('', [Validators.required, Validators.email])
-    this.email2nd = new FormControl('', [Validators.required, Validators.email])
-    this.password1st = new FormControl('', Validators.required)
-    this.password2nd = new FormControl('', Validators.required)
-    this.userControl = new FormControl(USER);
-   }
+  constructor(
+    private _formBuilder: FormBuilder,
+    private translate: TranslateService,
+    public dialog: MatDialog,
+    private userService: UsersService,
+    private authService: AuthenticationService
+  ) {
+  }
 
   ngOnInit(): void {
-    this.subscritpion.add(this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.changeHintLabel();
+    this.isSpinnerDisplayed = true;
+    this.hide = true;
+
+    this.createsForms();
+    this.getLoggedUser();
+    this.onSpinnerDisplayed();
+  }
+
+  private onSpinnerDisplayed(){
+    this.subscritpion.add(this.userService.spinnerData.subscribe((isSpinnerDisplayed: boolean) => {
+      this.isSpinnerDisplayed = isSpinnerDisplayed;
     }));
   }
 
-  ngAfterViewInit(): void {
-    this.changeHintLabel();
+  private createsForms() {
+    this.userControl = new FormControl('', Validators.required);
+
+    this.passwordForm = this._formBuilder.group({
+      password: ['', [Validators.required]],
+      confirmPassword: ['']
+    }, { validator: this.checkPasswords })
+
+    this.emailForm = this._formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      confirmEmail: ['', Validators.email]
+    }, { validator: this.checkEmails })
+
+    this.matcher = new MyErrorStateMatcher();
   }
 
-  private changeHintLabel(){
+  private getLoggedUser() {
+    this.userService.getLoggedUser().then(() => {
+      this.subscritpion.add(this.userService.loggedUserData.subscribe((userEto: UserEto) => {
+        this.userControl = new FormControl(userEto);
+        this.user = userEto;
+      }))
+    })
   }
 
   getErrorMessage1st() {
-    if (this.email1st.hasError('required')) {
+    if (this.emailForm.controls['email'].hasError('required')) {
       return this.translate.instant('registration.email-null');
     }
 
-    return this.email1st.hasError('email') ? this.translate.instant('registration.email-invalid') : '';
+    return this.emailForm.controls['email'].hasError('email') ? this.translate.instant('registration.email-invalid') : '';
   }
 
   getErrorMessage2nd() {
-    if (this.email2nd.hasError('required')) {
+    if (this.emailForm.controls['confirmEmail'].hasError('required')) {
       return this.translate.instant('registration.email-null');
     }
 
-    return this.email2nd.hasError('email') ? this.translate.instant('registration.email-invalid') : '';
+    return this.emailForm.controls['confirmEmail'].hasError('email') ? this.translate.instant('registration.email-invalid') : '';
+  }
+
+  checkPasswords(group: FormGroup) {
+    let pass = group.get('password').value;
+    let confirmPass = group.get('confirmPassword').value;
+
+    return pass === confirmPass ? null : { notSame: true }
+  }
+
+  checkEmails(group: FormGroup) {
+    let email = group.get('email').value;
+    let confirmEmail = group.get('confirmEmail').value;
+
+    return email === confirmEmail ? null : { notSame: true }
   }
 
   ngOnDestroy() {
     this.subscritpion.unsubscribe();
   }
 
-  modifyAccount(){
-    const dialogRef = this.dialog.open(UserDetailsModifyDialog, { data: this.userControl.value, height: '31%', width: '30%' });
-    dialogRef.afterClosed().subscribe((user) => {
-      if(!!user){
-        this.userControl.setValue(user);
-        this.user = user;
+  modifyAccount() {
+    const dialogRef = this.dialog.open(UserDetailsModifyDialog, { data: this.userControl.value, height: '31%', width: '50%' });
+    dialogRef.afterClosed().subscribe((userTo: UserTo) => {
+      if (!!userTo) {
+        this.userService.modifyUser(userTo, this.user.id);
       }
+    })
+  }
+
+  changePassword(){
+    let userTo: UserTo = {
+      roleId: this.user.roleEto.id,
+      accountTo: {
+        email: this.user.accountEto.email,
+        password: this.passwordForm.get('password').value
+      },
+      name: this.user.name,
+      surname: this.user.surname
+    }
+
+    this.userService.modifyAccount(userTo, this.user.id).then(() => {
+      this.authService.logout();
+    })
+  }
+
+  changeEmail(){
+    let userTo: UserTo = {
+      roleId: this.user.roleEto.id,
+      accountTo: {
+        email: this.emailForm.get('email').value,
+        password: this.user.accountEto.password
+      },
+      name: this.user.name,
+      surname: this.user.surname
+    }
+
+    this.userService.modifyAccount(userTo, this.user.id).then(() => {
+      this.authService.logout();
     })
   }
 }
 
-  @Component({
-    selector: 'user-details-modify-dialog',
-    templateUrl: 'user-details-modify-dialog.html',
-    styleUrls: ['./user-details.component.scss']
-  })
-  export class UserDetailsModifyDialog implements OnInit{
-    isSpinnerDisplayed = false;
-    subscription = new Subscription();
-    nameControl = new FormControl("", Validators.required);
-    surnameControl = new FormControl("", Validators.required);
+@Component({
+  selector: 'user-details-modify-dialog',
+  templateUrl: 'user-details-modify-dialog.html',
+  styleUrls: ['./user-details.component.scss']
+})
+export class UserDetailsModifyDialog implements OnInit {
+  isSpinnerDisplayed = false;
+  subscription = new Subscription();
+  nameControl = new FormControl("", Validators.required);
+  surnameControl = new FormControl("", Validators.required);
 
-    constructor(
-      public dialogRef: MatDialogRef<UserDetailsModifyDialog>,
-      @Inject(MAT_DIALOG_DATA) public data: UserEto) { }
+  constructor(
+    public dialogRef: MatDialogRef<UserDetailsModifyDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: UserEto) { }
 
   ngOnInit(): void {
+    this.nameControl.setValue(this.data.name);
+    this.surnameControl.setValue(this.data.surname);
   }
 
   modifyUser() {
-    if(this.nameControl.valid && this.surnameControl.valid) {
+    if (this.nameControl.valid && this.surnameControl.valid) {
       this.dialogRef.close({
-        id: this.data.id,
-        role: this.data.role,
-        account: this.data.account,
+        roleId: this.data.roleEto.id,
+        accountTo: {
+          username: this.data.accountEto.username,
+          password: this.data.accountEto.password
+        },
         name: this.nameControl.value,
         surname: this.surnameControl.value
       })
     }
   }
-
   closeDialog() {
     this.dialogRef.close();
-}
+  }
 }
 
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const invalidCtrl = !!(control && control.invalid && control.parent.dirty);
+    const invalidParent = !!(control && control.parent && control.parent.invalid && control.parent.dirty);
+
+    return (invalidCtrl || invalidParent);
+  }
+}

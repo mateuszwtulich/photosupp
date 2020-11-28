@@ -56,10 +56,11 @@ import { LoginComponent } from './login/login.component';
 import { ForgottenPasswordComponent } from './forgotten-password/forgotten-password.component';
 import { OrderModule } from '../order/order.module';
 import { NgxPermissionsModule } from 'ngx-permissions';
+import { MaterialElevationDirective } from './utils/material-elevation.directive';
 
 
 @NgModule({
-  declarations: [HeaderComponent, ClientPanelComponent, HomeComponent, ManagerPanelComponent, LoginComponent, ForgottenPasswordComponent],
+  declarations: [HeaderComponent, ClientPanelComponent, HomeComponent, ManagerPanelComponent, LoginComponent, ForgottenPasswordComponent, MaterialElevationDirective],
   imports: [
     OrderModule,
     PricingModule,

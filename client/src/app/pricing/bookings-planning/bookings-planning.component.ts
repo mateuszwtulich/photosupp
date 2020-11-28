@@ -15,6 +15,7 @@ import { RoleEto } from 'src/app/usermanagement/shared/to/RoleEto';
 import { UserEto } from 'src/app/usermanagement/shared/to/UserEto';
 
 const ROLE1: RoleEto = {
+  id: 2,
   name: "User",
   description: "Description of normal user",
   permissions: null
@@ -32,8 +33,8 @@ const USER: UserEto = {
   id: 1,
   name: "Tom",
   surname: "Willman",
-  account: ACCOUNT2,
-  role: ROLE1
+  accountEto: ACCOUNT2,
+  roleEto: ROLE1
 }
 
 @Component({

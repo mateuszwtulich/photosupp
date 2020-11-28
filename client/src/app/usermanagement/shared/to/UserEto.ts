@@ -6,6 +6,6 @@ export class UserEto {
     id: number;
     name: string;
     surname: string;
-    account: AccountEto;
-    role: RoleEto;
+    accountEto: AccountEto;
+    roleEto: RoleEto;
 }

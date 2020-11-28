@@ -48,16 +48,11 @@ import { LocalStorageService } from 'src/app/shared/cache/localStorage.service';
           this.localStorageService.setAuthInfo(this.localStorageService.parseHeaderToAuthInfo(decodedToken));
           this.localStorageService.setBasicAuthority();
           this.permissionsService.addPermission(this.localStorageService.getAuthorities());
-          console.log(this.localStorageService.getAuthInfo());
           this.spinnerDataSource.next(false);
           resolve();
         },
           (error) => {
-            if (error.status === 401) {
-              this.snackbar.open(this.translate.instant('login.unauthorized'));
-            } else {
-                this.snackbar.open(this.translate.instant('login.error'));
-            }
+            this.snackbar.open(this.translate.instant('login.error'));
             this.spinnerDataSource.next(false);
 
             reject(error);

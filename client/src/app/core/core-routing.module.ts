@@ -39,7 +39,7 @@ const routes: Routes = [
     { path: 'manager/user/overview', component: UsersOverviewComponent, canActivate: [AuthGuardSerice, PermissionsGuardService] },
     { path: 'manager/role/overview', component: RolesOverviewComponent, canActivate: [AuthGuardSerice, PermissionsGuardService] },
     { path: 'home/calculate', component: CalculateComponent },
-    { path: 'home/forgotten-password', component: ForgottenPasswordComponent }
+    { path: 'home/login/forgotten-password', component: ForgottenPasswordComponent }
 ];
 
 @NgModule({

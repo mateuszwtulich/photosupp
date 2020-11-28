@@ -1,7 +1,7 @@
 <mat-grid-list id="client-panel" [cols]="breakpoint" [rowHeight]="ratio" (window:resize)="onResize($event)">
-    <mat-grid-tile>
+    <mat-grid-tile *ngxPermissionsOnly="['AUTH_USER']">
         <div class="mat-container left-card top-card">
-        <mat-card routerLink="order/planning">
+        <mat-card routerLink="order/planning" app-material-elevation [default-elevation]="defaultElevation" raised-elevation="raisedElevation">
             <mat-card-header>
                 <div class="header">
                     <mat-icon>book_online</mat-icon>
@@ -16,9 +16,9 @@
         </mat-card>
         </div>
     </mat-grid-tile>
-    <mat-grid-tile>
+    <mat-grid-tile *ngxPermissionsOnly="['AUTH_USER']">
         <div class="mat-container right-card top-card">
-        <mat-card routerLink="orders">
+        <mat-card routerLink="orders" app-material-elevation [default-elevation]="defaultElevation" raised-elevation="raisedElevation">
             <mat-card-header>
                 <div class="header">
                     <mat-icon>list_alt</mat-icon>
@@ -33,9 +33,9 @@
         </mat-card>
         </div>
     </mat-grid-tile>
-    <mat-grid-tile>
+    <mat-grid-tile *ngxPermissionsOnly="['AUTH_USER']">
         <div class="mat-container left-card bottom-card">
-        <mat-card routerLink="scheduler">
+        <mat-card routerLink="scheduler" app-material-elevation [default-elevation]="defaultElevation" raised-elevation="raisedElevation">
             <mat-card-header>
                 <div class="header">
                     <mat-icon>calendar_today</mat-icon>
@@ -50,9 +50,10 @@
         </mat-card>
         </div>
     </mat-grid-tile>
-    <mat-grid-tile>
+    <mat-grid-tile *ngxPermissionsOnly="['AUTH_USER']">
         <div class="mat-container right-card bottom-card">
-        <mat-card class="right-card bottom-card" routerLink="user/details">
+        <mat-card class="right-card bottom-card" routerLink="user/details" 
+        app-material-elevation [default-elevation]="defaultElevation" raised-elevation="raisedElevation">
             <mat-card-header>
                 <div class="header">
                     <mat-icon>account_circle</mat-icon>

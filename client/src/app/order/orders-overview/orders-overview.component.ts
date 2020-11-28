@@ -128,16 +128,16 @@ const COORDINATOR: UserEto = {
   id: 1,
   name: "John",
   surname: "Smith",
-  account: null,
-  role: null
+  accountEto: null,
+  roleEto: null
 }
 
 const USER: UserEto = {
   id: 2,
   name: "Tom",
   surname: "Willman",
-  account: null,
-  role: null
+  accountEto: null,
+  roleEto: null
 }
 
 const SERVICE: ServiceEto = {

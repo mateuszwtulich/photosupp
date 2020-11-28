@@ -43,7 +43,6 @@ export class LoginComponent implements OnInit {
       }
       this.authService.authenticate(this.credentials).then(() => {
         this.permissionsService.hasPermission(ApplicationPermission.A_CRUD_SUPER).then((result) => {
-          console.log(result)
           if (result) {
             this.router.navigate(['manager']);
           } else {

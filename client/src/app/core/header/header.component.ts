@@ -1,6 +1,6 @@
 import {MediaMatcher} from '@angular/cdk/layout';
 import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from 'src/app/authentication/services/authentication.service';
@@ -56,15 +56,22 @@ export class HeaderComponent implements OnDestroy {
   }
 
   ngOnInit(): void {
-    if(window.location.pathname.startsWith("/client")){
-      this.filterNav = this.clientNav;
-    } else if(window.location.pathname.startsWith("/manager")){
-      this.filterNav = this.managerNav;
-    } else {
-      this.filterNav = this.homeNav;
-    }
+    this.onNavigationChange();
+  }
 
-    this.refreshSidenavText();
+  private onNavigationChange(){
+    this.subscription.add(this.router.events.subscribe((arg: NavigationEnd) => {
+      if(!!arg.url && arg.url.startsWith("/client")){
+        this.filterNav = this.clientNav;
+        this.refreshSidenavText();
+      } else if(!!arg.url && arg.url.startsWith("/manager")){
+        this.filterNav = this.managerNav;
+        this.refreshSidenavText();
+      } else if(!!arg.url && arg.url.startsWith("/home")){
+        this.filterNav = this.homeNav;
+        this.refreshSidenavText();
+      }
+    }));
   }
 
   navigateToHome() {
@@ -114,11 +121,3 @@ export class HeaderComponent implements OnDestroy {
     return this.router.url.startsWith("/home");
   }
 }
-
-
-
-
-
-/**  Copyright 2020 Google LLC. All Rights Reserved.
-    Use of this source code is governed by an MIT-style license that
-    can be found in the LICENSE file at http://angular.io/license */

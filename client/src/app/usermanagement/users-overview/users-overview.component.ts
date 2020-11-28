@@ -10,59 +10,61 @@ import { PermissionEto } from '../shared/to/PermissionEto';
 import { RoleEto } from '../shared/to/RoleEto';
 import { UserEto } from '../shared/to/UserEto';
 
-const BASIC_PERM: PermissionEto[] = [{
-  name: ApplicationPermissions.AUTH_USER,
-  description: "Basic permissions"
-}]
+// const BASIC_PERM: PermissionEto[] = [{
+//   name: ApplicationPermissions.AUTH_USER,
+//   description: "Basic permissions"
+// }]
 
-const SUPER_PERM: PermissionEto[] = [{
-  name: ApplicationPermissions.A_CRUD_SUPER,
-  description: "All permissions"
-}]
+// const SUPER_PERM: PermissionEto[] = [{
+//   name: ApplicationPermissions.A_CRUD_SUPER,
+//   description: "All permissions"
+// }]
 
-const ROLE1: RoleEto = {
-  name: "User",
-  description: "Description of normal user",
-  permissions: BASIC_PERM
-}
+// const ROLE1: RoleEto = {
+//   id: 2,
+//   name: "User",
+//   description: "Description of normal user",
+//   permissions: BASIC_PERM
+// }
 
-const ROLE2: RoleEto = {
-  name: "Manager",
-  description: "Description of manager user",
-  permissions: SUPER_PERM
-}
+// const ROLE2: RoleEto = {
+//   id: 2,
+//   name: "Manager",
+//   description: "Description of manager user",
+//   permissions: SUPER_PERM
+// }
 
-const ACCOUNT1: AccountEto = {
-  id: 1,
-  username: "test1",
-  password: "dsf",
-  email: "test1@test.com",
-  isActivated: false
-}
+// const ACCOUNT1: AccountEto = {
+//   id: 1,
+//   username: "test1",
+//   password: "dsf",
+//   email: "test1@test.com",
+//   isActivated: false
+// }
 
-const ACCOUNT2: AccountEto = {
-  id: 2,
-  username: "test2",
-  password: "dsf",
-  email: "test2@test.com",
-  isActivated: true
-}
+// const ACCOUNT2: AccountEto = {
+//   id: 2,
+//   username: "test2",
+//   password: "dsf",
+//   email: "test2@test.com",
+//   isActivated: true
+// }
 
-const COORDINATOR: UserEto = {
-  id: 1,
-  name: "John",
-  surname: "Smith",
-  account: ACCOUNT1,
-  role: ROLE2
-}
+// const COORDINATOR: UserEto = {
+//   id: 1,
+//   name: "John",
+//   surname: "Smith",
+//   account: ACCOUNT1,
+//   role: ROLE2
+// }
 
-const USER: UserEto = {
-  id: 2,
-  name: "Tom",
-  surname: "Willman",
-  account: ACCOUNT2,
-  role: ROLE1
-}
+// const USER: UserEto = {
+//   id: 2,
+//   name: "Tom",
+//   surname: "Willman",
+//   account: ACCOUNT2,
+//   role: ROLE1
+// }
 
 @Component({
   selector: 'cf-users-overview',
@@ -71,7 +73,7 @@ const USER: UserEto = {
 })
 export class UsersOverviewComponent implements OnInit {
   displayedColumns: string[] = ['name', 'surname', 'username', 'email', 'isActivated', 'role', 'actions'];
-  dataSource = new MatTableDataSource([COORDINATOR, USER]);
+  dataSource = new MatTableDataSource([]);
   isSpinnerDisplayed = false;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -100,9 +102,9 @@ export class UsersOverviewComponent implements OnInit {
     return (data: UserEto, filter: string) => {
 
       return data.name.toLocaleLowerCase().includes(filter) || data.surname.toLocaleLowerCase().includes(filter) || 
-      data.account.username.toLocaleLowerCase().includes(filter) || data.account.email.toLocaleLowerCase().includes(filter) ||
-        this.translate.instant("users." + data.account.isActivated).toLocaleLowerCase().includes(filter) || 
-        data.role.name.toLocaleLowerCase().includes(filter);
+      data.accountEto.username.toLocaleLowerCase().includes(filter) || data.accountEto.email.toLocaleLowerCase().includes(filter) ||
+        this.translate.instant("users." + data.accountEto.isActivated).toLocaleLowerCase().includes(filter) || 
+        data.roleEto.name.toLocaleLowerCase().includes(filter);
     };
   }
 

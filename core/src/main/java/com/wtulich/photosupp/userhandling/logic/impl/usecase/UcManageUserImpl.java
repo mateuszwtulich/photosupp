@@ -100,7 +100,7 @@ public class UcManageUserImpl implements UcManageUser {
         userEntity.setAccount(accountEntity);
 
         UserEntity userSaved = userDao.save(userEntity);
-        ;
+
         sendMailOfAccountCreation(accountEntity, userTo.getAccountTo().getPassword(), request, errors);
 
         return toUserEto(userSaved);
@@ -130,15 +130,25 @@ public class UcManageUserImpl implements UcManageUser {
             verifyAccount(accountTo);
             accountEntity.setEmail(accountTo.getEmail());
             accountEntity.setUsername(extractUsername(accountTo.getEmail()));
+            sendMailWithNewUsername(accountEntity);
         }
 
         if(!accountEntity.getPassword().equals(accountTo.getPassword())){
             accountEntity.setPassword(passwordEncoder.encode(accountTo.getPassword()));
-            sendMailWithNewPassword(accountEntity);
+            sendMailWithNewPassword(accountEntity, accountTo.getPassword());
         }
 
         userEntity.setAccount(accountEntity);
         return Optional.of(accountMapper.toAccountEto(accountEntity));
+    }
+
+    @Override
+    public void updatePassword(AccountTo accountTo) throws EntityDoesNotExistException {
+        AccountEntity accountEntity = accountDao.findByEmail(accountTo.getEmail()).orElseThrow(() ->
+                new EntityDoesNotExistException("Account with id " + accountTo.getEmail() + " does not exist."));
+
+        accountEntity.setPassword(passwordEncoder.encode(accountTo.getPassword()));
+        sendMailWithNewPassword(accountEntity, accountTo.getPassword());
     }
 
     private AccountEntity createAccountEntities(AccountTo accountTo) throws AccountAlreadyExistsException, AddressException {
@@ -205,14 +215,29 @@ public class UcManageUserImpl implements UcManageUser {
         return email.split("@")[0];
     }
 
-    private void sendMailWithNewPassword(AccountEntity account){
+    private void sendMailWithNewPassword(AccountEntity account, String password){
         String recipientAddress = account.getEmail();
         String subject = messages.getMessage("message.passwordTitle", null, Locale.getDefault());
         StringBuilder generatePasswordMessage = new StringBuilder();
         StringBuilder message = new StringBuilder();
         message.append(messages.getMessage("message.passwordSucc", null, Locale.getDefault()));
-        message.append("\n\nPassword: " + account.getPassword() + "\n");
-        message.append(messages.getMessage("message.regReminder", null, Locale.getDefault()));
+        message.append("\n\nPassword: " + password + "\n");
+        message.append("\r\n\n" + messages.getMessage("frontend", null, Locale.getDefault()) + "/login" + generatePasswordMessage.toString());
+
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo(recipientAddress);
+        email.setSubject(subject);
+        email.setText(message.toString());
+        mailSender.send(email);
+    }
+
+    private void sendMailWithNewUsername(AccountEntity account) {
+        String recipientAddress = account.getEmail();
+        String subject = messages.getMessage("message.usernameTitle", null, Locale.getDefault());
+        StringBuilder generatePasswordMessage = new StringBuilder();
+        StringBuilder message = new StringBuilder();
+        message.append(messages.getMessage("message.usernameSucc", null, Locale.getDefault()));
+        message.append("\n\nUsername: " + account.getUsername() + "\n");
         message.append("\r\n\n" + messages.getMessage("frontend", null, Locale.getDefault()) + "/login" + generatePasswordMessage.toString());
 
         SimpleMailMessage email = new SimpleMailMessage();

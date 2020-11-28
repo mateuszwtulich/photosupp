@@ -3,6 +3,7 @@ package com.wtulich.photosupp.general.security.config;
 import com.wtulich.photosupp.general.security.authentication.logic.impl.jwt.filter.JwtUserAuthenticationFilter;
 import com.wtulich.photosupp.general.security.authentication.logic.impl.jwt.verifier.JwtVerifier;
 import com.wtulich.photosupp.general.security.authentication.logic.impl.usecase.UcLoginImpl;
+import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,12 +42,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(new JwtVerifier(), JwtUserAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/user/v1/user").permitAll()
+                .antMatchers("/user/v1/user/account").permitAll()
                 .antMatchers("/user/v1/user/account/registrationConfirm**").permitAll()
                 .antMatchers("/service/v1/service/calculate").permitAll()
                 .antMatchers("/service/v1/services").permitAll()
                 .antMatchers("/service/v1/indicators").permitAll()
-                .antMatchers("/service/v1/address/streets").permitAll()
-                .antMatchers("/service/v1/address/cities").permitAll()
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources",
@@ -56,6 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-resources/configuration/ui",
                         "/swagger-resources/configuration/security",
                         "/swagger-ui.html").permitAll()
+                .antMatchers("/**").hasAnyAuthority(ApplicationPermissions.AUTH_USER.name())
                 .anyRequest()
                 .authenticated();
 

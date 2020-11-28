@@ -98,8 +98,8 @@ const USER: UserEto = {
   id: 1,
   name: "Tom",
   surname: "Willman",
-  account: null,
-  role: null
+  accountEto: null,
+  roleEto: null
 }
 
 const ADDRESS: AddressEto = {

@@ -45,7 +45,7 @@ public interface UserRestService extends RestService {
     })
     @GetMapping(value = "/user/{id}",
             produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
-    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_USERS})
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.AUTH_USER, ApplicationPermissions.A_CRUD_USERS})
     ResponseEntity<UserEto> getUser(@PathVariable(value = "id") Long id);
 
 
@@ -159,6 +159,23 @@ public interface UserRestService extends RestService {
     @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_USERS,
             ApplicationPermissions.AUTH_USER})
     ResponseEntity<AccountEto> updateUserAccount(@PathVariable(value = "id") Long userId, @Validated @RequestBody AccountTo accountTo);
+
+
+    @ApiOperation(value = "Updates account password",
+            tags = {"account"},
+            response = AccountEto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request"),
+            @ApiResponse(code = 401, message = "Unauthorized request"),
+            @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
+            @ApiResponse(code = 404, message = "Entity not found"),
+            @ApiResponse(code = 422, message = "Could not process entity"),
+            @ApiResponse(code = 429, message = "Too many requests"),
+    })
+    @PutMapping(value = "/user/account",
+            consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<?> updateAccountPassword(@Validated @RequestBody AccountTo accountTo);
 
 
     @ApiOperation(value = "Deletes User",

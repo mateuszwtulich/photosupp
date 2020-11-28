@@ -20,6 +20,7 @@ const BASIC_PERM: PermissionEto[] = [{
 }]
 
 const ROLE1: RoleEto = {
+  id: 2,
   name: "User",
   description: "Description of normal user",
   permissions: BASIC_PERM
@@ -37,8 +38,8 @@ const USER: UserEto = {
   id:1,
   name: "Tom",
   surname: "Willman",
-  account: ACCOUNT2,
-  role: ROLE1
+  accountEto: ACCOUNT2,
+  roleEto: ROLE1
 }
 
 const SERVICE: ServiceEto = {

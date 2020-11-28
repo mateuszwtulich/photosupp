@@ -39,6 +39,17 @@
         padding-top: 0 !important;
         background-color: #e9f0f3;
 
+        .spinner-wrapper {
+          position: absolute !important;
+          z-index: 3;
+          width: 100% !important;
+          height: 100% !important;
+          background-color: rgba(0, 0, 0, 0.1);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+
         .field{
             display: flex;
             flex-direction: row;
@@ -71,6 +82,10 @@
             ::ng-deep.mat-form-field-outline-gap,
             ::ng-deep.mat-form-field-outline-end{
                 background-color: white;
+            }
+
+            #password-form{
+              width: 100% !important;
             }
         }
     

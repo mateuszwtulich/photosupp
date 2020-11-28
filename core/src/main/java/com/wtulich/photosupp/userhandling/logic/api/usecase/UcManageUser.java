@@ -21,4 +21,6 @@ UcManageUser {
     Optional<UserEto> updateUser(UserTo userTo, Long userId) throws EntityDoesNotExistException;
 
     Optional<AccountEto> updateUserAccount(AccountTo accountTo, Long userId) throws AccountAlreadyExistsException, AddressException, EntityDoesNotExistException;
+
+    void updatePassword(AccountTo accountTo) throws EntityDoesNotExistException;
 }

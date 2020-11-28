@@ -34,7 +34,16 @@ export class HomeComponent implements OnInit {
     private userService: UsersService,
     private snackbar: MatSnackBar
   ) {
+  }
 
+  ngOnInit(): void {
+    this.createsForms();
+    this.subscritpion.add(this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.changeHintLabel();
+    }));
+  }
+
+  private createsForms() {
     this.hide = true;
     this.nameFormControl = new FormControl('', Validators.required);
     this.surnameFormControl = new FormControl('', Validators.required);
@@ -46,12 +55,6 @@ export class HomeComponent implements OnInit {
     }, { validator: this.checkPasswords })
 
     this.matcher = new MyErrorStateMatcher();
-  }
-
-  ngOnInit(): void {
-    this.subscritpion.add(this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.changeHintLabel();
-    }));
   }
 
   ngAfterViewInit(): void {

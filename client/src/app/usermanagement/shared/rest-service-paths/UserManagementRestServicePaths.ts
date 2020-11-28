@@ -18,8 +18,12 @@ export class UserManagementRestServicePaths{
         return BackendApiServicePath.BACKEND_API() + 'user/v1/users/role/';
     }
 
+    public static ACCOUNT_PATH_WITH_ID(userId: number) {
+        return BackendApiServicePath.BACKEND_API() + 'user/v1/user/' + userId + '/account';
+    }
+
     public static ACCOUNT_PATH() {
-        return BackendApiServicePath.BACKEND_API() + 'user/v1/user/{id}/account';
+        return BackendApiServicePath.BACKEND_API() + 'user/v1/user/account';
     }
 
     public static ROLE_PATH() {

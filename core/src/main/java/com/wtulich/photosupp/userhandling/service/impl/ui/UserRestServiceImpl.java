@@ -132,6 +132,16 @@ public class UserRestServiceImpl implements UserRestService {
     }
 
     @Override
+    public ResponseEntity<?> updateAccountPassword(AccountTo accountTo) {
+        try {
+            userHandling.updatePassword(accountTo);
+            return ResponseEntity.ok().build();
+        } catch (EntityDoesNotExistException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @Override
     public ResponseEntity<?> deleteUser(Long id) {
         try {
             userHandling.deleteUserAndAllRelatedEntities(id);

@@ -8,7 +8,8 @@
     "username": "Nazwa użytkownika",
     "title": "Logowanie",
     "button": "Zaloguj się",
-    "password-message": "Jeśli zapomniałeś hasła, wyślij przypomnienie na adres e-mail."
+    "password-message": "Jeśli zapomniałeś hasła, możesz je zmienić znając adres e-mail.",
+    "error": "Podane hasło lub nazwa są błędne."
   },
   "pricing": {
     "title": "Oblicz cenę swojej usługi już teraz!",
@@ -51,7 +52,11 @@
     "button": "Zarejestruj się",
     "login-message": "Jeśli posiadasz już konto, zaloguj się.",
     "email-null": "Musisz podać adres e-mail",
-    "email-invalid": "To nie jest poprawny adres e-mail"
+    "email-invalid": "To nie jest poprawny adres e-mail",
+    "enter-password": "Musisz podać hasło",
+    "password-not-match": "Hasła nie są takie same",
+    "email-not-match": "Adresy e-mail nie są takie same",
+    "check-mailbox": "Sprawdź skrzynkę pocztową, aby zweryfikować konto."
   },
   "sidenav": {
     "login": "Zaloguj się",
@@ -68,8 +73,8 @@
     "supervised_user_circle": "Użytkownicy"
   },
   "password": {
-    "title": "Przypomnij hasło",
-    "button": "Wyślij przypomnienie"
+    "title": "Zmień hasło",
+    "button": "Zmień hasło"
   },
   "client": {
     "booking": "Dzięki tej funkcjonalności oszacujesz koszt interesującej Cię usługi oraz umówisz się na realizację w dogodnym dla Ciebie terminie.",
@@ -179,7 +184,9 @@
     "email-2nd": "Powtórz nowy adres e-mail",
     "password-button": "Zmień hasło",
     "email-button": "Zmień adres e-mail",
-    "modify": "Zmień dane osobowe"
+    "modify": "Zmień dane osobowe",
+    "modified": "Twoje dane zostały zmienione.",
+    "check-mailbox": "Sprawdź skrzynkę pocztową. Dane konta zostały zmienione."
   },
   "roles": {
     "plural": "Role",
@@ -212,5 +219,8 @@
   "dialog": {
     "modify": "Zaktualizuj",
     "add": "Utwórz"
+  },
+  "server": {
+    "error": "Błąd serwera. Proszę spróbuj ponownie."
   }
 }

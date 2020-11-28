@@ -5,6 +5,7 @@ import { ServiceHandlingRestServicePaths } from '../rest-service-paths/ServiceHa
 import { ServiceEto } from '../to/ServiceEto';
 import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 
 //   fuelIndicatorPL = {
 //     id: 3,
@@ -124,20 +125,19 @@ export class ServiceService {
 
   constructor(
     private http: HttpClient,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private translate: TranslateService
     ) { }
 
   public getAllServices() {
     return new Promise((resolve, reject) => {
     this.subscription.add(this.http.get<ServiceEto[]>(`${ServiceHandlingRestServicePaths.FIND_ALL_SERVICES()}`).subscribe(
       (services: ServiceEto[]) => {
-        console.log(services)
-        this.snackbar
         this.servicesDataSource.next(services);
         resolve(services);
       },
       (e) => {
-        this.snackbar
+        this.snackbar.open(this.translate.instant('server.error'))
         reject();
       }))
     })

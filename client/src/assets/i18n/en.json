@@ -8,7 +8,7 @@
     "username": "Username",
     "title": "Signing in",
     "button": "Sign in",
-    "password-message": "If you forget the password, we will send reminder on your e-mail."
+    "password-message": "If you forget the password, you can change it. New password will be send on your e-mail."
   },
   "pricing": {
     "title": "Estimate your service now!",
@@ -68,8 +68,8 @@
     "supervised_user_circle": "Users"
   },
   "password": {
-    "title": "Remind the password",
-    "button": "Send the reminder"
+    "title": "Change the password",
+    "button": "Change the pasword"
   },
   "client": {
     "booking": "Thanks to this functionality you can estimate cost of service that you are interested in and make an appointment in suitable time.",

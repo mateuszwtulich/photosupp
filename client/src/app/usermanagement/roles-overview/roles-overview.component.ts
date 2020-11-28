@@ -19,12 +19,14 @@ const SUPER_PERM: PermissionEto[] = [{
 }]
 
 const ROLE1: RoleEto = {
+  id: 2,
   name: "User",
   description: "Description of normal user",
   permissions: BASIC_PERM
 }
 
 const ROLE2: RoleEto = {
+  id: 2,
   name: "Manager",
   description: "Description of manager user",
   permissions: SUPER_PERM

@@ -130,6 +130,11 @@ public class UserHandlingImpl implements UserHandling {
     }
 
     @Override
+    public void updatePassword(AccountTo accountTo) throws EntityDoesNotExistException {
+        ucManageUser.updatePassword(accountTo);
+    }
+
+    @Override
     public Optional<RedirectView> confirmRegistration(String token) throws EntityDoesNotExistException {
         return ucManageRegistration.confirmRegistration(token);
     }
