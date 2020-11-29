@@ -1,16 +1,11 @@
 <div id="container">
-    <div id="header">
+    <div id="header"  *ngxPermissionsOnly="['AUTH_USER']">
         <mat-chip-list aria-label="Language selection" id="fast-filters">
             <mat-chip color="accent" selected (click)="filterEvents('ALL')">{{ 'table.all' | translate}}</mat-chip>
-            <mat-chip color="accent" selected (click)="filterEvents('orders')">{{ 'orders.plural' | translate}}</mat-chip>
-            <mat-chip color="primary" selected (click)="filterEvents('bookings')">{{ 'bookings.plural' | translate}}</mat-chip>
+            <mat-chip color="accent" selected (click)="filterEvents('MINE')">{{ 'bookings.mine' | translate}}</mat-chip>
           </mat-chip-list>
   </div>
     <div id="full-calendar-wrapper">
-        <!-- <full-calendar defaultView="dayGridMonth" [events]="calendarEvents" [plugins]="calendarPlugins"
-        [eventTextColor]="textColor" [aspectRatio]="2" [firstDay]="1">
-    </full-calendar> -->
         <full-calendar [options]="calendarOptions"></full-calendar>
-
     </div>
 </div>

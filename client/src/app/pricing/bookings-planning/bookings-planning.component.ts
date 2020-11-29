@@ -273,7 +273,7 @@ export class BookingsPlanningComponent implements OnInit {
       id: null,
       name: this.addressFormGroup.controls['nameCtrl'].value,
       description: this.addressFormGroup.controls['descriptionCtrl'].value,
-      address: {
+      addressEto: {
         id: 1,
         city: this.addressFormGroup.controls['cityCtrl'].value,
         street: this.addressFormGroup.controls['nameCtrl'].value,
@@ -281,8 +281,8 @@ export class BookingsPlanningComponent implements OnInit {
         apartmentNumber: this.addressFormGroup.controls['apartmentNumberCtrl'].value,
         postalCode: this.addressFormGroup.controls['postalCodeCtrl'].value
       },
-      service: this.firstFormGroup.controls['firstCtrl'].value,
-      user: USER,
+      serviceEto: this.firstFormGroup.controls['firstCtrl'].value,
+      userEto: USER,
       isConfirmed: false,
       predictedPrice: this.calculateThePredictedCost(),
       start: this.dateFormGroup.controls['dateCtrl'].value.start,

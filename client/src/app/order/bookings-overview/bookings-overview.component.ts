@@ -4,10 +4,14 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { NgxPermissionsService } from 'ngx-permissions';
+import { Subscription } from 'rxjs';
 import { IndicatorEto } from 'src/app/servicehandling/to/IndicatorEto';
 import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
+import { ApplicationPermission } from 'src/app/shared/utils/ApplicationPermission';
 import { SortUtil } from 'src/app/shared/utils/SortUtil';
 import { UserEto } from 'src/app/usermanagement/shared/to/UserEto';
+import { BookingService } from '../shared/services/booking.service';
 import { AddressEto } from '../shared/to/AddressEto';
 import { BookingEto } from '../shared/to/BookingEto';
 
@@ -112,10 +116,10 @@ const ADDRESS: AddressEto = {
 }
 
 const BOOKINGS: BookingEto[] = [
-  {id: 1, name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
-  {id: 2, name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
-  {id: 3, name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}, 
-  {id: 4, name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}
+  {id: 1, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
+  {id: 2, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
+  {id: 3, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}, 
+  {id: 4, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}
 ];
 
 @Component({
@@ -125,19 +129,66 @@ const BOOKINGS: BookingEto[] = [
 })
 
 export class BookingsOverviewComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'service', 'address', 'user', 'isConfirmed', 'predictedPrice', 'start', 'end', 'actions'];
-  dataSource = new MatTableDataSource(BOOKINGS);
-  isSpinnerDisplayed = false;
+  public displayedColumns: string[] = ['name', 'service', 'address', 'user', 'isConfirmed', 'predictedPrice', 'start', 'end', 'actions'];
+  public dataSource: MatTableDataSource<BookingEto>;
+  public isSpinnerDisplayed = false;
+  private subscription = new Subscription; 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private translate: TranslateService, private router: Router) {
+  constructor(
+    private translate: TranslateService,
+    private router: Router,
+    private permissionsService: NgxPermissionsService,
+    private bookingService: BookingService
+    ) {
    }
 
    ngOnInit(): void {
+    this.loadsBooking();
   }
 
-  ngAfterViewInit() {
+  private loadsBooking(){
+    this.permissionsService.hasPermission(ApplicationPermission.A_CRUD_SUPER).then((result) => {
+      if (result) {
+        this.loadsAllBookings();
+      } else {
+        this.permissionsService.hasPermission(ApplicationPermission.A_CRUD_ORDERS).then((result) => {
+          if (result) {
+            this.loadsAllBookings();
+          } else {
+            this.permissionsService.hasPermission(ApplicationPermission.AUTH_USER).then((result) => {
+              if (result) {
+                this.loadsUserBookings();
+              }
+            })
+          }
+        })
+      }
+    })  
+  }
+
+  private loadsUserBookings(){
+    this.bookingService.getAllBookingsOfUser();
+
+    this.subscription.add(this.bookingService.userBookingsData.subscribe(
+      (bookings) => {
+        this.dataSource = new MatTableDataSource(bookings);
+        this.setDataSourceSettings();
+    }))
+  }
+
+  private loadsAllBookings(){
+    this.bookingService.getAllBookings();
+
+    this.subscription.add(this.bookingService.bookingsData.subscribe(
+      (bookings) => {
+        this.dataSource = new MatTableDataSource(bookings);
+        this.setDataSourceSettings();
+    }))
+  }
+
+  private setDataSourceSettings() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.dataSource.filterPredicate = this.prepareFilterPredicate();
@@ -154,12 +205,12 @@ export class BookingsOverviewComponent implements OnInit {
 
   private prepareFilterPredicate(): (data: BookingEto, filter: string) => boolean {
     return (data: BookingEto, filter: string) => {
-      return data.user.name.toLocaleLowerCase().includes(filter) || data.user.surname.toLocaleLowerCase().includes(filter) ||
+      return data.userEto.name.toLocaleLowerCase().includes(filter) || data.userEto.surname.toLocaleLowerCase().includes(filter) ||
         (data.isConfirmed ? this.translate.instant("bookings.confirmed").toLocaleLowerCase().includes(filter) : 
         this.translate.instant("bookings.confirmed").toLocaleLowerCase().includes(filter)) || data.start.includes(filter) || 
-        data.end.includes(filter) || data.predictedPrice.toFixed().includes(filter) || data.service.name.toLocaleLowerCase().includes(filter) || 
-        data.address.city.toLocaleLowerCase().includes(filter) || data.address.street.toLocaleLowerCase().includes(filter) || 
-        data.address.buildingNumber.toLocaleLowerCase().includes(filter) || data.name.toLocaleLowerCase().includes(filter);
+        data.end.includes(filter) || data.predictedPrice.toFixed().includes(filter) || data.serviceEto.name.toLocaleLowerCase().includes(filter) || 
+        data.addressEto.city.toLocaleLowerCase().includes(filter) || data.addressEto.street.toLocaleLowerCase().includes(filter) || 
+        data.addressEto.buildingNumber.toLocaleLowerCase().includes(filter) || data.name.toLocaleLowerCase().includes(filter);
     };
   }
 
@@ -182,11 +233,11 @@ export class BookingsOverviewComponent implements OnInit {
         case "name":
           return SortUtil.compare(a.name, b.name, isAsc);
         case "coordinator":
-          return SortUtil.compare(a.service.name, b.service.name, isAsc);
+          return SortUtil.compare(a.serviceEto.name, b.serviceEto.name, isAsc);
         case "user":
-          return SortUtil.compare(a.user.surname, b.user.surname, isAsc);
+          return SortUtil.compare(a.userEto.surname, b.userEto.surname, isAsc);
         case "address":
-          return SortUtil.compare(a.address.city, b.address.city, isAsc);
+          return SortUtil.compare(a.addressEto.city, b.addressEto.city, isAsc);
         case "isConfirmed":
           return SortUtil.compare(
             this.translate.instant("bookings." + a.isConfirmed), 

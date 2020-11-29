@@ -7,9 +7,9 @@ export class BookingEto{
     id: number;
     name: string;
     description: string;
-    service: ServiceEto;
-    address: AddressEto;
-    user: UserEto;
+    serviceEto: ServiceEto;
+    addressEto: AddressEto;
+    userEto: UserEto;
     isConfirmed: boolean;
     predictedPrice: number;
     start: string;

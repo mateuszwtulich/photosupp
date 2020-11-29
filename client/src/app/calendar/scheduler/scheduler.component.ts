@@ -7,18 +7,10 @@ import { Router } from '@angular/router';
 import { SchedulerService } from '../services/scheduler.service';
 import { BookingEto } from 'src/app/order/shared/to/BookingEto';
 import { DatePipe } from '@angular/common';
-
-const EVENTS = [
-  {
-    id: 1,
-    type: "Order",
-    title: "zamówienie",
-    start: "22-11-2020",
-    end: "22-11-2020",
-    color: "white",
-    textColor: "black"
-  }
-]
+import { NgxPermissionsService } from 'ngx-permissions';
+import { BookingService } from 'src/app/order/shared/services/booking.service';
+import { LocalStorageService } from 'src/app/shared/cache/localStorage.service';
+import { ApplicationPermission } from 'src/app/shared/utils/ApplicationPermission';
 
 @Component({
   selector: 'cf-scheduler',
@@ -26,51 +18,14 @@ const EVENTS = [
   styleUrls: ['./scheduler.component.scss']
 })
 export class SchedulerComponent implements OnInit {
-  isSpinnerDisplayed = false;
-  calendarEvents: CalendarEvent[];
-  textColor: string;
-  subscritpion: Subscription = new Subscription();
+  public isSpinnerDisplayed = false;
+  public calendarEvents: CalendarEvent[];
+  public textColor: string;
+  private subscritpion: Subscription = new Subscription();
+  private bookings: BookingEto[];
+  private myBookings: BookingEto[];
 
-  calendarOptions: CalendarOptions = {
-    eventClick: this.eventClicked.bind(this),
-    initialView: 'dayGridMonth',
-    selectable: true,
-    select: this.selectedFields.bind(this),
-    unselectAuto: false,
-    weekends: true,
-    locale: "pl",
-    firstDay: 1,
-    aspectRatio: 1.75,
-    eventTextColor: 'black',
-    events: [
-      {
-        id: 'INVIU00001',
-        type: 'ORDER',
-        title: 'zamówienie',
-        start: '2020-11-20',
-        end: '2020-11-22',
-        textColor: 'white',
-        color: '#86a3b7',
-      },
-      {
-        id: '2',
-        type: 'BOOKING',
-        title: 'rezerwacja',
-        start: '2020-11-27',
-        end: '2020-11-27',
-        textColor: 'black',
-        color: '#e9f0f3',
-      },
-      {
-        daysOfWeek: [0], //Sundays and saturdays
-        rendering: "background",
-        color: "#ff9f89",
-        display: 'background',
-        overLap: false,
-        allDay: true
-      }
-    ]
-  };
+  public calendarOptions: CalendarOptions;
 
   @ViewChild('calendar') calendarComponent: FullCalendarComponent;
   constructor(
@@ -78,19 +33,59 @@ export class SchedulerComponent implements OnInit {
     private router: Router,
     private schedulerService: SchedulerService,
     private datePipe: DatePipe,
+    private permissionService: NgxPermissionsService,
+    private bookingService: BookingService,
+    private localStorage: LocalStorageService,
   ) { }
 
   ngOnInit(): void {
-    this.calendarEvents = EVENTS;
     this.subscritpion.add(this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this.calendarOptions.locale = event.lang;
     }));
 
+    this.createsCalendarOptions();
+    this.loadsBookings();
     this.checkIfPlanning();
   }
 
-  filterEvents(type: string) {
+  private createsCalendarOptions() {
+    this.calendarOptions = {
+      eventClick: this.eventClicked.bind(this),
+      initialView: 'dayGridMonth',
+      selectable: true,
+      select: this.selectedFields.bind(this),
+      unselectAuto: false,
+      weekends: true,
+      locale: "pl",
+      firstDay: 1,
+      aspectRatio: 1.75,
+      eventTextColor: 'black'
+    };
+  }
 
+  private loadsBookings() {
+    this.bookingService.getAllBookings();
+
+    this.subscritpion.add(this.bookingService.bookingsData.subscribe((bookings) => {
+      this.bookings = bookings;
+      this.myBookings = bookings.filter(booking => booking.userEto.id == this.localStorage.getUserId())
+
+      this.loadCalendarEvents(bookings);
+    }));
+  }
+
+  filterEvents(type: string) {
+    if(type == "ALL"){
+      this.loadCalendarEvents(this.bookings);
+    } else if(type == "MINE"){
+      this.loadCalendarEvents(this.myBookings);
+    }
+  }
+
+  private loadCalendarEvents(bookings: BookingEto[]) {
+    this.calendarEvents = bookings.map(booking => new CalendarEvent(booking));
+
+    this.calendarOptions.events = this.calendarEvents;
   }
 
   private checkIfPlanning() {
@@ -116,19 +111,33 @@ export class SchedulerComponent implements OnInit {
   }
 
   eventClicked(arg) {
-    if (this.router.url.startsWith("/client")) {
-      this.navigateToDetailsByRole("/client", arg);
-    } else if (this.router.url.startsWith("/manager"))  {
-      this.navigateToDetailsByRole("/manager", arg);
-    }
+    let isMine = this.myBookings.find(booking => booking.userEto.id == arg.event._def.extendedProps.groupId) ? true : false;
+
+    this.permissionService.hasPermission(ApplicationPermission.A_CRUD_SUPER).then((result) => {
+      if (result) {
+        this.navigateToDetailsByRole("/manager", arg);
+      } else {
+        this.permissionService.hasPermission(ApplicationPermission.A_CRUD_BOOKINGS).then((result) => {
+          if (result) {
+            this.navigateToDetailsByRole("/manager", arg);
+          } else {
+            this.permissionService.hasPermission(ApplicationPermission.AUTH_USER).then((result) => {
+              if (result && isMine) {
+                this.navigateToDetailsByRole("/client", arg);
+              }
+            })
+          }
+        })
+      }
+    })
   }
 
   navigateToDetailsByRole(url: string, arg) {
     console.log(arg.event._def)
-    if (arg.event._def.extendedProps.type == "ORDER") {
-      this.router.navigateByUrl(url + "/orders/details/" + arg.event.id);
-    } else if (arg.event._def.extendedProps.type == "BOOKING") {
-      this.router.navigateByUrl(url + "/orders/booking/details/" + arg.event.id);
-    }
+    this.router.navigateByUrl(url + "/orders/booking/details/" + arg.event.id);
+  }
+
+  ngOnDestroy(){
+    this.subscritpion.unsubscribe();
   }
 }

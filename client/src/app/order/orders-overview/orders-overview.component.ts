@@ -6,12 +6,17 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { NgxPermissionsService } from 'ngx-permissions';
+import { combineLatest, Subscription } from 'rxjs';
+import { combineAll } from 'rxjs/operators';
 import { IndicatorEto } from 'src/app/servicehandling/to/IndicatorEto';
 import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
+import { ApplicationPermission } from 'src/app/shared/utils/ApplicationPermission';
 import { SortUtil } from 'src/app/shared/utils/SortUtil';
 import { UserEto } from 'src/app/usermanagement/shared/to/UserEto';
 import { OrderStatus } from '../shared/enum/OrderStatus';
+import { BookingService } from '../shared/services/booking.service';
+import { OrderService } from '../shared/services/order.service';
 import { AddressEto } from '../shared/to/AddressEto';
 import { BookingEto } from '../shared/to/BookingEto';
 import { OrderEto } from '../shared/to/OrderEto';
@@ -160,10 +165,10 @@ const ADDRESS: AddressEto = {
 
 
 const BOOKINGS: BookingEto[] = [
-  {id: 1, name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
-  {id: 2, name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
-  {id: 3, name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}, 
-  {id: 4, name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}
+  {id: 1, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
+  {id: 2, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
+  {id: 3, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}, 
+  {id: 4, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}
 ];
 
 const ORDERS: OrderEto[] = [
@@ -182,18 +187,66 @@ const ORDERS: OrderEto[] = [
 })
 
 export class OrdersOverviewComponent implements OnInit {
-  displayedColumns: string[] = ['orderNumber', 'coordinator', 'user', 'status', 'booking', 'price', 'createdAt', 'actions'];
-  dataSource = new MatTableDataSource(ORDERS);
-  isSpinnerDisplayed = false;
+  public displayedColumns: string[] = ['orderNumber', 'coordinator', 'user', 'status', 'booking', 'price', 'createdAt', 'actions'];
+  public dataSource: MatTableDataSource<OrderEto>;
+  public isSpinnerDisplayed = false;
+  private subscription = new Subscription();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private translate: TranslateService, private router: Router, public dialog: MatDialog) { }
+  constructor(
+    private translate: TranslateService, 
+    private router: Router, 
+    public dialog: MatDialog,
+    private orderService: OrderService,
+    private permissionsService: NgxPermissionsService
+    ) { }
 
   ngOnInit(): void {
+    this.loadsOrders();
   }
 
-  ngAfterViewInit() {
+  private loadsOrders(){
+    this.permissionsService.hasPermission(ApplicationPermission.A_CRUD_SUPER).then((result) => {
+      if (result) {
+        this.loadsAllOrders();
+      } else {
+        this.permissionsService.hasPermission(ApplicationPermission.A_CRUD_ORDERS).then((result) => {
+          if (result) {
+            this.loadsAllOrders();
+          } else {
+            this.permissionsService.hasPermission(ApplicationPermission.AUTH_USER).then((result) => {
+              if (result) {
+                this.loadsUserOrders();
+              }
+            })
+          }
+        })
+      }
+    })  
+  }
+
+  private loadsUserOrders(){
+    this.orderService.getOrdersOfUser();
+
+    this.subscription.add(this.orderService.userOrdersData.subscribe(
+      (orders) => {
+        this.dataSource = new MatTableDataSource(orders);
+        this.setDataSourceSettings();
+    }))
+  }
+
+  private loadsAllOrders(){
+    this.orderService.getAllOrders();
+
+    this.subscription.add(this.orderService.ordersData.subscribe(
+      (orders) => {
+        this.dataSource = new MatTableDataSource(orders);
+        this.setDataSourceSettings();
+    }))
+  }
+
+  private setDataSourceSettings() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.dataSource.filterPredicate = this.prepareFilterPredicate();
@@ -277,6 +330,10 @@ export class OrdersOverviewComponent implements OnInit {
         console.log(order);
       }
     })
+  }
+
+  ngOnDestroy(){
+    this.subscription.unsubscribe();
   }
 }
 

@@ -10,12 +10,16 @@ export class UserManagementRestServicePaths{
         return BackendApiServicePath.BACKEND_API() + 'user/v1/user';
     }
 
+    public static USER_PATH_WITH_ID(userId: number) {
+        return BackendApiServicePath.BACKEND_API() + 'user/v1/user/' + userId;
+    }
+
     public static FIND_ALL_ACCOUNTS() {
         return BackendApiServicePath.BACKEND_API() + 'user/v1/users/accounts';
     }
 
-    public static FIND_ALL_USERS_BY_ROLE() {
-        return BackendApiServicePath.BACKEND_API() + 'user/v1/users/role/';
+    public static FIND_ALL_USERS_BY_ROLE(roleId: number) {
+        return BackendApiServicePath.BACKEND_API() + 'user/v1/users/role/' + roleId;
     }
 
     public static ACCOUNT_PATH_WITH_ID(userId: number) {
@@ -28,6 +32,10 @@ export class UserManagementRestServicePaths{
 
     public static ROLE_PATH() {
         return BackendApiServicePath.BACKEND_API() + 'user/v1/role';
+    }
+
+    public static ROLE_PATH_WTH_ID(roleId: number) {
+        return BackendApiServicePath.BACKEND_API() + 'user/v1/role/' + roleId;
     }
 
     public static FIND_ALL_ROLES_PATH() {

@@ -150,7 +150,8 @@
     "indicator-price": "Cena dodatkowa",
     "start-booking": "Przyjmij zlecenie",
     "information": "Podaj informacje",
-    "save": "Utwórz rezerwacje"
+    "save": "Utwórz rezerwacje",
+    "mine": "Moje"
   },
   "services": {
       "plural": "Usługi",

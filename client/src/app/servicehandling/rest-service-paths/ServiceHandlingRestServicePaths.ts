@@ -2,46 +2,6 @@ import { BackendApiServicePath } from 'src/app/pricing/rest-service-paths/Backen
 
 export class ServiceHandlingRestServicePaths{
 
-    public static FIND_ALL_SERVICES() {
-        return BackendApiServicePath.BACKEND_API() + 'service/v1/services';
-    }
-
-    public static SERVICE_PATH() {
-        return BackendApiServicePath.BACKEND_API() + 'service/v1/service';
-    }
-
-    public static SERVICE_PATH_BY_ID(serviceId: string) {
-        return BackendApiServicePath.BACKEND_API() + 'service/v1/service/' + serviceId;
-    }
-
-    public static FIND_ALL_INDICATORS() {
-        return BackendApiServicePath.BACKEND_API() + 'service/v1/indicators';
-    }
-
-    public static INDICATOR_PATH() {
-        return BackendApiServicePath.BACKEND_API() + 'service/v1/indicator';
-    }
-
-    public static INDICATOR_PATH_BY_ID(indicatorId: string) {
-        return BackendApiServicePath.BACKEND_API() + 'service/v1/indicator/' + indicatorId;
-    }
-
-    public static FIND_ALL_BOOKINGS() {
-        return BackendApiServicePath.BACKEND_API() + 'service/v1/bookings';
-    }
-
-    public static BOOKING_PATH() {
-        return BackendApiServicePath.BACKEND_API() + 'service/v1/booking';
-    }
-
-    public static BOOKING_PATH_BY_ID(bookingId: string) {
-        return BackendApiServicePath.BACKEND_API() + 'service/v1/booking/' + bookingId;
-    }
-
-    public static FIND_ALL_BOOKINGS_BY_USER_ID(userId: string) {
-        return BackendApiServicePath.BACKEND_API() + 'service/v1/bookings/' + userId;
-    }
-
     public static FIND_ALL_CITIES() {
         return BackendApiServicePath.BACKEND_API() + 'service/v1/address/cities';
     }
@@ -50,15 +10,47 @@ export class ServiceHandlingRestServicePaths{
         return BackendApiServicePath.BACKEND_API() + 'service/v1/address/streets';
     }
 
-    public static ROLE_PATH() {
-        return BackendApiServicePath.BACKEND_API() + 'user/v1/role';
+    public static FIND_ALL_BOOKINGS() {
+        return BackendApiServicePath.BACKEND_API() + 'service/v1/bookings';
     }
 
-    public static FIND_ALL_ROLES_PATH() {
-        return BackendApiServicePath.BACKEND_API() + 'user/v1/roles';
+    public static FIND_ALL_BOOKINGS_BY_USER(userId: number) {
+        return BackendApiServicePath.BACKEND_API() + 'service/v1/bookings/' + userId;
     }
 
-    public static CONFIRM_BOOKING_PATH(bookingId: string) {
-        return BackendApiServicePath.BACKEND_API() + 'service/v1/booking/' + bookingId + "/confirm";
+    public static FIND_ALL_INDICATORS() {
+        return BackendApiServicePath.BACKEND_API() + 'service/v1/indicators';
+    }
+
+    public static FIND_ALL_SERVICES() {
+        return BackendApiServicePath.BACKEND_API() + 'service/v1/services';
+    }
+
+    public static BOOKING_PATH_WITH_ID(id: number) {
+        return BackendApiServicePath.BACKEND_API() + 'service/v1/booking/' + id;
+    }
+
+    public static BOOKING_PATH() {
+        return BackendApiServicePath.BACKEND_API() + 'service/v1/booking';
+    }
+
+    public static INFICATOR_PATH_WITH_ID(id: number) {
+        return BackendApiServicePath.BACKEND_API() + 'service/v1/indicator/' + id;
+    }
+
+    public static INDICATOR_PATH() {
+        return BackendApiServicePath.BACKEND_API() + 'service/v1/indicator';
+    }
+
+    public static SERVICE_PATH_WITH_ID(id: number) {
+        return BackendApiServicePath.BACKEND_API() + 'service/v1/service/' + id;
+    }
+
+    public static SERVICE_PATH() {
+        return BackendApiServicePath.BACKEND_API() + 'service/v1/service';
+    }
+
+    public static BOOKING_CONFIRM_PATH(id: number) {
+        return BackendApiServicePath.BACKEND_API() + 'service/v1/booking/' + id + '/confirm';
     }
 }

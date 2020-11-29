@@ -52,10 +52,16 @@ import { LocalStorageService } from 'src/app/shared/cache/localStorage.service';
           resolve();
         },
           (error) => {
-            this.snackbar.open(this.translate.instant('login.error'));
-            this.spinnerDataSource.next(false);
+            console.log(error.status)
+            if (error.status == 403) {
+              this.snackbar.open(this.translate.instant('login.error'));
+              this.spinnerDataSource.next(false);
+            }
+            if(error.status != 403)
+              this.snackbar.open(this.translate.instant('server.error'));
+              this.spinnerDataSource.next(false);
 
-            reject(error);
+              reject(error);
           });
       });
     }
