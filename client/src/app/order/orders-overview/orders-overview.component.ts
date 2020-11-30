@@ -164,12 +164,12 @@ const ADDRESS: AddressEto = {
 }
 
 
-const BOOKINGS: BookingEto[] = [
-  {id: 1, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
-  {id: 2, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
-  {id: 3, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}, 
-  {id: 4, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}
-];
+// const BOOKINGS: BookingEto[] = [
+//   {id: 1, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorEtoList: null},
+//   {id: 2, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
+//   {id: 3, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}, 
+//   {id: 4, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}
+// ];
 
 const ORDERS: OrderEto[] = [
   { orderNumber: "INVIU0001", coordinator: COORDINATOR, user: USER, status: OrderStatus.NEW, booking: null, price: 1000, createdAt: "22-11-2020" },
@@ -203,6 +203,7 @@ export class OrdersOverviewComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    this.onSpinnerDisplayed();
     this.loadsOrders();
   }
 
@@ -244,6 +245,12 @@ export class OrdersOverviewComponent implements OnInit {
         this.dataSource = new MatTableDataSource(orders);
         this.setDataSourceSettings();
     }))
+  }
+
+  private onSpinnerDisplayed(){
+    this.subscription.add(this.orderService.spinnerData.subscribe((isSpinnerDisplayed: boolean) => {
+      this.isSpinnerDisplayed = isSpinnerDisplayed;
+    }));
   }
 
   private setDataSourceSettings() {
@@ -320,7 +327,7 @@ export class OrdersOverviewComponent implements OnInit {
   }
 
   addOrder(){
-    const dialogRef = this.dialog.open(OrderAddDialog, { data: [ORDERS, [USER], [COORDINATOR], BOOKINGS], height: '48%', width: '40%' });
+    const dialogRef = this.dialog.open(OrderAddDialog, { data: [ORDERS, [USER], [COORDINATOR], null], height: '48%', width: '40%' });
     dialogRef.afterClosed().subscribe((order: OrderEto) => {
       if(!!order){
         order.orderNumber = "INVIU00004";

@@ -71,7 +71,7 @@
                   </mat-chip>
                 </mat-chip-list>
               </div>
-              <div class="field" *ngIf="booking.isConfirmed;else defaultValue">
+              <div class="field" *ngIf="booking.confirmed;else defaultValue">
                 {{'bookings.confirmed' | translate}}
               </div>
               <ng-template #defaultValue>{{'bookings.unconfirmed' | translate}}</ng-template>

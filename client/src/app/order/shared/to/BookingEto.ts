@@ -10,10 +10,10 @@ export class BookingEto{
     serviceEto: ServiceEto;
     addressEto: AddressEto;
     userEto: UserEto;
-    isConfirmed: boolean;
+    confirmed: boolean;
     predictedPrice: number;
     start: string;
     end: string;
     modificationDate: string;
-    priceIndicatorList: PriceIndicatorEto[];
+    priceIndicatorEtoList: PriceIndicatorEto[];
 }

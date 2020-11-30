@@ -6,6 +6,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { ServiceHandlingRestServicePaths } from 'src/app/servicehandling/rest-service-paths/ServiceHandlingRestServicePaths';
 import { LocalStorageService } from 'src/app/shared/cache/localStorage.service';
 import { BookingEto } from '../to/BookingEto';
+import { BookingTo } from '../to/BookingTo';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,9 @@ export class BookingService {
   private bookingsDataSource: BehaviorSubject<BookingEto[]> = new BehaviorSubject([]);
   public bookingsData = this.bookingsDataSource.asObservable();
   private userBookingsDataSource: BehaviorSubject<BookingEto[]> = new BehaviorSubject([]);
-  public userBookingsData = this.bookingsDataSource.asObservable();
+  public userBookingsData = this.userBookingsDataSource.asObservable();
+  private spinnerDataSource: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public spinnerData = this.spinnerDataSource.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -26,13 +29,16 @@ export class BookingService {
 
   public getAllBookings() {
     return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
     this.subscription.add(this.http.get<BookingEto[]>(`${ServiceHandlingRestServicePaths.FIND_ALL_BOOKINGS()}`).subscribe(
       (bookings: BookingEto[]) => {
         this.bookingsDataSource.next(bookings);
+        this.spinnerDataSource.next(false);
         resolve(bookings);
       },
       (e) => {
-        this.snackbar.open(this.translate.instant('server.error'))
+        this.snackbar.open(this.translate.instant('server.error'));
+        this.spinnerDataSource.next(false);
         reject();
       }))
     })
@@ -40,14 +46,36 @@ export class BookingService {
 
   public getAllBookingsOfUser() {
     return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
       let userId = this.localStorage.getUserId();
     this.subscription.add(this.http.get<BookingEto[]>(`${ServiceHandlingRestServicePaths.FIND_ALL_BOOKINGS_BY_USER(userId)}`).subscribe(
       (bookings: BookingEto[]) => {
         this.userBookingsDataSource.next(bookings);
+        this.spinnerDataSource.next(false);
         resolve(bookings);
       },
       (e) => {
-        this.snackbar.open(this.translate.instant('server.error'))
+        this.snackbar.open(this.translate.instant('server.error'));
+        this.spinnerDataSource.next(false);
+        reject();
+      }))
+    })
+  }
+
+  public createUserBooking(bookingTo: BookingTo) {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+    this.subscription.add(this.http.post<BookingEto>(`${ServiceHandlingRestServicePaths.BOOKING_PATH()}`, bookingTo).subscribe(
+      (booking: BookingEto) => {
+        const currentValue = this.userBookingsDataSource.value;
+        const updatedValue = [...currentValue, booking];
+        this.userBookingsDataSource.next(updatedValue);
+        this.spinnerDataSource.next(false);
+        resolve(booking);
+      },
+      (e) => {
+        this.snackbar.open(this.translate.instant('server.error'));
+        this.spinnerDataSource.next(false);
         reject();
       }))
     })

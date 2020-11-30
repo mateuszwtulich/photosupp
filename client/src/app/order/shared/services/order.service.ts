@@ -16,6 +16,8 @@ export class OrderService {
   public ordersData = this.ordersDataSource.asObservable();
   private userOrdersDataSource: BehaviorSubject<OrderEto[]> = new BehaviorSubject([]);
   public userOrdersData = this.ordersDataSource.asObservable();
+  private spinnerDataSource: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public spinnerData = this.spinnerDataSource.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -26,13 +28,16 @@ export class OrderService {
 
   public getAllOrders() {
     return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
     this.subscription.add(this.http.get<OrderEto[]>(`${OrderRestServicePaths.FIND_ALL_ORDERS()}`).subscribe(
       (orders: OrderEto[]) => {
         this.ordersDataSource.next(orders);
+        this.spinnerDataSource.next(false);
         resolve(orders);
       },
       (e) => {
-        this.snackbar.open(this.translate.instant('server.error'))
+        this.snackbar.open(this.translate.instant('server.error'));
+        this.spinnerDataSource.next(false);
         reject();
       }))
     })
@@ -40,14 +45,17 @@ export class OrderService {
 
   public getOrdersOfUser() {
     return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
       let userId = this.localStorage.getUserId();
     this.subscription.add(this.http.get<OrderEto[]>(`${OrderRestServicePaths.FIND_ALL_ORDERS_BY_USER(userId)}`).subscribe(
       (orders: OrderEto[]) => {
         this.userOrdersDataSource.next(orders);
+        this.spinnerDataSource.next(false);
         resolve(orders);
       },
       (e) => {
         this.snackbar.open(this.translate.instant('server.error'))
+        this.spinnerDataSource.next(false);
         reject();
       }))
     })

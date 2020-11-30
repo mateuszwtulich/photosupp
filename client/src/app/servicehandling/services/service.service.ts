@@ -122,6 +122,8 @@ export class ServiceService {
   private subscription: Subscription = new Subscription();
   private servicesDataSource: BehaviorSubject<ServiceEto[]> = new BehaviorSubject([]);
   public servicesData = this.servicesDataSource.asObservable();
+  private spinnerDataSource: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public spinnerData = this.spinnerDataSource.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -131,8 +133,10 @@ export class ServiceService {
 
   public getAllServices() {
     return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
     this.subscription.add(this.http.get<ServiceEto[]>(`${ServiceHandlingRestServicePaths.FIND_ALL_SERVICES()}`).subscribe(
       (services: ServiceEto[]) => {
+        this.spinnerDataSource.next(false);
         this.servicesDataSource.next(services);
         resolve(services);
       },

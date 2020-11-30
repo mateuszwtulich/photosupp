@@ -4,8 +4,8 @@
     <mat-chip color="accent" selected (click)="filterStatus('confirmed')"> {{'bookings.confirmed' | translate}} </mat-chip>
     <mat-chip color="accent" selected (click)="filterStatus('unconfirmed')">{{'bookings.unconfirmed' | translate}} </mat-chip>
   </mat-chip-list>
-  <button id="add-booking" mat-mini-fab color="primary" aria-label="Add booking button">
-    <mat-icon>add</mat-icon>
+  <button *ngxPermissionsOnly="['A_CRUD_SUPER', 'A_CRUD_BOOKINGS']" id="add-booking" mat-mini-fab color="primary" aria-label="Add booking button">
+    <mat-icon id="icon">add</mat-icon>
   </button>
 </div>
 <div id="bookings-table">
@@ -30,23 +30,23 @@
 
       <ng-container matColumnDef="service">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'bookings.service' | translate}} </th>
-        <td mat-cell *matCellDef="let element"> {{element.service.name}}</td>
+        <td mat-cell *matCellDef="let element"> {{element.serviceEto.name}}</td>
       </ng-container>
 
       <ng-container matColumnDef="address">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'bookings.address' | translate}} </th>
-        <td mat-cell *matCellDef="let element"> {{element.address.city}}, {{element.address.street}} {{element.address.buildingNumber}}</td>
+        <td mat-cell *matCellDef="let element"> {{element.addressEto.city}}, {{element.addressEto.street}} {{element.addressEto.buildingNumber}}</td>
       </ng-container>
 
       <ng-container matColumnDef="user">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'bookings.user' | translate}} </th>
-        <td mat-cell *matCellDef="let element"> {{element.user.name}} {{element.user.surname}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.userEto.name}} {{element.userEto.surname}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="isConfirmed">
+      <ng-container matColumnDef="confirmed">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'bookings.isConfirmed' | translate}} </th>
         <td mat-cell *matCellDef="let element">
-        <ng-container *ngIf="element.isConfirmed;else defaultValue">
+        <ng-container *ngIf="element.confirmed;else defaultValue">
           {{'bookings.confirmed' | translate}}
         </ng-container>
       </td>
@@ -78,7 +78,10 @@
               <button mat-icon-button color="primary" (click)="modifyBooking(element)">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="deleteBooking(element)">
+              <button  *ngxPermissionsOnly="['AUTH_USER']" [disabled]="element.confirmed" mat-icon-button color="warn" (click)="deleteBooking(element)">
+                <mat-icon>clear</mat-icon>
+              </button>
+              <button  *ngxPermissionsOnly="['A_CRUD_SUPER', 'A_CRUD_BOOKINGS']" mat-icon-button color="warn" (click)="deleteBooking(element)">
                 <mat-icon>clear</mat-icon>
               </button>
             </div>
@@ -89,9 +92,6 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-      <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">{{ 'table.filter-null' | translate}} "{{input.value}}"</td>
-      </tr>
     </table>
     <mat-paginator [pageSizeOptions]="[5, 10]"></mat-paginator>
   </div>

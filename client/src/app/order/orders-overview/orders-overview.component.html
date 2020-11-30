@@ -8,7 +8,7 @@
                 <mat-chip color="accent" selected (click)="filterStatus('TO_VERIFY')"> {{ 'orders.TO_VERIFY' | translate}} </mat-chip>
                 <mat-chip color="accent" selected (click)="filterStatus('FINISHED')"> {{ 'orders.FINISHED' | translate}} </mat-chip>
               </mat-chip-list>
-              <button id="add-order" mat-mini-fab color="primary" aria-label="Add order button" (click)="addOrder()">
+              <button *ngxPermissionsOnly="['A_CRUD_SUPER', 'A_CRUD_ORDERS']" id="add-order" mat-mini-fab color="primary" aria-label="Add order button" (click)="addOrder()">
                 <mat-icon id="icon">add</mat-icon>
             </button>
         </div>
@@ -90,10 +90,7 @@
           
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          
-            <tr class="mat-row" *matNoDataRow>
-              <td class="mat-cell" colspan="4">{{ 'table.filter-null' | translate}} "{{input.value}}"</td>
-            </tr>
+
           </table>
           <mat-paginator [pageSizeOptions]="[5, 10]"></mat-paginator>
           </div>

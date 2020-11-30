@@ -59,7 +59,7 @@ export class SchedulerComponent implements OnInit {
       locale: "pl",
       firstDay: 1,
       aspectRatio: 1.75,
-      eventTextColor: 'black'
+      eventTextColor: 'black',
     };
   }
 
@@ -67,10 +67,17 @@ export class SchedulerComponent implements OnInit {
     this.bookingService.getAllBookings();
 
     this.subscritpion.add(this.bookingService.bookingsData.subscribe((bookings) => {
-      this.bookings = bookings;
-      this.myBookings = bookings.filter(booking => booking.userEto.id == this.localStorage.getUserId())
+      this.bookings = bookings.map(booking => {
+        let endDate = new Date(booking.end);
+        endDate.setDate(endDate.getDate() + 1);
+    
+        booking.end = this.transformDate(endDate);
+        return booking;
+      });
 
-      this.loadCalendarEvents(bookings);
+      this.myBookings = this.bookings.filter(booking => booking.userEto.id == this.localStorage.getUserId())
+
+      this.loadCalendarEvents(this.bookings);
     }));
   }
 
@@ -79,13 +86,25 @@ export class SchedulerComponent implements OnInit {
       this.loadCalendarEvents(this.bookings);
     } else if(type == "MINE"){
       this.loadCalendarEvents(this.myBookings);
+    } else if(type == "confirmed"){
+      this.loadCalendarEvents(this.bookings.filter(booking => booking.confirmed == true))
+    } else if(type == "unconfirmed"){
+      this.loadCalendarEvents(this.bookings.filter(booking => booking.confirmed == false))
     }
   }
 
   private loadCalendarEvents(bookings: BookingEto[]) {
-    this.calendarEvents = bookings.map(booking => new CalendarEvent(booking));
+    this.calendarEvents = bookings.map(booking => new CalendarEvent(booking))
 
     this.calendarOptions.events = this.calendarEvents;
+    this.calendarOptions.events.push({
+      daysOfWeek: [0], //Sundays and saturdays
+      rendering: "background",
+      color: "#ff9f89",
+      display: 'background',
+      overLap: false,
+      allDay: true
+    })
   }
 
   private checkIfPlanning() {
@@ -111,7 +130,7 @@ export class SchedulerComponent implements OnInit {
   }
 
   eventClicked(arg) {
-    let isMine = this.myBookings.find(booking => booking.userEto.id == arg.event._def.extendedProps.groupId) ? true : false;
+    let isMine = !!this.myBookings.find(booking => booking.userEto.id == arg.event._def.groupId) ? true : false;
 
     this.permissionService.hasPermission(ApplicationPermission.A_CRUD_SUPER).then((result) => {
       if (result) {

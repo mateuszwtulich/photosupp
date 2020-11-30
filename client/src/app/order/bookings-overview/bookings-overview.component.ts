@@ -6,121 +6,10 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { Subscription } from 'rxjs';
-import { IndicatorEto } from 'src/app/servicehandling/to/IndicatorEto';
-import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
 import { ApplicationPermission } from 'src/app/shared/utils/ApplicationPermission';
 import { SortUtil } from 'src/app/shared/utils/SortUtil';
-import { UserEto } from 'src/app/usermanagement/shared/to/UserEto';
 import { BookingService } from '../shared/services/booking.service';
-import { AddressEto } from '../shared/to/AddressEto';
 import { BookingEto } from '../shared/to/BookingEto';
-
-const fuelIndicatorPL = {
-  id: 3,
-  name: "Odległość od Częstochowy",
-  description: "Proszę podać liczbę kilometrów Państwa lokalizacji od Częstochowy",
-  locale: "pl",
-  baseAmount: 20,
-  doublePrice: 20
-}
-
-const fuelIndicatorEN = {
-  id: 4,
-  name: "Distance from Czestochowa",
-  description: "Kindly provide number of kilometers to your localization from Czestochowa",
-  locale: "en",
-  baseAmount: 20,
-  doublePrice: 20
-}
-
-const fotoIndicators: IndicatorEto[] = [{
-  id: 1,
-  name: "Szacowna liczba zdjęć",
-  description: "Dla foto takiej proponujemy taką liczbę itp",
-  locale: "pl",
-  baseAmount: 50,
-  doublePrice: 200
-},
-{
-id: 2,
-name: "Predicted number of photos",
-description: "For this kind of service we propose the number",
-locale: "en",
-baseAmount: 50,
-doublePrice: 200
-},
-fuelIndicatorPL,
-fuelIndicatorEN
-]
-
-const filmIndicators: IndicatorEto[] = [{
-  id: 5,
-  name: "Szacowna liczba filmów",
-  description: "Dla filmu takiego proponujemy taką liczbę filmów",
-  locale: "pl",
-  baseAmount: 1,
-  doublePrice: 150
-},
-{
-id: 6,
-name: "Predicted number of clips",
-description: "For this kind of service we propose the number",
-locale: "en",
-baseAmount: 1,
-doublePrice: 150
-},
-{
-id: 7,
-name: "Szacowna liczba minut dla filmu",
-description: "Dla filmu takiego typu proponujemy taką liczbę minut",
-locale: "pl",
-baseAmount: 2,
-doublePrice: 40
-},
-{
-id: 8,
-name: "Predicted number of minutes for each clip",
-description: "For this kind of service we propose the number",
-locale: "en",
-baseAmount: 2,
-doublePrice: 40
-},
-fuelIndicatorPL,
-fuelIndicatorEN
-]
-
-const SERVICE: ServiceEto = {
-  id: 1,
-  name: "foto",
-  description: "opis",
-  locale: "pl",
-  basePrice: 300,
-  indicatorEtoList: fotoIndicators
-};
-
-const USER: UserEto = {
-  id: 1,
-  name: "Tom",
-  surname: "Willman",
-  accountEto: null,
-  roleEto: null
-}
-
-const ADDRESS: AddressEto = {
-  id: 1,
-  city: "Wroclaw",
-  street: "Wroblewskiego",
-  buildingNumber: "20A",
-  apartmentNumber: null,
-  postalCode: "60-324",
-}
-
-const BOOKINGS: BookingEto[] = [
-  {id: 1, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
-  {id: 2, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
-  {id: 3, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}, 
-  {id: 4, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}
-];
 
 @Component({
   selector: 'cf-bookings-overview',
@@ -129,10 +18,10 @@ const BOOKINGS: BookingEto[] = [
 })
 
 export class BookingsOverviewComponent implements OnInit {
-  public displayedColumns: string[] = ['name', 'service', 'address', 'user', 'isConfirmed', 'predictedPrice', 'start', 'end', 'actions'];
+  public displayedColumns: string[] = ['name', 'service', 'address', 'user', 'confirmed', 'predictedPrice', 'start', 'end', 'actions'];
   public dataSource: MatTableDataSource<BookingEto>;
   public isSpinnerDisplayed = false;
-  private subscription = new Subscription; 
+  private subscription = new Subscription;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -141,14 +30,15 @@ export class BookingsOverviewComponent implements OnInit {
     private router: Router,
     private permissionsService: NgxPermissionsService,
     private bookingService: BookingService
-    ) {
-   }
+  ) {
+  }
 
-   ngOnInit(): void {
+  ngOnInit(): void {
+    this.onSpinnerDisplayed();
     this.loadsBooking();
   }
 
-  private loadsBooking(){
+  private loadsBooking() {
     this.permissionsService.hasPermission(ApplicationPermission.A_CRUD_SUPER).then((result) => {
       if (result) {
         this.loadsAllBookings();
@@ -165,27 +55,33 @@ export class BookingsOverviewComponent implements OnInit {
           }
         })
       }
-    })  
+    })
   }
 
-  private loadsUserBookings(){
+  private loadsUserBookings() {
     this.bookingService.getAllBookingsOfUser();
 
     this.subscription.add(this.bookingService.userBookingsData.subscribe(
       (bookings) => {
         this.dataSource = new MatTableDataSource(bookings);
         this.setDataSourceSettings();
-    }))
+      }));
   }
 
-  private loadsAllBookings(){
+  private loadsAllBookings() {
     this.bookingService.getAllBookings();
 
     this.subscription.add(this.bookingService.bookingsData.subscribe(
       (bookings) => {
         this.dataSource = new MatTableDataSource(bookings);
         this.setDataSourceSettings();
-    }))
+      }));
+  }
+
+  private onSpinnerDisplayed() {
+    this.subscription.add(this.bookingService.spinnerData.subscribe((isSpinnerDisplayed: boolean) => {
+      this.isSpinnerDisplayed = isSpinnerDisplayed;
+    }));
   }
 
   private setDataSourceSettings() {
@@ -206,10 +102,10 @@ export class BookingsOverviewComponent implements OnInit {
   private prepareFilterPredicate(): (data: BookingEto, filter: string) => boolean {
     return (data: BookingEto, filter: string) => {
       return data.userEto.name.toLocaleLowerCase().includes(filter) || data.userEto.surname.toLocaleLowerCase().includes(filter) ||
-        (data.isConfirmed ? this.translate.instant("bookings.confirmed").toLocaleLowerCase().includes(filter) : 
-        this.translate.instant("bookings.confirmed").toLocaleLowerCase().includes(filter)) || data.start.includes(filter) || 
-        data.end.includes(filter) || data.predictedPrice.toFixed().includes(filter) || data.serviceEto.name.toLocaleLowerCase().includes(filter) || 
-        data.addressEto.city.toLocaleLowerCase().includes(filter) || data.addressEto.street.toLocaleLowerCase().includes(filter) || 
+        (data.confirmed ? this.translate.instant("bookings.confirmed").toLocaleLowerCase() == filter :
+          this.translate.instant("bookings.unconfirmed").toLocaleLowerCase() == filter) || data.start.includes(filter) ||
+        data.end.includes(filter) || data.predictedPrice.toFixed().includes(filter) || data.serviceEto.name.toLocaleLowerCase().includes(filter) ||
+        data.addressEto.city.toLocaleLowerCase().includes(filter) || data.addressEto.street.toLocaleLowerCase().includes(filter) ||
         data.addressEto.buildingNumber.toLocaleLowerCase().includes(filter) || data.name.toLocaleLowerCase().includes(filter);
     };
   }
@@ -240,8 +136,8 @@ export class BookingsOverviewComponent implements OnInit {
           return SortUtil.compare(a.addressEto.city, b.addressEto.city, isAsc);
         case "isConfirmed":
           return SortUtil.compare(
-            this.translate.instant("bookings." + a.isConfirmed), 
-            this.translate.instant("bookings." + b.isConfirmed), isAsc);
+            this.translate.instant("bookings." + a.confirmed),
+            this.translate.instant("bookings." + b.confirmed), isAsc);
         case "predictedPrice":
           return SortUtil.compare(a.predictedPrice, b.predictedPrice, isAsc);
         case "start":
@@ -254,9 +150,13 @@ export class BookingsOverviewComponent implements OnInit {
     });
   }
 
-  navigateToBookingDetails(id: number){
-    let currentHeadLink = this.router.url.substring(0,this.router.url.indexOf("o"));
-    
+  navigateToBookingDetails(id: number) {
+    let currentHeadLink = this.router.url.substring(0, this.router.url.indexOf("o"));
+
     this.router.navigateByUrl(currentHeadLink + "orders/booking/details/" + id.toFixed());
+  }
+
+  ngOnDestroy(){
+    this.subscription.unsubscribe();
   }
 }

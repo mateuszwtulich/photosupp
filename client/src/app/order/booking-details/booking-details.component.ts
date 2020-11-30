@@ -147,7 +147,7 @@ const PRICE_INDICATORS = [
   }
 ]
 
-const BOOKING: BookingEto = {id: 1, name: "Booking #1", description: "short descriptionssss sssssssssssssss ssssssssss sssssssss ssssssss sssssss sssss ssss", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: PRICE_INDICATORS};
+const BOOKING: BookingEto = {id: 1, name: "Booking #1", description: "short descriptionssss sssssssssssssss ssssssssss sssssssss ssssssss sssssss sssss ssss", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, confirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorEtoList: PRICE_INDICATORS};
 
 @Component({
   selector: 'cf-booking-details',

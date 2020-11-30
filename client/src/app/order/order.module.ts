@@ -53,6 +53,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OrderDetailsComponent } from './order-details/order-details.component';
 import { BookingDetailsComponent } from './booking-details/booking-details.component';
 import {IvyGalleryModule} from 'angular-gallery';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 
 @NgModule({
@@ -108,7 +109,8 @@ import {IvyGalleryModule} from 'angular-gallery';
     OverlayModule,
     PortalModule,
     ScrollingModule,
-    OrderRoutingModule
+    OrderRoutingModule,
+    NgxPermissionsModule.forChild()
   ],
   exports: [BookingsOverviewComponent, OrdersOverviewComponent, OrderDetailsComponent, BookingDetailsComponent, OrderAddDialog]
 })

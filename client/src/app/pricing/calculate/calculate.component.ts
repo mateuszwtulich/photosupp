@@ -42,8 +42,15 @@ export class CalculateComponent implements OnInit {
       secondCtrl: ['', Validators.required]
     });
 
+    this.onSpinnerDisplayed();
     this.onLangChange();
     this.getServices();
+  }
+
+  private onSpinnerDisplayed(){
+    this.subscription.add(this.serviceService.spinnerData.subscribe((isSpinnerDisplayed: boolean) => {
+      this.isSpinnerDisplayed = isSpinnerDisplayed;
+    }));
   }
 
   private onLangChange() {
@@ -55,11 +62,9 @@ export class CalculateComponent implements OnInit {
   }
 
   private getServices() {
-    this.isSpinnerDisplayed = true;
     this.serviceService.getAllServices().then((services: ServiceEto[]) => {
       this.servicesStored = services;
       this.filterServices(this.translate.currentLang);
-      this.isSpinnerDisplayed = false;
     })
   }
 
