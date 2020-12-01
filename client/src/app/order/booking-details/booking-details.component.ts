@@ -1,153 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
-import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { PriceIndicatorEto } from 'src/app/core/to/PriceIndicatorEto';
 import { SortUtil } from 'src/app/shared/utils/SortUtil';
-import { ApplicationPermissions } from 'src/app/usermanagement/shared/enum/ApplicationPermissions';
-import { AccountEto } from 'src/app/usermanagement/shared/to/AccountEto';
-import { PermissionEto } from 'src/app/usermanagement/shared/to/PermissionEto';
-import { RoleEto } from 'src/app/usermanagement/shared/to/RoleEto';
-import { UserEto } from 'src/app/usermanagement/shared/to/UserEto';
-import { AddressEto } from '../shared/to/AddressEto';
+import { BookingService } from '../shared/services/booking.service';
 import { BookingEto } from '../shared/to/BookingEto';
-
-const BASIC_PERM: PermissionEto[] = [{
-  name: ApplicationPermissions.AUTH_USER,
-  description: "Basic permissions"
-}]
-
-const ROLE1: RoleEto = {
-  id: 2,
-  name: "User",
-  description: "Description of normal user",
-  permissions: BASIC_PERM
-}
-
-const ACCOUNT2: AccountEto = {
-  id: 1,
-  username: "test2",
-  password: "dsf",
-  email: "test2@test.com",
-  isActivated: true
-}
-
-const USER: UserEto = {
-  id:1,
-  name: "Tom",
-  surname: "Willman",
-  accountEto: ACCOUNT2,
-  roleEto: ROLE1
-}
-
-const SERVICE: ServiceEto = {
-  id: 1,
-  name: "foto",
-  description: "opis",
-  locale: "pl",
-  basePrice: 300,
-  indicatorEtoList: null
-};
-
-const ADDRESS: AddressEto = {
-  id: 1,
-  city: "Wroclaw",
-  street: "Wroblewskiego",
-  buildingNumber: "20A",
-  apartmentNumber: null,
-  postalCode: "60-324",
-}
-
-const INDICATORS = [{
-  id: 3,
-  name: "Odległość od Częstochowy",
-  description: "Proszę podać liczbę kilometrów Państwa lokalizacji od Częstochowy",
-  locale: "pl",
-  baseAmount: 20,
-  doublePrice: 20
-},
-{
-  id: 4,
-  name: "Distance from Czestochowa",
-  description: "Kindly provide number of kilometers to your localization from Czestochowa",
-  locale: "en",
-  baseAmount: 20,
-  doublePrice: 20
-},
-{
-  id: 1,
-  name: "Szacowna liczba zdjęć",
-  description: "Dla foto takiej proponujemy taką liczbę itp",
-  locale: "pl",
-  baseAmount: 50,
-  doublePrice: 200
-},
-{
-id: 2,
-name: "Predicted number of photos",
-description: "For this kind of service we propose the number",
-locale: "en",
-baseAmount: 50,
-doublePrice: 200
-},
-{
-  id: 5,
-  name: "Szacowna liczba filmów",
-  description: "Dla filmu takiego proponujemy taką liczbę filmów",
-  locale: "pl",
-  baseAmount: 1,
-  doublePrice: 150
-},
-{
-id: 6,
-name: "Predicted number of clips",
-description: "For this kind of service we propose the number",
-locale: "en",
-baseAmount: 1,
-doublePrice: 150
-},
-{
-id: 7,
-name: "Szacowna liczba minut dla filmu",
-description: "Dla filmu takiego typu proponujemy taką liczbę minut",
-locale: "pl",
-baseAmount: 2,
-doublePrice: 40
-},
-{
-id: 8,
-name: "Predicted number of minutes for each clip",
-description: "For this kind of service we propose the number",
-locale: "en",
-baseAmount: 2,
-doublePrice: 40
-}
-]
-
-const PRICE_INDICATORS = [
-  {
-    indicator: INDICATORS[0],
-    bookingId: 1,
-    price: 300,
-    amount: 200
-  },
-  {
-    indicator: INDICATORS[6],
-    bookingId: 1,
-    price: 30,
-    amount: 2
-  },
-  {
-    indicator: INDICATORS[4],
-    bookingId: 1,
-    price: 324,
-    amount: 3
-  }
-]
-
-const BOOKING: BookingEto = {id: 1, name: "Booking #1", description: "short descriptionssss sssssssssssssss ssssssssss sssssssss ssssssss sssssss sssss ssss", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, confirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorEtoList: PRICE_INDICATORS};
+import { BookingEtoWithOrderNumber } from '../shared/to/BookingEtoWithOrderNumber';
 
 @Component({
   selector: 'cf-booking-details',
@@ -156,23 +18,46 @@ const BOOKING: BookingEto = {id: 1, name: "Booking #1", description: "short desc
 })
 export class BookingDetailsComponent implements OnInit {
   public bookingControl: FormControl;
-  booking = BOOKING;
-  displayedColumns: string[] = ['name', 'description', 'amount', 'price', 'actions'];
-  dataSource = new MatTableDataSource(PRICE_INDICATORS);
-  isSpinnerDisplayed = false;
+  public booking: BookingEto;
+  public displayedColumns: string[] = ['name', 'description', 'amount', 'price', 'actions'];
+  public dataSource: MatTableDataSource<PriceIndicatorEto>;
+  public isSpinnerDisplayed = false;
+  public subscription = new Subscription();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(
+    private route: ActivatedRoute,
+    private bookingService: BookingService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.bookingControl = new FormControl(BOOKING);
-    this.route.snapshot.paramMap.get('id');
+    this.onSpinnerDisplayed();
+    this.bookingControl = new FormControl("", Validators.required);
+    this.getBookingById(this.route.snapshot.paramMap.get('id'));
   }
 
-  ngAfterViewInit() {
+  private getBookingById(id: string) {
+    this.bookingService.getBookingById(id).then(() => {
+      this.subscription.add(this.bookingService.bookingDetailsData.subscribe((booking: BookingEto) => {
+        this.dataSource = new MatTableDataSource(booking.priceIndicatorEtoList);
+        this.booking = booking;
+        this.bookingControl.setValue(booking);
+        this.setDataSource();
+      }))
+    });
+  }
+
+  private setDataSource() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  private onSpinnerDisplayed() {
+    this.subscription.add(this.bookingService.spinnerData.subscribe((isSpinnerDisplayed: boolean) => {
+      this.isSpinnerDisplayed = isSpinnerDisplayed;
+    }));
   }
 
   sortData(sort: Sort) {
@@ -184,9 +69,9 @@ export class BookingDetailsComponent implements OnInit {
       const isAsc = sort.direction === "asc";
       switch (sort.active) {
         case "name":
-          return SortUtil.compare(a.indicator.name, b.indicator.name, isAsc);
+          return SortUtil.compare(a.indicatorEto.name, b.indicatorEto.name, isAsc);
         case "description":
-          return SortUtil.compare(a.indicator.description, b.indicator.description, isAsc);
+          return SortUtil.compare(a.indicatorEto.description, b.indicatorEto.description, isAsc);
         case "amount":
           return SortUtil.compare(a.amount, b.amount, isAsc);
         case "price":
@@ -195,5 +80,17 @@ export class BookingDetailsComponent implements OnInit {
           return 0;
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  confirmBooking() {
+    let currentHeadLink = this.router.url.substring(0, this.router.url.indexOf("o"));
+
+    this.bookingService.confirmBooking(this.booking.id).then((booking: BookingEtoWithOrderNumber) => {
+      this.router.navigateByUrl(currentHeadLink + "orders/details/" + booking.orderNumber);
+    })
   }
 }

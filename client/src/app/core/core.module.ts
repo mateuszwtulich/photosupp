@@ -57,10 +57,11 @@ import { ForgottenPasswordComponent } from './forgotten-password/forgotten-passw
 import { OrderModule } from '../order/order.module';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { MaterialElevationDirective } from './utils/material-elevation.directive';
+import { DeleteComponent } from './delete/delete.component';
 
 
 @NgModule({
-  declarations: [HeaderComponent, ClientPanelComponent, HomeComponent, ManagerPanelComponent, LoginComponent, ForgottenPasswordComponent, MaterialElevationDirective],
+  declarations: [HeaderComponent, ClientPanelComponent, HomeComponent, ManagerPanelComponent, LoginComponent, ForgottenPasswordComponent, MaterialElevationDirective, DeleteComponent],
   imports: [
     OrderModule,
     PricingModule,
@@ -116,7 +117,7 @@ import { MaterialElevationDirective } from './utils/material-elevation.directive
     CoreRoutingModule,
     NgxPermissionsModule.forChild()
   ],
-  exports: [HeaderComponent, ClientPanelComponent, HomeComponent, ManagerPanelComponent, LoginComponent, ForgottenPasswordComponent],
+  exports: [HeaderComponent, ClientPanelComponent, HomeComponent, ManagerPanelComponent, LoginComponent, ForgottenPasswordComponent, DeleteComponent],
 })
 export class CoreModule { }
 

@@ -1,6 +1,6 @@
 import { BackendApiServicePath } from 'src/app/pricing/rest-service-paths/BackendApiServicePath';
 
-export class OrderRestServicePaths{
+export class OrderRestServicePaths {
 
     public static FIND_ALL_ORDERS() {
         return BackendApiServicePath.BACKEND_API() + 'order/v1/orders';
@@ -11,11 +11,11 @@ export class OrderRestServicePaths{
     }
 
     public static FIND_ALL_COMMENTS_BY_ORDER_NUMBER(orderNumber: string) {
-        return BackendApiServicePath.BACKEND_API() + 'order/v1/order' + orderNumber + '/comments';
+        return BackendApiServicePath.BACKEND_API() + 'order/v1/order/' + orderNumber + '/comments';
     }
 
     public static MEDIA_CONTENT_BY_ORDER_NUMBER(orderNumber: string) {
-        return BackendApiServicePath.BACKEND_API() + 'order/v1/order' + orderNumber + '/mediaContent';
+        return BackendApiServicePath.BACKEND_API() + 'order/v1/order/' + orderNumber + '/mediaContent';
     }
 
     public static ORDER_PATH_WITH_ORDER_NUMBER(orderNumber: string) {

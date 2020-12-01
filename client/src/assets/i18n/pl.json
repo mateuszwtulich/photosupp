@@ -99,7 +99,12 @@
     "en": "angielski",
     "all": "Wszystkie",
     "language": "Język",
-    "name": "Nazwa"
+    "name": "Nazwa",
+    "name-second": "Nazwa w języku obcym",
+    "locale-add": "Język obcy",
+    "delete": "Czy jesteś pewny?",
+    "cancel": "Zrezygnuj",
+    "delete-confirm": "Potwierdź"
   },
   "orders": {
     "plural": "Zamówienia",
@@ -123,7 +128,9 @@
     "add-comment": "Komentarze",
     "comment-button": "Dodaj komentarz",
     "comment-write": "Napisz komentarz",
-    "verify": "Zatwierdź zlecenie",
+    "verify": "Wyślij do weryfikacji",
+    "inprogress": "Rozpocznij zlecenie",
+    "finish": "Zakończ zlecenie",
     "add": "Utwórz nowe zamówienie"
   },
   "bookings": {
@@ -162,7 +169,9 @@
       "plural": "Czynniki",
       "description": "Opis",
       "baseAmount": "Ilość wolna od dopłaty",
-      "doublePrice": "Dodatkowa cena za podwojenie ilości"
+      "doublePrice": "Dodatkowa cena za podwojenie ilości",
+      "add": "Dodaj czynnik",
+      "description-second": "Opis w języku obcym"
   },
   "users": {
     "plural": "Użytkownicy",

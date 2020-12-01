@@ -187,7 +187,7 @@ const ORDERS: OrderEto[] = [
 })
 
 export class OrdersOverviewComponent implements OnInit {
-  public displayedColumns: string[] = ['orderNumber', 'coordinator', 'user', 'status', 'booking', 'price', 'createdAt', 'actions'];
+  public displayedColumns: string[] = ['orderNumber', 'coordinator', 'user', 'status', 'booking', 'price', 'createdAt'];
   public dataSource: MatTableDataSource<OrderEto>;
   public isSpinnerDisplayed = false;
   private subscription = new Subscription();
@@ -195,19 +195,19 @@ export class OrdersOverviewComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private translate: TranslateService, 
-    private router: Router, 
+    private translate: TranslateService,
+    private router: Router,
     public dialog: MatDialog,
     private orderService: OrderService,
     private permissionsService: NgxPermissionsService
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     this.onSpinnerDisplayed();
     this.loadsOrders();
   }
 
-  private loadsOrders(){
+  private loadsOrders() {
     this.permissionsService.hasPermission(ApplicationPermission.A_CRUD_SUPER).then((result) => {
       if (result) {
         this.loadsAllOrders();
@@ -224,30 +224,31 @@ export class OrdersOverviewComponent implements OnInit {
           }
         })
       }
-    })  
+    })
   }
 
-  private loadsUserOrders(){
+  private loadsUserOrders() {
     this.orderService.getOrdersOfUser();
 
     this.subscription.add(this.orderService.userOrdersData.subscribe(
       (orders) => {
         this.dataSource = new MatTableDataSource(orders);
         this.setDataSourceSettings();
-    }))
+      }))
   }
 
-  private loadsAllOrders(){
+  private loadsAllOrders() {
+    this.displayedColumns.push('actions');
     this.orderService.getAllOrders();
 
     this.subscription.add(this.orderService.ordersData.subscribe(
       (orders) => {
         this.dataSource = new MatTableDataSource(orders);
         this.setDataSourceSettings();
-    }))
+      }))
   }
 
-  private onSpinnerDisplayed(){
+  private onSpinnerDisplayed() {
     this.subscription.add(this.orderService.spinnerData.subscribe((isSpinnerDisplayed: boolean) => {
       this.isSpinnerDisplayed = isSpinnerDisplayed;
     }));
@@ -326,10 +327,10 @@ export class OrdersOverviewComponent implements OnInit {
     this.router.navigateByUrl(currentHeadLink + "orders/booking/details/" + id.toFixed());
   }
 
-  addOrder(){
+  addOrder() {
     const dialogRef = this.dialog.open(OrderAddDialog, { data: [ORDERS, [USER], [COORDINATOR], null], height: '48%', width: '40%' });
     dialogRef.afterClosed().subscribe((order: OrderEto) => {
-      if(!!order){
+      if (!!order) {
         order.orderNumber = "INVIU00004";
         order.createdAt = "27-11-2020";
         order.status = OrderStatus.NEW;
@@ -339,7 +340,7 @@ export class OrdersOverviewComponent implements OnInit {
     })
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 }

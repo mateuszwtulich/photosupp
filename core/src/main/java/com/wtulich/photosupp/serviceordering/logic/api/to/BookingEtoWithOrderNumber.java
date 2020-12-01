@@ -2,6 +2,7 @@ package com.wtulich.photosupp.serviceordering.logic.api.to;
 
 import com.sun.istack.NotNull;
 import com.wtulich.photosupp.general.dataaccess.api.entity.AbstractApplicationEntityTransportObject;
+import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
 
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +18,9 @@ public class BookingEtoWithOrderNumber extends AbstractApplicationEntityTranspor
     private ServiceEto serviceEto;
 
     private AddressEto addressEto;
+
+    @NotNull
+    private UserEto userEto;
 
     @NotNull
     private boolean isConfirmed;
@@ -40,14 +44,13 @@ public class BookingEtoWithOrderNumber extends AbstractApplicationEntityTranspor
     public BookingEtoWithOrderNumber() {
     }
 
-    public BookingEtoWithOrderNumber(Long id, String name, String description, ServiceEto serviceEto, AddressEto addressEto,
-                                     boolean isConfirmed, Double predictedPrice, String start, String end,
-                                     String modificationDate, List<PriceIndicatorEto> priceIndicatorEtoList, String orderNumber) {
+    public BookingEtoWithOrderNumber(Long id, String name, String description, ServiceEto serviceEto, AddressEto addressEto, UserEto userEto, boolean isConfirmed, Double predictedPrice, String start, String end, String modificationDate, List<PriceIndicatorEto> priceIndicatorEtoList, String orderNumber) {
         super(id);
         this.name = name;
         this.description = description;
         this.serviceEto = serviceEto;
         this.addressEto = addressEto;
+        this.userEto = userEto;
         this.isConfirmed = isConfirmed;
         this.predictedPrice = predictedPrice;
         this.start = start;
@@ -87,6 +90,14 @@ public class BookingEtoWithOrderNumber extends AbstractApplicationEntityTranspor
 
     public void setAddressEto(AddressEto addressEto) {
         this.addressEto = addressEto;
+    }
+
+    public UserEto getUserEto() {
+        return userEto;
+    }
+
+    public void setUserEto(UserEto userEto) {
+        this.userEto = userEto;
     }
 
     public boolean isConfirmed() {
@@ -148,24 +159,25 @@ public class BookingEtoWithOrderNumber extends AbstractApplicationEntityTranspor
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BookingEtoWithOrderNumber)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         BookingEtoWithOrderNumber that = (BookingEtoWithOrderNumber) o;
         return isConfirmed == that.isConfirmed &&
                 name.equals(that.name) &&
                 Objects.equals(description, that.description) &&
                 serviceEto.equals(that.serviceEto) &&
-                Objects.equals(addressEto, that.addressEto) &&
-                Objects.equals(predictedPrice, that.predictedPrice) &&
+                addressEto.equals(that.addressEto) &&
+                userEto.equals(that.userEto) &&
+                predictedPrice.equals(that.predictedPrice) &&
                 start.equals(that.start) &&
                 end.equals(that.end) &&
                 modificationDate.equals(that.modificationDate) &&
-                Objects.equals(priceIndicatorEtoList, that.priceIndicatorEtoList) &&
+                priceIndicatorEtoList.equals(that.priceIndicatorEtoList) &&
                 orderNumber.equals(that.orderNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, description, serviceEto, addressEto, isConfirmed, predictedPrice, start, end, modificationDate, priceIndicatorEtoList, orderNumber);
+        return Objects.hash(super.hashCode(), name, description, serviceEto, addressEto, userEto, isConfirmed, predictedPrice, start, end, modificationDate, priceIndicatorEtoList, orderNumber);
     }
 }

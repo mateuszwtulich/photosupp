@@ -4,7 +4,7 @@
       <mat-chip color="accent" selected (click)="filterStatus('pl')">{{ 'table.pl' | translate}}</mat-chip>
       <mat-chip color="accent" selected (click)="filterStatus('en')">{{ 'table.en' | translate}}</mat-chip>
     </mat-chip-list>
-    <button id="add-indicator" mat-mini-fab color="primary" aria-label="Add indicator button">
+    <button id="add-indicator" mat-mini-fab color="primary" aria-label="Add indicator button" (click)="addIndicator()">
       <mat-icon id="icon">add</mat-icon>
     </button>
   </div>
@@ -63,9 +63,6 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   
-        <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell" colspan="4">{{ 'table.filter-null' | translate}} "{{input.value}}"</td>
-        </tr>
       </table>
       <mat-paginator [pageSizeOptions]="[5, 10]"></mat-paginator>
     </div>

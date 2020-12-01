@@ -156,7 +156,7 @@ export class BookingsOverviewComponent implements OnInit {
     this.router.navigateByUrl(currentHeadLink + "orders/booking/details/" + id.toFixed());
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 }

@@ -767,7 +767,7 @@ public class ServiceRestServiceIntegrationTest {
 
         BookingEtoWithOrderNumber bookingEtoWithOrderNumber =
                 new BookingEtoWithOrderNumber(1L, "Film dla TestCompany", "Film produktowy z dojazdem",
-                        serviceEto, addressEto, true, 1400D, "2020-04-11", "2020-04-12",
+                        serviceEto, addressEto, userEto, true, 1400D, "2020-04-11", "2020-04-12",
                         "2020-04-11", priceIndicatorEtoList, "INVIU_00001");
 
         //Act

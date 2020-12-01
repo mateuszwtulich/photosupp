@@ -4,6 +4,6 @@ export class CommentEto {
     id: number;
     content: string;
     orderNumber: string;
-    user: UserEto;
+    userEto: UserEto;
     createdAt: string;
 }

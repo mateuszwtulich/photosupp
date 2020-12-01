@@ -235,7 +235,7 @@ public class ServiceRestServiceImpl implements ServiceRestService {
     }
 
     @Override
-    public ResponseEntity<BookingEtoWithOrderNumber> confirmBooking(Long id, Long coordinatorId) {
+    public ResponseEntity<BookingEtoWithOrderNumber> confirmBooking(Long coordinatorId, Long id) {
         try {
             return ResponseEntity
                     .ok()

@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ServicehandlingRoutingModule } from './servicehandling-routing.module';
-import { ServicePlanningComponent } from './service-planning/service-planning.component';
 import { ServicesOverviewComponent } from './services-overview/services-overview.component';
 import { IndicatorsOverviewComponent } from './indicators-overview/indicators-overview.component';
 import {A11yModule} from '@angular/cdk/a11y';
@@ -51,9 +50,13 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import { BrowserModule } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AddIndicatorComponent } from './modals/indicator/add-indicator/add-indicator.component';
+import { ModifyIndicatorComponent } from './modals/indicator/modify-indicator/modify-indicator.component';
+import { AddServiceComponent } from './modals/service/add-service/add-service.component';
+import { ModifyServiceComponent } from './modals/service/modify-service/modify-service.component';
 
 @NgModule({
-  declarations: [ServicePlanningComponent, ServicesOverviewComponent, IndicatorsOverviewComponent],
+  declarations: [ServicesOverviewComponent, IndicatorsOverviewComponent, AddIndicatorComponent, ModifyIndicatorComponent, AddServiceComponent, ModifyServiceComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -107,6 +110,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     ServicehandlingRoutingModule
   ],
-  exports: [ServicePlanningComponent, ServicesOverviewComponent, IndicatorsOverviewComponent]
+  exports: [ServicesOverviewComponent, IndicatorsOverviewComponent, AddIndicatorComponent, ModifyIndicatorComponent, AddServiceComponent, ModifyServiceComponent]
 })
 export class ServicehandlingModule { }

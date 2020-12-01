@@ -252,7 +252,7 @@ export class BookingsPlanningComponent implements OnInit {
     this.priceIndicators = [];
 
     service.indicatorEtoList.forEach(indicator => this.priceIndicators.push({
-      indicator: indicator,
+      indicatorEto: indicator,
       bookingId: null,
       price: 0,
       amount: indicator.baseAmount,
@@ -295,7 +295,7 @@ export class BookingsPlanningComponent implements OnInit {
       addressEto: {
         id: 1,
         city: this.addressFormGroup.controls['cityCtrl'].value,
-        street: this.addressFormGroup.controls['nameCtrl'].value,
+        street: this.addressFormGroup.controls['streetCtrl'].value,
         buildingNumber: this.addressFormGroup.controls['buildingNumberCtrl'].value,
         apartmentNumber: this.addressFormGroup.controls['apartmentNumberCtrl'].value,
         postalCode: this.addressFormGroup.controls['postalCodeCtrl'].value
@@ -322,7 +322,7 @@ export class BookingsPlanningComponent implements OnInit {
     if (this.bookingControl.valid) {
       let priceIndicatorToList = this.priceIndicators.map(priceIndicator => {
         return {
-          indicatorId: priceIndicator.indicator.id,
+          indicatorId: priceIndicator.indicatorEto.id,
           bookingId: null,
           price: priceIndicator.price,
           amount: priceIndicator.amount
@@ -348,7 +348,6 @@ export class BookingsPlanningComponent implements OnInit {
 
       this.bookingService.createUserBooking(bookingTo).then((bookingEto: BookingEto) => {
         if (!!bookingEto) {
-          console.log(bookingEto)
           this.router.navigateByUrl("/client/orders/booking/details/" + bookingEto.id.toFixed());
         }
       });

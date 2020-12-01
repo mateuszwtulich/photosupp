@@ -926,7 +926,7 @@ public class ServiceRestServiceTest {
     @DisplayName("PUT /service/v1/booking/1/confirm - OK")
     void testConfirmBookingOk() throws Exception {
         //Arrange
-        bookingEtoWithOrderNumber = new BookingEtoWithOrderNumber(1L, "Film dla TestCompany", "Film produktowy z dojazdem", serviceEto, addressEto, false, 900D,
+        bookingEtoWithOrderNumber = new BookingEtoWithOrderNumber(1L, "Film dla TestCompany", "Film produktowy z dojazdem", serviceEto, addressEto, userEto, false, 900D,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)),
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),

@@ -26,7 +26,7 @@ export class ServiceHandlingRestServicePaths{
         return BackendApiServicePath.BACKEND_API() + 'service/v1/services';
     }
 
-    public static BOOKING_PATH_WITH_ID(id: number) {
+    public static BOOKING_PATH_WITH_ID(id: string) {
         return BackendApiServicePath.BACKEND_API() + 'service/v1/booking/' + id;
     }
 

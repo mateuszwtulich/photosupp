@@ -3,9 +3,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { IndicatorEto } from 'src/app/servicehandling/to/IndicatorEto';
 import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
 import { SortUtil } from 'src/app/shared/utils/SortUtil';
+import { ServiceService } from '../services/service.service';
 
 const fuelIndicatorPL = {
   id: 3,
@@ -33,18 +35,18 @@ const fotoIndicatorsPL: IndicatorEto[] = [{
   baseAmount: 50,
   doublePrice: 200
 },
-fuelIndicatorPL
+  fuelIndicatorPL
 ]
 
 const fotoIndicatorsEN: IndicatorEto[] = [{
-id: 2,
-name: "Predicted number of photos",
-description: "For this kind of service we propose the number",
-locale: "en",
-baseAmount: 50,
-doublePrice: 200
+  id: 2,
+  name: "Predicted number of photos",
+  description: "For this kind of service we propose the number",
+  locale: "en",
+  baseAmount: 50,
+  doublePrice: 200
 },
-fuelIndicatorEN
+  fuelIndicatorEN
 ]
 
 const filmIndicatorsPL: IndicatorEto[] = [{
@@ -62,23 +64,23 @@ const filmIndicatorsPL: IndicatorEto[] = [{
   locale: "pl",
   baseAmount: 2,
   doublePrice: 40
-  }]
+}]
 
 const filmIndicatorsEN: IndicatorEto[] = [{
-id: 6,
-name: "Predicted number of clips",
-description: "For this kind of service we propose the number",
-locale: "en",
-baseAmount: 1,
-doublePrice: 150
+  id: 6,
+  name: "Predicted number of clips",
+  description: "For this kind of service we propose the number",
+  locale: "en",
+  baseAmount: 1,
+  doublePrice: 150
 },
 {
-id: 8,
-name: "Predicted number of minutes for each clip",
-description: "For this kind of service we propose the number",
-locale: "en",
-baseAmount: 2,
-doublePrice: 40
+  id: 8,
+  name: "Predicted number of minutes for each clip",
+  description: "For this kind of service we propose the number",
+  locale: "en",
+  baseAmount: 2,
+  doublePrice: 40
 }
 ]
 
@@ -91,28 +93,28 @@ const SERVICES: ServiceEto[] = [{
   indicatorEtoList: fotoIndicatorsPL
 },
 {
-id: 2,
-name: "Photo",
-description: "Description",
-locale: "en",
-basePrice: 300,
-indicatorEtoList: fotoIndicatorsEN
+  id: 2,
+  name: "Photo",
+  description: "Description",
+  locale: "en",
+  basePrice: 300,
+  indicatorEtoList: fotoIndicatorsEN
 },
 {
-id: 3,
-name: "film",
-description: "opis filmu",
-locale: "pl",
-basePrice: 600,
-indicatorEtoList: filmIndicatorsPL
+  id: 3,
+  name: "film",
+  description: "opis filmu",
+  locale: "pl",
+  basePrice: 600,
+  indicatorEtoList: filmIndicatorsPL
 },
 {
-id: 4,
-name: "Film",
-description: "Description",
-locale: "en",
-basePrice: 600,
-indicatorEtoList: filmIndicatorsEN
+  id: 4,
+  name: "Film",
+  description: "Description",
+  locale: "en",
+  basePrice: 600,
+  indicatorEtoList: filmIndicatorsEN
 }];
 
 @Component({
@@ -122,18 +124,40 @@ indicatorEtoList: filmIndicatorsEN
 })
 
 export class ServicesOverviewComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'locale', 'basePrice', 'indicators', 'actions'];
-  dataSource = new MatTableDataSource(SERVICES);
-  isSpinnerDisplayed = false;
+  public displayedColumns: string[] = ['name', 'basePrice', 'indicators', 'locale', 'actions'];
+  public dataSource: MatTableDataSource<ServiceEto>;
+  public isSpinnerDisplayed = false;
+  public subscription = new Subscription();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private translate: TranslateService) { }
+  constructor(
+    private translate: TranslateService,
+    private serviceService: ServiceService
+  ) { }
 
   ngOnInit(): void {
+    this.onSpinnerDisplayed();
+    this.loadsAllServices();
   }
 
-  ngAfterViewInit() {
+  private loadsAllServices() {
+    this.serviceService.getAllServices();
+
+    this.subscription.add(this.serviceService.servicesData.subscribe(
+      (services) => {
+        this.dataSource = new MatTableDataSource(services);
+        this.setDataSourceSettings();
+      }))
+  }
+
+  private onSpinnerDisplayed() {
+    this.subscription.add(this.serviceService.spinnerData.subscribe((isSpinnerDisplayed: boolean) => {
+      this.isSpinnerDisplayed = isSpinnerDisplayed;
+    }));
+  }
+
+  private setDataSourceSettings() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.dataSource.filterPredicate = this.prepareFilterPredicate();

@@ -1,15 +1,18 @@
-<mat-tab-group mat-align-tabs="start" color="accent">
+<mat-tab-group mat-align-tabs="start" color="accent" *ngIf="bookingControl.valid">
   <mat-tab label="{{ 'bookings.details' | translate}}" color="accent">
     <div id="header">
-      <button id="modify-account" mat-mini-fab color="primary" aria-label="Add user button">
+      <button id="modify-booking" mat-mini-fab color="primary" aria-label="Modify account button">
         <mat-icon id="icon">edit</mat-icon>
       </button>
-      <button id="delete-account" mat-mini-fab color="warn" aria-label="Add user button">
+      <button class="delete-booking" mat-mini-fab color="warn" aria-label="Delete account button">
         <mat-icon id="icon">clear</mat-icon>
       </button>
     </div>
 
     <div class="update-container">
+      <div *ngIf="isSpinnerDisplayed" class="spinner-wrapper">
+        <mat-spinner color="accent"></mat-spinner>
+      </div>
       <mat-card class="update-card margin-top-0">
         <mat-card-title class="card-title"> {{ 'bookings.details' | translate}} </mat-card-title>
         <mat-divider></mat-divider>
@@ -108,9 +111,12 @@
             </mat-list-item>
             <mat-divider></mat-divider>
           </mat-list>
-          <div class="mat-form-container">
-            <button mat-raised-button color="accent" class="start-button">
-              {{ 'bookings.start-booking' | translate }} </button>
+          <div class="mat-form-container" *ngIf="!bookingControl.value.confirmed">
+            <div id="start-booking">
+              <button mat-raised-button color="accent" *ngxPermissionsOnly="['A_CRUD_SUPER', 'A_CRUD_BOOKINGS']"
+                class="start-button" (click)="confirmBooking()">
+                {{ 'bookings.start-booking' | translate }} </button>
+            </div>
           </div>
         </mat-card-content>
       </mat-card>
@@ -131,12 +137,12 @@
 
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'table.name' | translate}} </th>
-            <td mat-cell *matCellDef="let element"> {{element.indicator.name}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.indicatorEto.name}} </td>
           </ng-container>
 
           <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'indicators.description' | translate}} </th>
-            <td mat-cell *matCellDef="let element"> {{element.indicator.description}}</td>
+            <td mat-cell *matCellDef="let element"> {{element.indicatorEto.description}}</td>
           </ng-container>
 
           <ng-container matColumnDef="amount">

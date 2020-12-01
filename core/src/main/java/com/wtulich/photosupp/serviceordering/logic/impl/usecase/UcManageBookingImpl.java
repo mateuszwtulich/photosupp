@@ -132,6 +132,7 @@ public class UcManageBookingImpl implements UcManageBooking {
         Objects.requireNonNull(id, ID_CANNOT_BE_NULL);
 
         BookingEntity bookingEntity = getBookingById(id);
+        bookingEntity.setConfirmed(true);
         LOG.debug(CONFIRM_BOOKING_URL, id);
 
         return Optional.of(toBookingEtoWithOrderNumber(bookingEntity, coordinatorId));
@@ -336,8 +337,6 @@ public class UcManageBookingImpl implements UcManageBooking {
         BookingEto bookingEto = toBookingEto(bookingEntity).get();
 
         BookingEtoWithOrderNumber bookingEtoWithOrderNumber = bookingMapper.toBookingEtoWithOrderId(bookingEto);
-        bookingEtoWithOrderNumber.setConfirmed(true);
-
         bookingEtoWithOrderNumber.setOrderNumber(createOrder(bookingEntity, coordinatorId).getOrderNumber());
 
         return bookingEtoWithOrderNumber;

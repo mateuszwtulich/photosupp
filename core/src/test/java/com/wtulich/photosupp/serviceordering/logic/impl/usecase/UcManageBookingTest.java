@@ -404,10 +404,16 @@ public class UcManageBookingTest {
         AddressEto addressEto = new AddressEto(1L, "Wroclaw", "Wroblewskiego", "27", null, "51-627");
         IndicatorEto indicatorEto = new IndicatorEto(1L,"Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 30);
         List<IndicatorEto> indicatorEtos = List.of(indicatorEto);
+
+        List<PermissionEto> permissionEtoList = new ArrayList<>();
+        permissionEtoList.add(new PermissionEto(1L, ApplicationPermissions.A_CRUD_SUPER, "DESC1"));
         ServiceEto serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl", indicatorEtos);
+        RoleEto roleEto = new RoleEto(1L, "ADMIN", "DESC1", permissionEtoList);
+        AccountEto accountEto = new AccountEto(1L, "TEST", "PASS", "TEST@test.com", false);
+        UserEto userEto = new UserEto(1L, "NAME1", "SURNAME1", accountEto, roleEto);
 
         BookingEtoWithOrderNumber bookingEtoWithOrderNumber = new BookingEtoWithOrderNumber(1L, "Film dla TestCompany",
-                "Film produktowy z dojazdem", serviceEto, addressEto, true, 1400D,
+                "Film produktowy z dojazdem", serviceEto, addressEto, userEto, true, 1400D,
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)),
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),

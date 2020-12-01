@@ -6,6 +6,8 @@ import { ServiceEto } from '../to/ServiceEto';
 import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { IndicatorEto } from '../to/IndicatorEto';
+import { IndicatorTo } from '../to/IndicatorTo';
 
 //   fuelIndicatorPL = {
 //     id: 3,
@@ -122,6 +124,8 @@ export class ServiceService {
   private subscription: Subscription = new Subscription();
   private servicesDataSource: BehaviorSubject<ServiceEto[]> = new BehaviorSubject([]);
   public servicesData = this.servicesDataSource.asObservable();
+  private indicatorsDataSource: BehaviorSubject<IndicatorEto[]> = new BehaviorSubject([]);
+  public indciatorsData = this.indicatorsDataSource.asObservable();
   private spinnerDataSource: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public spinnerData = this.spinnerDataSource.asObservable();
 
@@ -144,6 +148,90 @@ export class ServiceService {
         this.snackbar.open(this.translate.instant('server.error'))
         reject();
       }))
+    })
+  }
+
+  public getAllIndicators() {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+    this.subscription.add(this.http.get<IndicatorEto[]>(`${ServiceHandlingRestServicePaths.FIND_ALL_INDICATORS()}`).subscribe(
+      (indicators: IndicatorEto[]) => {
+        this.spinnerDataSource.next(false);
+        this.indicatorsDataSource.next(indicators);
+        resolve(indicators);
+      },
+      (e) => {
+        this.snackbar.open(this.translate.instant('server.error'))
+        reject();
+      }))
+    })
+  }
+
+  public createIndicator(indicatorTo: IndicatorTo) {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+      this.subscription.add(this.http.post<IndicatorEto>(`${ServiceHandlingRestServicePaths.INDICATOR_PATH()}`, indicatorTo).subscribe(
+        (indicator: IndicatorEto) => {
+          if (this.indicatorsDataSource.value) {
+            const currentValue = this.indicatorsDataSource.value;
+            const updatedValue = [...currentValue, indicator];
+            this.indicatorsDataSource.next(updatedValue);
+          } else {
+            this.indicatorsDataSource.next([indicator]);
+          }
+          this.spinnerDataSource.next(false);
+          resolve(indicator);
+        },
+        (e) => {
+          console.log(e)
+          this.snackbar.open(this.translate.instant('server.error') + ": " + e.error.message);
+          this.spinnerDataSource.next(false);
+          reject();
+        }))
+    })
+  }
+
+  public modifyIndicator(indicatorTo: IndicatorTo, id: number) {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+      this.subscription.add(this.http.put<IndicatorEto>(`${ServiceHandlingRestServicePaths.INFICATOR_PATH_WITH_ID(id)}`, indicatorTo).subscribe(
+        (indicatorEto: IndicatorEto) => {
+          this.indicatorsDataSource.value.forEach((indicator) => {
+            if(indicator.id == indicatorEto.id) {
+              indicator.name = indicatorEto.name;
+              indicator.description = indicatorEto.description;
+              indicator.baseAmount = indicatorEto.baseAmount;
+              indicator.doublePrice = indicatorEto.doublePrice;
+            }
+          })
+            this.indicatorsDataSource.next(this.indicatorsDataSource.value);
+          this.spinnerDataSource.next(false);
+          resolve(indicatorEto);
+        },
+        (e) => {
+          console.log(e)
+          this.snackbar.open(this.translate.instant('server.error') + ": " + e.error.message);
+          this.spinnerDataSource.next(false);
+          reject();
+        }))
+    })
+  }
+
+  public deleteIndicator(id: number) {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+      this.subscription.add(this.http.delete<void>(`${ServiceHandlingRestServicePaths.INFICATOR_PATH_WITH_ID(id)}`).subscribe(
+        () => {
+          this.indicatorsDataSource.next(this.indicatorsDataSource.value.filter((indicator) => indicator.id != id));
+          this.spinnerDataSource.next(false);
+          resolve();
+        },
+        (e) => {
+          console.log(e)
+          this.snackbar.open(this.translate.instant('server.error') + ": " + e.error.message);
+          this.spinnerDataSource.next(false);
+          reject();
+        }))
     })
   }
 

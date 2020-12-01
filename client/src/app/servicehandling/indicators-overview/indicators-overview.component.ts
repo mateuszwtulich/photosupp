@@ -1,10 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { DeleteComponent } from 'src/app/core/delete/delete.component';
 import { SortUtil } from 'src/app/shared/utils/SortUtil';
+import { AddIndicatorComponent } from '../modals/indicator/add-indicator/add-indicator.component';
+import { ModifyIndicatorComponent } from '../modals/indicator/modify-indicator/modify-indicator.component';
+import { ServiceService } from '../services/service.service';
 import { IndicatorEto } from '../to/IndicatorEto';
+import { IndicatorTo } from '../to/IndicatorTo';
 
 const INDICATORS = [{
   id: 3,
@@ -31,12 +38,12 @@ const INDICATORS = [{
   doublePrice: 200
 },
 {
-id: 2,
-name: "Predicted number of photos",
-description: "For this kind of service we propose the number",
-locale: "en",
-baseAmount: 50,
-doublePrice: 200
+  id: 2,
+  name: "Predicted number of photos",
+  description: "For this kind of service we propose the number",
+  locale: "en",
+  baseAmount: 50,
+  doublePrice: 200
 },
 {
   id: 5,
@@ -47,28 +54,28 @@ doublePrice: 200
   doublePrice: 150
 },
 {
-id: 6,
-name: "Predicted number of clips",
-description: "For this kind of service we propose the number",
-locale: "en",
-baseAmount: 1,
-doublePrice: 150
+  id: 6,
+  name: "Predicted number of clips",
+  description: "For this kind of service we propose the number",
+  locale: "en",
+  baseAmount: 1,
+  doublePrice: 150
 },
 {
-id: 7,
-name: "Szacowna liczba minut dla filmu",
-description: "Dla filmu takiego typu proponujemy taką liczbę minut",
-locale: "pl",
-baseAmount: 2,
-doublePrice: 40
+  id: 7,
+  name: "Szacowna liczba minut dla filmu",
+  description: "Dla filmu takiego typu proponujemy taką liczbę minut",
+  locale: "pl",
+  baseAmount: 2,
+  doublePrice: 40
 },
 {
-id: 8,
-name: "Predicted number of minutes for each clip",
-description: "For this kind of service we propose the number",
-locale: "en",
-baseAmount: 2,
-doublePrice: 40
+  id: 8,
+  name: "Predicted number of minutes for each clip",
+  description: "For this kind of service we propose the number",
+  locale: "en",
+  baseAmount: 2,
+  doublePrice: 40
 }
 ]
 
@@ -79,18 +86,41 @@ doublePrice: 40
   styleUrls: ['./indicators-overview.component.scss']
 })
 export class IndicatorsOverviewComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'description', 'baseAmount', 'doublePrice', 'language', 'actions'];
-  dataSource = new MatTableDataSource(INDICATORS);
-  isSpinnerDisplayed = false;
+  public displayedColumns: string[] = ['name', 'description', 'baseAmount', 'doublePrice', 'language', 'actions'];
+  public dataSource: MatTableDataSource<IndicatorEto>;
+  public isSpinnerDisplayed = false;
+  public subscription = new Subscription();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private translate: TranslateService) { }
+  constructor(
+    private translate: TranslateService,
+    private serviceService: ServiceService,
+    public dialog: MatDialog,
+  ) { }
 
   ngOnInit(): void {
+    this.onSpinnerDisplayed();
+    this.loadsAllIndicators();
   }
 
-  ngAfterViewInit() {
+  private loadsAllIndicators() {
+    this.serviceService.getAllIndicators();
+
+    this.subscription.add(this.serviceService.indciatorsData.subscribe(
+      (indicators) => {
+        this.dataSource = new MatTableDataSource(indicators);
+        this.setDataSourceSettings();
+      }))
+  }
+
+  private onSpinnerDisplayed() {
+    this.subscription.add(this.serviceService.spinnerData.subscribe((isSpinnerDisplayed: boolean) => {
+      this.isSpinnerDisplayed = isSpinnerDisplayed;
+    }));
+  }
+
+  private setDataSourceSettings() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.dataSource.filterPredicate = this.prepareFilterPredicate();
@@ -108,8 +138,8 @@ export class IndicatorsOverviewComponent implements OnInit {
   private prepareFilterPredicate(): (data: IndicatorEto, filter: string) => boolean {
     return (data: IndicatorEto, filter: string) => {
 
-      return data.name.toLocaleLowerCase().includes(filter) || data.description.toLocaleLowerCase().includes(filter) || 
-      data.baseAmount.toFixed().includes(filter) || data.doublePrice.toFixed().includes(filter) ||
+      return data.name.toLocaleLowerCase().includes(filter) || data.description.toLocaleLowerCase().includes(filter) ||
+        data.baseAmount.toFixed().includes(filter) || data.doublePrice.toFixed().includes(filter) ||
         this.translate.instant("table." + data.locale).toLocaleLowerCase().includes(filter);
     };
   }
@@ -144,5 +174,27 @@ export class IndicatorsOverviewComponent implements OnInit {
           return 0;
       }
     });
+  }
+
+  addIndicator() {
+    const dialogRef = this.dialog.open(AddIndicatorComponent, { height: '75%', width: '45%' });
+  }
+
+  modifyIndicator(indicator: IndicatorEto) {
+    const dialogRef = this.dialog.open(ModifyIndicatorComponent, { data: indicator, height: '55%', width: '45%' });
+  }
+
+  deleteIndicator(indicator: IndicatorEto) {
+    const dialogRef = this.dialog.open(DeleteComponent, { height: '20%', width: '45%'});
+
+    dialogRef.afterClosed().subscribe((isDecisionPositive: boolean) => {
+      if(isDecisionPositive){
+        this.serviceService.deleteIndicator(indicator.id);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

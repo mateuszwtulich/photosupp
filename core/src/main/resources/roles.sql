@@ -83,11 +83,11 @@ INSERT INTO public.role_permissions(
 
 INSERT INTO public.account(
     id, username, password, email, is_activated)
-    VALUES (1000000, 'user1', '$2y$10$EqGHhmN8QZRvdLHaUv5wgeqezToyPK8gd1qxRHgnKUPtCKz2fRjkm', 'user1@test.com', false);
+    VALUES (1000000, 'user1', '$2a$10$x7ejXgV3CaKQ5MppIsD1heYr/49AGRjGREcHzc49RgmUSzKkDlvQO', 'user1@test.com', true);
 
 INSERT INTO public.account(
     id, username, password, email, is_activated)
-    VALUES (1000001, 'user2', '$2y$10$EqGHhmN8QZRvdLHaUv5wgeqezToyPK8gd1qxRHgnKUPtCKz2fRjkm', 'user2@test.com', true);
+    VALUES (1000001, 'user2', '$2a$10$x7ejXgV3CaKQ5MppIsD1heYr/49AGRjGREcHzc49RgmUSzKkDlvQO', 'user2@test.com', true);
 
 INSERT INTO public.VERIFICATION_TOKEN(
     id, token, account_id)
@@ -99,7 +99,7 @@ INSERT INTO public.photosupp_user(
 
 INSERT INTO public.photosupp_user(
     id, name, surname, role_id, account_id)
-    VALUES (1000001, 'NAME2', 'SURNAME2', 2, 1000001);
+    VALUES (1000001, 'NAME2', 'SURNAME2', 1, 1000001);
 
 INSERT INTO public.indicator(
     id, name, description, locale, base_amount, DOUBLE_PRICE)

@@ -8,104 +8,25 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { Gallery } from 'angular-gallery';
-import { Subscription } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { combineAll } from 'rxjs/operators';
 import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
+import { LocalStorageService } from 'src/app/shared/cache/localStorage.service';
 import { SortUtil } from 'src/app/shared/utils/SortUtil';
 import { ApplicationPermissions } from 'src/app/usermanagement/shared/enum/ApplicationPermissions';
 import { AccountEto } from 'src/app/usermanagement/shared/to/AccountEto';
 import { PermissionEto } from 'src/app/usermanagement/shared/to/PermissionEto';
 import { RoleEto } from 'src/app/usermanagement/shared/to/RoleEto';
 import { UserEto } from 'src/app/usermanagement/shared/to/UserEto';
+import { OrderModule } from '../order.module';
 import { MediaType } from '../shared/enum/MediaType';
 import { OrderStatus } from '../shared/enum/OrderStatus';
-import { AddressEto } from '../shared/to/AddressEto';
-
-const BASIC_PERM: PermissionEto[] = [{
-  name: ApplicationPermissions.AUTH_USER,
-  description: "Basic permissions"
-}]
-
-const ROLE1: RoleEto = {
-  id: 2,
-  name: "User",
-  description: "Description of normal user",
-  permissions: BASIC_PERM
-}
-
-const ACCOUNT2: AccountEto = {
-  id: 2,
-  username: "test2",
-  password: "dsf",
-  email: "test2@test.com",
-  isActivated: true
-}
-
-const USER: UserEto = {
-  id: 1,
-  name: "Tom",
-  surname: "Willman",
-  accountEto: ACCOUNT2,
-  roleEto: ROLE1
-}
-
-const COORDINATOR: UserEto = {
-  id: 2,
-  name: "John",
-  surname: "Smith",
-  accountEto: null,
-  roleEto: null
-}
-
-const SERVICE: ServiceEto = {
-  id: 1,
-  name: "foto",
-  description: "opis",
-  locale: "pl",
-  basePrice: 300,
-  indicatorEtoList: null
-};
-
-const ADDRESS: AddressEto = {
-  id: 1,
-  city: "Wroclaw",
-  street: "Wroblewskiego",
-  buildingNumber: "20A",
-  apartmentNumber: null,
-  postalCode: "60-324",
-}
-
-const ORDER = { orderNumber: "INVIU0001", coordinator: COORDINATOR, user: USER, status: OrderStatus.NEW,
- booking: {id: 1, name: "Booking #1", description: "short description", service: SERVICE, address: ADDRESS, user: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
-  price: 1000, createdAt: "22-11-2020" }
-
-  const COMMENTS = [{
-    id: 1,
-    orderNumber: "Sd",
-    content: "Mr Sgsd adsgfsdop sdgosd jopsdg opsdgpojdog sdpogjdsdsg sdopgjsdop jsd ospdgjf sspog jspo gso jgdp sdogpfj. sgojps gj. sgjopdfjg",
-    user: USER,
-    createdAt: "22-11-2020"
-  },
-  { 
-    id: 2,
-    orderNumber: "Sd",
-    content: "Mr Sgsd adsgfsdop sdgosd jopsdg opsdgpojdog sdpogjdsdsg sdopgjsdodsfds sdf sdf sdf sd re yrthj ykyiuy lki7yolul iu tyr grdfgfd tt tyhrt p jsd ospdgjf sspog jspo gso jgdp sdogpfj. sgojps gj. sgjopdfjg",
-    user: COORDINATOR,
-    createdAt: "22-11-2020"
-  }
-]
-
-const MEDIA_CONTENT = [{
-  id: 2,
-  type: MediaType.IMAGE,
-  url: "url",
-  orderNumber: "SAd"
-},
-{
-  id: 2,
-  type: MediaType.VIDEO,
-  url: "urlasdasasdasasdasdassa",
-  orderNumber: "SAd"
-}]
+import { OrderService } from '../shared/services/order.service';
+import { CommentEto } from '../shared/to/CommentEto';
+import { CommentTo } from '../shared/to/CommentTo';
+import { ImagePath } from '../shared/to/ImagePath';
+import { MediaContentEto } from '../shared/to/MediaContentEto';
+import { OrderEto } from '../shared/to/OrderEto';
 
 @Component({
   selector: 'cf-order-details',
@@ -113,66 +34,161 @@ const MEDIA_CONTENT = [{
   styleUrls: ['./order-details.component.scss']
 })
 export class OrderDetailsComponent implements OnInit {
-  displayedColumns: string[] = ['type', 'name', 'actions'];
-  dataSource = new MatTableDataSource(MEDIA_CONTENT);
-  isSpinnerDisplayed = false;
+  public displayedColumns: string[] = ['type', 'name', 'actions'];
+  public dataSource: MatTableDataSource<MediaContentEto>;
+  public isSpinnerDisplayed = false;
+  public subscritpion: Subscription = new Subscription();
+  public order: OrderEto;
+  public subscription = new Subscription();
+  public orderControl: FormControl;
+  public commentControl: FormControl;
+  public comments: Observable<CommentEto[]>;
+  public mediaContents: MediaContentEto[];
+  public imagePaths: ImagePath[] = [];
+  public userId: number;
+  public mediaExists = false;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  subscritpion: Subscription = new Subscription();
-  order = ORDER;
-
-  @Input()
-  public orderControl: FormControl;
-  public comments = COMMENTS;
-
-  constructor(private translate: TranslateService, private router: Router, private gallery: Gallery, private route: ActivatedRoute) {
-   }
+  constructor(
+    private translate: TranslateService,
+    private router: Router,
+    private gallery: Gallery,
+    private route: ActivatedRoute,
+    private orderSevice: OrderService,
+    private localStorage: LocalStorageService,
+  ) {
+  }
 
   ngOnInit(): void {
-    this.orderControl = new FormControl(ORDER);
-    this.route.snapshot.paramMap.get('id');
+    this.userId = this.localStorage.getUserId();
+    this.onSpinnerDisplayed();
+    this.orderControl = new FormControl("", Validators.required);
+    this.commentControl = new FormControl("");
+    this.getOrderById(this.route.snapshot.paramMap.get('orderNumber'));
+  }
+
+  private getOrderById(orderNumber: string) {
+    Promise.all([
+      this.orderSevice.getOrderByOrderNumber(orderNumber),
+      this.orderSevice.getCommentsOfOrder(orderNumber),
+      this.orderSevice.getMediaContentOfOrder(orderNumber)
+    ]).then(() => {
+      this.subscritpion.add(combineLatest(
+        this.orderSevice.orderDetailsData,
+        this.orderSevice.mediaContentOrderData
+      ).subscribe(([order, mediaContents]) => {
+        this.order = order;
+        this.orderControl.setValue(order);
+        this.comments = this.orderSevice.commentOrderData;
+        this.mediaContents = mediaContents;
+        this.mediaExists = this.mediaContents.length > 0;
+        this.prepareMediaContentTable();
+      }))
+    })
+  }
+
+  private prepareMediaContentTable() {
+    let dataSource = this.mediaContents.map((mediaContent: MediaContentEto) => {
+      return {
+        id: mediaContent.id,
+        type: mediaContent.type,
+        orderNumber: mediaContent.orderNumber,
+        url: mediaContent.url.substring(mediaContent.url.lastIndexOf("/") + 1)
+      }
+    })
+    this.dataSource = new MatTableDataSource(dataSource);
+    this.setDataSource();
+    this.loadImages(this.mediaContents);
+  }
+
+  private setDataSource() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  private onSpinnerDisplayed() {
+    this.subscription.add(this.orderSevice.spinnerData.subscribe((isSpinnerDisplayed: boolean) => {
+      this.isSpinnerDisplayed = isSpinnerDisplayed;
+    }));
+  }
+
+  private loadImages(mediaContents) {
+    this.imagePaths = [];
+    mediaContents.forEach((mediaContent: MediaContentEto) => {
+      this.imagePaths.push({
+        path: mediaContent.url
+      });
+    })
   }
 
   ngOnDestroy() {
     this.subscritpion.unsubscribe();
   }
 
-  navigateToBookingDetails(id: number){
-    let currentHeadLink = this.router.url.substring(0,this.router.url.indexOf("o"));
-    
+  navigateToBookingDetails(id: number) {
+    let currentHeadLink = this.router.url.substring(0, this.router.url.indexOf("o"));
+
     this.router.navigateByUrl(currentHeadLink + "orders/booking/details/" + id.toFixed());
   }
 
   showGallery(index: number) {
     let prop = {
-        images: [
-            {path: '../../../assets/img6.jpg'},
-            {path: '../../../assets/img6.jpg'},
-            {path: '../../../assets/img6.jpg'}
-        ],
-        index 
+      images: this.imagePaths,
+      index
     };
     this.gallery.load(prop);
-}
-
-sortData(sort: Sort) {
-  const data = this.dataSource.data.slice();
-  if (!sort.active || sort.direction === "") {
-    this.dataSource.data = data;
   }
-  this.dataSource.data = data.sort((a, b) => {
-    const isAsc = sort.direction === "asc";
-    switch (sort.active) {
-      case "name":
-        return SortUtil.compare(a.url, b.url, isAsc);
-      case "type":
-        return SortUtil.compare(a.type, b.type, isAsc);
-      default:
-        return 0;
+
+  sortData(sort: Sort) {
+    const data = this.dataSource.data.slice();
+    if (!sort.active || sort.direction === "") {
+      this.dataSource.data = data;
     }
-  });
-}
+    this.dataSource.data = data.sort((a, b) => {
+      const isAsc = sort.direction === "asc";
+      switch (sort.active) {
+        case "name":
+          return SortUtil.compare(a.url, b.url, isAsc);
+        case "type":
+          return SortUtil.compare(a.type, b.type, isAsc);
+        default:
+          return 0;
+      }
+    });
+  }
+
+  public addComment() {
+    if (this.commentControl.valid) {
+      let commentTo: CommentTo = {
+        content: this.commentControl.value,
+        orderNumber: this.order.orderNumber,
+        userId: this.localStorage.getUserId()
+      }
+
+      this.orderSevice.addComment(commentTo).then(() => {
+        this.commentControl.setValue("");
+      })
+    }
+  }
+
+  public acceptOrder() {
+    this.orderSevice.acceptOrder(this.order.orderNumber).then(() => {
+      this.order.status = OrderStatus.IN_PROGRESS;
+    });
+  }
+
+  public sendToVerficationOrder() {
+    this.orderSevice.sendOrderToVerification(this.order.orderNumber).then(() => {
+      this.order.status = OrderStatus.TO_VERIFY;
+    });
+  }
+
+  public finishOrder() {
+    this.orderSevice.finishOrder(this.order.orderNumber).then(() => {
+      this.order.status = OrderStatus.FINISHED;
+    });
+  }
 }
 
 
