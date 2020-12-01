@@ -4,12 +4,7 @@ import com.wtulich.photosupp.general.logic.api.exception.EntityAlreadyExistsExce
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
 import com.wtulich.photosupp.userhandling.logic.api.exception.AccountAlreadyExistsException;
 import com.wtulich.photosupp.userhandling.logic.api.exception.RoleHasAssignedUsersException;
-import com.wtulich.photosupp.userhandling.logic.api.to.AccountEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.AccountTo;
-import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.RoleTo;
-import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.UserTo;
+import com.wtulich.photosupp.userhandling.logic.api.to.*;
 import com.wtulich.photosupp.userhandling.logic.impl.UserHandlingImpl;
 import com.wtulich.photosupp.userhandling.service.api.ui.UserRestService;
 import org.slf4j.Logger;
@@ -172,6 +167,15 @@ public class UserRestServiceImpl implements UserRestService {
             return roleEtos;
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
     }
+
+    @Override
+    public List<PermissionEto> getAllPermissions() {
+        return userHandling.findAllPermissions().map(permissionEtos -> {
+            if (permissionEtos.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, ROLES_NOT_EXIST);
+            }
+            return permissionEtos;
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));    }
 
     @Override
     public ResponseEntity<RoleEto> createRole(RoleTo roleTo) {

@@ -1,36 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { DeleteComponent } from 'src/app/core/delete/delete.component';
 import { SortUtil } from 'src/app/shared/utils/SortUtil';
+import { AddRoleComponent } from '../modals/role/add-role/add-role.component';
+import { ModifyRoleComponent } from '../modals/role/modify-role/modify-role.component';
 import { ApplicationPermissions } from '../shared/enum/ApplicationPermissions';
+import { UsersService } from '../shared/services/users.service';
 import { PermissionEto } from '../shared/to/PermissionEto';
 import { RoleEto } from '../shared/to/RoleEto';
-
-const BASIC_PERM: PermissionEto[] = [{
-  name: ApplicationPermissions.AUTH_USER,
-  description: "Basic permissions"
-}]
-
-const SUPER_PERM: PermissionEto[] = [{
-  name: ApplicationPermissions.A_CRUD_SUPER,
-  description: "All permissions"
-}]
-
-const ROLE1: RoleEto = {
-  id: 2,
-  name: "User",
-  description: "Description of normal user",
-  permissions: BASIC_PERM
-}
-
-const ROLE2: RoleEto = {
-  id: 2,
-  name: "Manager",
-  description: "Description of manager user",
-  permissions: SUPER_PERM
-}
 
 @Component({
   selector: 'cf-roles-overview',
@@ -40,17 +22,40 @@ const ROLE2: RoleEto = {
 
 export class RolesOverviewComponent implements OnInit {
   displayedColumns: string[] = ['name', 'description', 'permissions', 'actions'];
-  dataSource = new MatTableDataSource([ROLE1, ROLE2]);
-  isSpinnerDisplayed = false;
+  public dataSource = new MatTableDataSource([]);
+  public isSpinnerDisplayed = false;
+  public subscription = new Subscription();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private translate: TranslateService) { }
+  constructor(
+    private translate: TranslateService,
+    private usersService: UsersService,
+    public dialog: MatDialog,
+  ) { }
 
   ngOnInit(): void {
+    this.onSpinnerDisplayed();
+    this.loadsAllRoles();
   }
 
-  ngAfterViewInit() {
+  private loadsAllRoles() {
+    this.usersService.getAllRoles();
+
+    this.subscription.add(this.usersService.rolesData.subscribe(
+      (roles) => {
+        this.dataSource = new MatTableDataSource(roles);
+        this.setDataSourceSettings();
+      }))
+  }
+
+  private onSpinnerDisplayed() {
+    this.subscription.add(this.usersService.spinnerData.subscribe((isSpinnerDisplayed: boolean) => {
+      this.isSpinnerDisplayed = isSpinnerDisplayed;
+    }));
+  }
+
+  private setDataSourceSettings() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.dataSource.filterPredicate = this.prepareFilterPredicate();
@@ -67,9 +72,8 @@ export class RolesOverviewComponent implements OnInit {
 
   private prepareFilterPredicate(): (data: RoleEto, filter: string) => boolean {
     return (data: RoleEto, filter: string) => {
-      let inPermissions: boolean = !!data.permissions
+      let inPermissions: boolean = !!data.permissionEtoList
       .find(permission => this.translate.instant("permissions." + permission.name).toLocaleLowerCase().includes(filter));
-      console.log(inPermissions);
 
       return data.name.toLocaleLowerCase().includes(filter) || data.description.toLocaleLowerCase().includes(filter) || inPermissions;
     };
@@ -88,10 +92,32 @@ export class RolesOverviewComponent implements OnInit {
         case "description":
           return SortUtil.compare(a.description, b.description, isAsc);
         case "permissions":
-          return SortUtil.compare(this.translate.instant("permissions." + a.name), this.translate.instant("permissions." + b.name), isAsc);
+          return SortUtil.compare(this.translate.instant("permissions." + a.permissionEtoList[0].name), this.translate.instant("permissions." + b.permissionEtoList[0].name), isAsc);
         default:
           return 0;
       }
     });
+  }
+
+  addRole() {
+    const dialogRef = this.dialog.open(AddRoleComponent, { height: '50%', width: '45%' });
+  }
+
+  modifyRole(role: RoleEto) {
+    const dialogRef = this.dialog.open(ModifyRoleComponent, { data: role, height: '50%', width: '45%' });
+  }
+
+  deleteRole(role: RoleEto) {
+    const dialogRef = this.dialog.open(DeleteComponent, { height: '20%', width: '45%'});
+
+    dialogRef.afterClosed().subscribe((isDecisionPositive: boolean) => {
+      if(isDecisionPositive){
+        this.usersService.deleteRole(role.id);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

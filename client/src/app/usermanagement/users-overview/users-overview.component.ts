@@ -1,70 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { DeleteComponent } from 'src/app/core/delete/delete.component';
 import { SortUtil } from 'src/app/shared/utils/SortUtil';
-import { ApplicationPermissions } from '../shared/enum/ApplicationPermissions';
-import { AccountEto } from '../shared/to/AccountEto';
-import { PermissionEto } from '../shared/to/PermissionEto';
-import { RoleEto } from '../shared/to/RoleEto';
+import { AddUserComponent } from '../modals/user/add-user/add-user.component';
+import { ModifyUserComponent } from '../modals/user/modify-user/modify-user.component';
+import { UsersService } from '../shared/services/users.service';
 import { UserEto } from '../shared/to/UserEto';
-
-// const BASIC_PERM: PermissionEto[] = [{
-//   name: ApplicationPermissions.AUTH_USER,
-//   description: "Basic permissions"
-// }]
-
-// const SUPER_PERM: PermissionEto[] = [{
-//   name: ApplicationPermissions.A_CRUD_SUPER,
-//   description: "All permissions"
-// }]
-
-// const ROLE1: RoleEto = {
-//   id: 2,
-//   name: "User",
-//   description: "Description of normal user",
-//   permissions: BASIC_PERM
-// }
-
-// const ROLE2: RoleEto = {
-//   id: 2,
-//   name: "Manager",
-//   description: "Description of manager user",
-//   permissions: SUPER_PERM
-// }
-
-// const ACCOUNT1: AccountEto = {
-//   id: 1,
-//   username: "test1",
-//   password: "dsf",
-//   email: "test1@test.com",
-//   isActivated: false
-// }
-
-// const ACCOUNT2: AccountEto = {
-//   id: 2,
-//   username: "test2",
-//   password: "dsf",
-//   email: "test2@test.com",
-//   isActivated: true
-// }
-
-// const COORDINATOR: UserEto = {
-//   id: 1,
-//   name: "John",
-//   surname: "Smith",
-//   account: ACCOUNT1,
-//   role: ROLE2
-// }
-
-// const USER: UserEto = {
-//   id: 2,
-//   name: "Tom",
-//   surname: "Willman",
-//   account: ACCOUNT2,
-//   role: ROLE1
-// }
 
 @Component({
   selector: 'cf-users-overview',
@@ -72,18 +18,41 @@ import { UserEto } from '../shared/to/UserEto';
   styleUrls: ['./users-overview.component.scss']
 })
 export class UsersOverviewComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'surname', 'username', 'email', 'isActivated', 'role', 'actions'];
-  dataSource = new MatTableDataSource([]);
-  isSpinnerDisplayed = false;
+  public displayedColumns: string[] = ['name', 'surname', 'username', 'email', 'isActivated', 'role', 'actions'];
+  public dataSource = new MatTableDataSource([]);
+  public isSpinnerDisplayed = false;
+  public subscription = new Subscription();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private translate: TranslateService) { }
+  constructor(
+    private translate: TranslateService,
+    private usersService: UsersService,
+    public dialog: MatDialog,
+  ) { }
 
   ngOnInit(): void {
+    this.onSpinnerDisplayed();
+    this.loadsAllUsers();
   }
 
-  ngAfterViewInit() {
+  private loadsAllUsers() {
+    this.usersService.getAllUsers();
+
+    this.subscription.add(this.usersService.usersData.subscribe(
+      (users) => {
+        this.dataSource = new MatTableDataSource(users);
+        this.setDataSourceSettings();
+      }))
+  }
+
+  private onSpinnerDisplayed() {
+    this.subscription.add(this.usersService.spinnerData.subscribe((isSpinnerDisplayed: boolean) => {
+      this.isSpinnerDisplayed = isSpinnerDisplayed;
+    }));
+  }
+
+  private setDataSourceSettings() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.dataSource.filterPredicate = this.prepareFilterPredicate();
@@ -100,7 +69,6 @@ export class UsersOverviewComponent implements OnInit {
 
   private prepareFilterPredicate(): (data: UserEto, filter: string) => boolean {
     return (data: UserEto, filter: string) => {
-
       return data.name.toLocaleLowerCase().includes(filter) || data.surname.toLocaleLowerCase().includes(filter) || 
       data.accountEto.username.toLocaleLowerCase().includes(filter) || data.accountEto.email.toLocaleLowerCase().includes(filter) ||
         this.translate.instant("users." + data.accountEto.isActivated).toLocaleLowerCase().includes(filter) || 
@@ -131,14 +99,36 @@ export class UsersOverviewComponent implements OnInit {
         case "isActivated":
           return SortUtil.compare(this.translate.instant("users." + a.account.isActivated), this.translate.instant("users." + b.account.isActivated), isAsc);
         case "username":
-          return SortUtil.compare(a.account.username, b.account.username, isAsc);
+          return SortUtil.compare(a.accountEto.username, b.accountEto.username, isAsc);
         case "email":
-          return SortUtil.compare(a.account.email, b.account.email, isAsc);
+          return SortUtil.compare(a.accountEto.email, b.accountEto.email, isAsc);
         case "role":
-          return SortUtil.compare(a.role.name, b.role.name, isAsc);
+          return SortUtil.compare(a.roleEto.name, b.roleEto.name, isAsc);
         default:
           return 0;
       }
     });
+  }
+
+  addUser() {
+    const dialogRef = this.dialog.open(AddUserComponent, { height: '55%', width: '45%' });
+  }
+
+  modifyUser(user: UserEto) {
+    const dialogRef = this.dialog.open(ModifyUserComponent, { data: user, height: '55%', width: '45%' });
+  }
+
+  deleteUser(user: UserEto) {
+    const dialogRef = this.dialog.open(DeleteComponent, { height: '20%', width: '45%'});
+
+    dialogRef.afterClosed().subscribe((isDecisionPositive: boolean) => {
+      if(isDecisionPositive){
+        this.usersService.deleteUser(user.id);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

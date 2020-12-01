@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { OrderRoutingModule } from './order-routing.module';
 import { BookingsOverviewComponent } from './bookings-overview/bookings-overview.component';
-import { OrderAddDialog, OrdersOverviewComponent } from './orders-overview/orders-overview.component';
+import { OrdersOverviewComponent } from './orders-overview/orders-overview.component';
 import {A11yModule} from '@angular/cdk/a11y';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import {DragDropModule} from '@angular/cdk/drag-drop';
@@ -54,10 +54,15 @@ import { OrderDetailsComponent } from './order-details/order-details.component';
 import { BookingDetailsComponent } from './booking-details/booking-details.component';
 import {IvyGalleryModule} from 'angular-gallery';
 import { NgxPermissionsModule } from 'ngx-permissions';
+import { AddBookingComponent } from './modals/booking/add-booking/add-booking.component';
+import { ModifyBookingComponent } from './modals/booking/modify-booking/modify-booking.component';
+import { ModifyOrderComponent } from './modals/order/modify-order/modify-order.component';
+import { AddOrderComponent } from './modals/order/add-order/add-order.component';
+import { ModifyPriceIndicatorComponent } from './modals/priceIndicator/modify-price-indicator/modify-price-indicator.component';
 
 
 @NgModule({
-  declarations: [BookingsOverviewComponent, OrdersOverviewComponent, OrderDetailsComponent, BookingDetailsComponent, OrderAddDialog],
+  declarations: [BookingsOverviewComponent, OrdersOverviewComponent, OrderDetailsComponent, BookingDetailsComponent, AddBookingComponent, ModifyBookingComponent, ModifyOrderComponent, AddOrderComponent, ModifyPriceIndicatorComponent],
   imports: [
     IvyGalleryModule,
     CommonModule,
@@ -112,6 +117,6 @@ import { NgxPermissionsModule } from 'ngx-permissions';
     OrderRoutingModule,
     NgxPermissionsModule.forChild()
   ],
-  exports: [BookingsOverviewComponent, OrdersOverviewComponent, OrderDetailsComponent, BookingDetailsComponent, OrderAddDialog]
+  exports: [BookingsOverviewComponent, OrdersOverviewComponent, OrderDetailsComponent, BookingDetailsComponent, AddBookingComponent, ModifyBookingComponent, ModifyOrderComponent, AddOrderComponent, ModifyPriceIndicatorComponent]
 })
 export class OrderModule { }

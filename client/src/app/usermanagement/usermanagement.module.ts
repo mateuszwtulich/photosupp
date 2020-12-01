@@ -51,9 +51,13 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import { BrowserModule } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AddRoleComponent } from './modals/role/add-role/add-role.component';
+import { ModifyRoleComponent } from './modals/role/modify-role/modify-role.component';
+import { AddUserComponent } from './modals/user/add-user/add-user.component';
+import { ModifyUserComponent } from './modals/user/modify-user/modify-user.component';
 
 @NgModule({
-  declarations: [RolesOverviewComponent, UsersOverviewComponent, UserDetailsComponent, UserDetailsModifyDialog],
+  declarations: [RolesOverviewComponent, UsersOverviewComponent, UserDetailsComponent, UserDetailsModifyDialog, AddRoleComponent, ModifyRoleComponent, AddUserComponent, ModifyUserComponent],
   imports: [
     CommonModule,
     UsermanagementRoutingModule,
@@ -106,6 +110,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     PortalModule,
     ScrollingModule
   ],
-  exports: [RolesOverviewComponent, UsersOverviewComponent, UserDetailsComponent, UserDetailsModifyDialog]
+  exports: [RolesOverviewComponent, UsersOverviewComponent, UserDetailsComponent, UserDetailsModifyDialog, AddRoleComponent, ModifyRoleComponent, AddUserComponent, ModifyUserComponent]
 })
 export class UsermanagementModule { }

@@ -19,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -54,7 +55,9 @@ public class UcManageServiceImpl implements UcManageService {
         LOG.debug(CREATE_SERVICE_LOG, serviceTo.getName());
 
         ServiceEntity serviceEntity = serviceMapper.toServiceEntity(serviceTo);
-        serviceEntity.setIndicatorList(getIndicatorsByIds(serviceTo.getIndicatorsIds()));
+        if(serviceTo.getIndicatorsIds().size() > 0){
+            serviceEntity.setIndicatorList(getIndicatorsByIds(serviceTo.getIndicatorsIds()));
+        }
 
         return Optional.of(toServiceEto(serviceDao.save(serviceEntity)));
     }
@@ -76,16 +79,21 @@ public class UcManageServiceImpl implements UcManageService {
         LOG.debug(UPDATE_SERVICE_LOG, id);
         serviceEntity.setDescription(serviceTo.getDescription());
         serviceEntity.setBasePrice(serviceTo.getBasePrice());
-        serviceEntity.setIndicatorList(getIndicatorsByIds(serviceTo.getIndicatorsIds()));
 
-        return Optional.of(serviceMapper.toServiceEto(serviceEntity));
+        if(serviceTo.getIndicatorsIds().size() > 0){
+            serviceEntity.setIndicatorList(getIndicatorsByIds(serviceTo.getIndicatorsIds()));
+        } else {
+            serviceEntity.setIndicatorList(new ArrayList<>());
+        }
+
+        return Optional.of(toServiceEto(serviceEntity));
     }
 
     private List<IndicatorEntity> getIndicatorsByIds(List<Long> indicatorsIds) throws EntityDoesNotExistException {
         List<IndicatorEntity> indicatorEntities = indicatorDao.findAllById(indicatorsIds);
 
         if(indicatorEntities.size() == 0){
-            throw new EntityDoesNotExistException("Indicators does not exists");
+            throw new EntityDoesNotExistException("Indicators do not exist");
         }
         return indicatorEntities;
     }

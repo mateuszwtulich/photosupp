@@ -3,12 +3,7 @@ package com.wtulich.photosupp.userhandling.service.api.ui;
 import com.wtulich.photosupp.general.common.api.RestService;
 import com.wtulich.photosupp.general.security.enums.ApplicationPermissions;
 import com.wtulich.photosupp.general.utils.annotations.PermissionRestrict;
-import com.wtulich.photosupp.userhandling.logic.api.to.AccountEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.AccountTo;
-import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.RoleTo;
-import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.UserTo;
+import com.wtulich.photosupp.userhandling.logic.api.to.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -221,6 +216,21 @@ public interface UserRestService extends RestService {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ROLES })
     List<RoleEto> getAllRoles();
+
+
+    @ApiOperation(value = "Get all permissions.",
+            tags = {"role"},
+            response = PermissionEto.class, responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request"),
+            @ApiResponse(code = 204, message = "No content found"),
+            @ApiResponse(code = 403, message = "You dont have permissions for this action!"),
+            @ApiResponse(code = 429, message = "Too many requests"),
+    })
+    @GetMapping(value = "/permissions",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PermissionRestrict(permissions = { ApplicationPermissions.A_CRUD_SUPER, ApplicationPermissions.A_CRUD_ROLES })
+    List<PermissionEto> getAllPermissions();
 
 
     @ApiOperation(value = "Creates role",

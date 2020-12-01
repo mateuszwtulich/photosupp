@@ -6,7 +6,7 @@
         <mat-chip color="accent" selected (click)="filterStatus('pl')">{{ 'table.pl' | translate}}</mat-chip>
         <mat-chip color="accent" selected (click)="filterStatus('en')">{{ 'table.en' | translate}}</mat-chip>
       </mat-chip-list>
-      <button id="add-service" mat-mini-fab color="primary" aria-label="Add service button">
+      <button id="add-service" mat-mini-fab color="primary" aria-label="Add service button" (click)="addService()">
         <mat-icon id="icon">add</mat-icon>
       </button>
     </div>

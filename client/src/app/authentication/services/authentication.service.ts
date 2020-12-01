@@ -52,7 +52,6 @@ import { LocalStorageService } from 'src/app/shared/cache/localStorage.service';
           resolve();
         },
           (error) => {
-            console.log(error.status)
             if (error.status == 403) {
               this.snackbar.open(this.translate.instant('login.error'));
               this.spinnerDataSource.next(false);

@@ -131,7 +131,8 @@
     "verify": "Wyślij do weryfikacji",
     "inprogress": "Rozpocznij zlecenie",
     "finish": "Zakończ zlecenie",
-    "add": "Utwórz nowe zamówienie"
+    "add": "Utwórz nowe zamówienie",
+    "modify": "Zaktualizuj zamówienie"
   },
   "bookings": {
     "plural": "Rezerwacje",
@@ -158,12 +159,15 @@
     "start-booking": "Przyjmij zlecenie",
     "information": "Podaj informacje",
     "save": "Utwórz rezerwacje",
-    "mine": "Moje"
+    "mine": "Moje",
+    "add": "Dodaj rezerwację",
+    "modify": "Zaktualizuj rezerwację"
   },
   "services": {
       "plural": "Usługi",
       "basePrice": "Cena podstawowa",
-      "indicators": "Czynniki podwyższające cenę"
+      "indicators": "Czynniki podwyższające cenę",
+      "modify": "Zaktualizuj usługę"
   },
   "indicators": {
       "plural": "Czynniki",
@@ -171,7 +175,8 @@
       "baseAmount": "Ilość wolna od dopłaty",
       "doublePrice": "Dodatkowa cena za podwojenie ilości",
       "add": "Dodaj czynnik",
-      "description-second": "Opis w języku obcym"
+      "description-second": "Opis w języku obcym",
+      "modify": "Zaktualizuj czynnik"
   },
   "users": {
     "plural": "Użytkownicy",
@@ -183,6 +188,7 @@
     "role": "Rola",
     "manager": "Menedżer",
     "user": "Użytkownik",
+    "admin": "Administrator",
     "false": "Tak",
     "true": "Nie",
     "personal-data": "Dane osobowe",
@@ -195,13 +201,16 @@
     "password-button": "Zmień hasło",
     "email-button": "Zmień adres e-mail",
     "modify": "Zmień dane osobowe",
-    "modified": "Twoje dane zostały zmienione.",
-    "check-mailbox": "Sprawdź skrzynkę pocztową. Dane konta zostały zmienione."
+    "modified": "Dane zostały zmienione.",
+    "check-mailbox": "Sprawdź skrzynkę pocztową. Dane konta zostały zmienione.",
+    "add":"Dodaj użytkownika"
   },
   "roles": {
     "plural": "Role",
     "description": "Opis",
-    "permissions": "Uprawnienia"
+    "permissions": "Uprawnienia",
+    "add": "Dodaj rolę",
+    "modify":"Zaktualizuj rolę"
   },
   "permissions": {
     "A_CRUD_SUPER": "Administrator",

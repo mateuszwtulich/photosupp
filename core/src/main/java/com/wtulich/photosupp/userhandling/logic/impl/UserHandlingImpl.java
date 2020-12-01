@@ -5,12 +5,7 @@ import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistExcep
 import com.wtulich.photosupp.userhandling.logic.api.UserHandling;
 import com.wtulich.photosupp.userhandling.logic.api.exception.AccountAlreadyExistsException;
 import com.wtulich.photosupp.userhandling.logic.api.exception.RoleHasAssignedUsersException;
-import com.wtulich.photosupp.userhandling.logic.api.to.AccountEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.AccountTo;
-import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.RoleTo;
-import com.wtulich.photosupp.userhandling.logic.api.to.UserEto;
-import com.wtulich.photosupp.userhandling.logic.api.to.UserTo;
+import com.wtulich.photosupp.userhandling.logic.api.to.*;
 import com.wtulich.photosupp.userhandling.logic.api.usecase.UcDeleteRole;
 import com.wtulich.photosupp.userhandling.logic.api.usecase.UcDeleteUser;
 import com.wtulich.photosupp.userhandling.logic.api.usecase.UcFindAccount;
@@ -85,6 +80,11 @@ public class UserHandlingImpl implements UserHandling {
     @Override
     public Optional<List<RoleEto>> findAllRoles() {
         return ucFindRole.findAllRoles();
+    }
+
+    @Override
+    public Optional<List<PermissionEto>> findAllPermissions() {
+        return ucFindRole.findAllPermissions();
     }
 
     @Override

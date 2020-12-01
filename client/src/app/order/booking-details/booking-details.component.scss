@@ -14,26 +14,36 @@
     display: flex;
     flex-direction: row;
 
-    #modify-booking{
-        margin-right: 2%;
+    #button-wrapper{
+      display: flex;
+      width: 10%;
+      flex-direction: row;
+      margin-right: 0%;
+      margin-left: auto;
+
+      #modify-booking{
         margin-left: auto;
+          margin-right: 1%;
 
         #icon {
             display: flex;
             justify-content: center;
             align-items: center;
           }
-    }
+        }
 
-    #delete-booking{
-        margin-right: 0%;
+        #delete-booking{
+          margin-left: auto;
+          margin-right: 0%;
 
-        #icon {
+          #icon {
             display: flex;
             justify-content: center;
             align-items: center;
           }
-    }
+        }
+      }
+  
 }
 
 .update-container {

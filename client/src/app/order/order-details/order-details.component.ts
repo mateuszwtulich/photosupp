@@ -1,25 +1,17 @@
-import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatFormField } from '@angular/material/form-field';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Gallery } from 'angular-gallery';
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { combineAll } from 'rxjs/operators';
-import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
+import { DeleteComponent } from 'src/app/core/delete/delete.component';
 import { LocalStorageService } from 'src/app/shared/cache/localStorage.service';
 import { SortUtil } from 'src/app/shared/utils/SortUtil';
-import { ApplicationPermissions } from 'src/app/usermanagement/shared/enum/ApplicationPermissions';
-import { AccountEto } from 'src/app/usermanagement/shared/to/AccountEto';
-import { PermissionEto } from 'src/app/usermanagement/shared/to/PermissionEto';
-import { RoleEto } from 'src/app/usermanagement/shared/to/RoleEto';
-import { UserEto } from 'src/app/usermanagement/shared/to/UserEto';
-import { OrderModule } from '../order.module';
-import { MediaType } from '../shared/enum/MediaType';
+import { ModifyOrderComponent } from '../modals/order/modify-order/modify-order.component';
 import { OrderStatus } from '../shared/enum/OrderStatus';
 import { OrderService } from '../shared/services/order.service';
 import { CommentEto } from '../shared/to/CommentEto';
@@ -57,6 +49,7 @@ export class OrderDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private orderSevice: OrderService,
     private localStorage: LocalStorageService,
+    public dialog: MatDialog
   ) {
   }
 
@@ -189,40 +182,32 @@ export class OrderDetailsComponent implements OnInit {
       this.order.status = OrderStatus.FINISHED;
     });
   }
+
+  modifyOrder() {
+    const dialogRef = this.dialog.open(ModifyOrderComponent, { data: this.order, height: '80%', width: '45%' });
+  }
+
+  deleteOrder() {
+    const dialogRef = this.dialog.open(DeleteComponent, { height: '22%', width: '45%' });
+
+    dialogRef.afterClosed().subscribe((isDecisionPositive: boolean) => {
+      if (isDecisionPositive) {
+        this.orderSevice.deleteOrder(this.order.orderNumber);
+        let currentHeadLink = this.router.url.substring(0, this.router.url.indexOf("o"));
+
+        this.router.navigateByUrl(currentHeadLink + "orders");
+      }
+    });
+  }
+
+  deleteComment(comment: CommentEto) {
+    const dialogRef = this.dialog.open(DeleteComponent, { height: '22%', width: '45%' });
+
+    dialogRef.afterClosed().subscribe((isDecisionPositive: boolean) => {
+      if (isDecisionPositive) {
+        this.orderSevice.deleteComment(comment.id);
+      }
+    });
+  }
 }
 
-
-// @Component({
-//   selector: 'order-details-modify-dialog',
-//   templateUrl: 'order-details-modify-dialog.html',
-//   styleUrls: ['./order-details.component.scss']
-// })
-// export class UserDetailsModifyDialog implements OnInit{
-//   isSpinnerDisplayed = false;
-//   subscription = new Subscription();
-//   nameControl = new FormControl("", Validators.required);
-//   surnameControl = new FormControl("", Validators.required);
-
-//   constructor(
-//     public dialogRef: MatDialogRef<UserDetailsModifyDialog>,
-//     @Inject(MAT_DIALOG_DATA) public data: UserEto) { }
-
-// ngOnInit(): void {
-// }
-
-// modifyUser() {
-//   if(this.nameControl.valid && this.surnameControl.valid) {
-//     this.dialogRef.close({
-//       id: this.data.id,
-//       role: this.data.role,
-//       account: this.data.account,
-//       name: this.nameControl.value,
-//       surname: this.surnameControl.value
-//     })
-//   }
-// }
-
-// closeDialog() {
-//   this.dialogRef.close();
-// }
-// }

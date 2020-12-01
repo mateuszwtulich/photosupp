@@ -6,7 +6,7 @@
     <mat-chip color="primary" selected (click)="filterStatus('unconfirmed')">{{'bookings.unconfirmed' | translate}}
     </mat-chip>
   </mat-chip-list>
-  <button *ngxPermissionsOnly="['A_CRUD_SUPER', 'A_CRUD_BOOKINGS']" id="add-booking" mat-mini-fab color="primary"
+  <button *ngxPermissionsOnly="['A_CRUD_SUPER', 'A_CRUD_BOOKINGS']" id="add-booking" mat-mini-fab color="primary" (click)="addBooking()"
     aria-label="Add booking button">
     <mat-icon id="icon">add</mat-icon>
   </button>

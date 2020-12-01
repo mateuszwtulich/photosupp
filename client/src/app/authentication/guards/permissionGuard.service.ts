@@ -38,7 +38,7 @@ export class PermissionsGuardService implements CanActivate {
       }
       case 'manager/user/details': {
         this.permissionService.hasPermission([
-          ApplicationPermission.AUTH_USER,
+          ApplicationPermission.AUTH_USER, ApplicationPermission.A_CRUD_SUPER
         ]).then((perm) => {
           hasPermission = this.hasPermission(perm);
         });
@@ -46,7 +46,7 @@ export class PermissionsGuardService implements CanActivate {
       }
       case 'client/user/details': {
         this.permissionService.hasPermission([
-          ApplicationPermission.AUTH_USER,
+          ApplicationPermission.AUTH_USER
         ]).then((perm) => {
           hasPermission = this.hasPermission(perm);
         });

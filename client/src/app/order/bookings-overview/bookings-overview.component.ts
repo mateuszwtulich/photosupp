@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -6,8 +7,11 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { Subscription } from 'rxjs';
+import { DeleteComponent } from 'src/app/core/delete/delete.component';
 import { ApplicationPermission } from 'src/app/shared/utils/ApplicationPermission';
 import { SortUtil } from 'src/app/shared/utils/SortUtil';
+import { AddBookingComponent } from '../modals/booking/add-booking/add-booking.component';
+import { ModifyBookingComponent } from '../modals/booking/modify-booking/modify-booking.component';
 import { BookingService } from '../shared/services/booking.service';
 import { BookingEto } from '../shared/to/BookingEto';
 
@@ -29,7 +33,8 @@ export class BookingsOverviewComponent implements OnInit {
     private translate: TranslateService,
     private router: Router,
     private permissionsService: NgxPermissionsService,
-    private bookingService: BookingService
+    private bookingService: BookingService,
+    public dialog: MatDialog,
   ) {
   }
 
@@ -154,6 +159,24 @@ export class BookingsOverviewComponent implements OnInit {
     let currentHeadLink = this.router.url.substring(0, this.router.url.indexOf("o"));
 
     this.router.navigateByUrl(currentHeadLink + "orders/booking/details/" + id.toFixed());
+  }
+
+  addBooking() {
+    const dialogRef = this.dialog.open(AddBookingComponent, { height: '80%', width: '45%' });
+  }
+
+  modifyBooking(booking: BookingEto) {
+    const dialogRef = this.dialog.open(ModifyBookingComponent, { data: booking, height: '80%', width: '45%' });
+  }
+
+  deleteBooking(booking: BookingEto) {
+    const dialogRef = this.dialog.open(DeleteComponent, { height: '22%', width: '45%' });
+
+    dialogRef.afterClosed().subscribe((isDecisionPositive: boolean) => {
+      if (isDecisionPositive) {
+        this.bookingService.deleteBooking(booking.id);
+      }
+    });
   }
 
   ngOnDestroy() {

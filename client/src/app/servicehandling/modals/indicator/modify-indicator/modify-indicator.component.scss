@@ -1,5 +1,17 @@
 #dialog{
     display: block;
+
+    .spinner-wrapper {
+      position: absolute !important;
+      z-index: 3;
+      height: 50%;
+      width: 42% !important;
+      padding: 0!important;
+      background-color: rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
   
     .button-wrapper {
         display: flex;

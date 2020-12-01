@@ -1,121 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { DeleteComponent } from 'src/app/core/delete/delete.component';
 import { IndicatorEto } from 'src/app/servicehandling/to/IndicatorEto';
 import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
 import { SortUtil } from 'src/app/shared/utils/SortUtil';
+import { AddServiceComponent } from '../modals/service/add-service/add-service.component';
+import { ModifyServiceComponent } from '../modals/service/modify-service/modify-service.component';
 import { ServiceService } from '../services/service.service';
-
-const fuelIndicatorPL = {
-  id: 3,
-  name: "Odległość od Częstochowy",
-  description: "Proszę podać liczbę kilometrów Państwa lokalizacji od Częstochowy",
-  locale: "pl",
-  baseAmount: 20,
-  doublePrice: 20
-}
-
-const fuelIndicatorEN = {
-  id: 4,
-  name: "Distance from Czestochowa",
-  description: "Kindly provide number of kilometers to your localization from Czestochowa",
-  locale: "en",
-  baseAmount: 20,
-  doublePrice: 20
-}
-
-const fotoIndicatorsPL: IndicatorEto[] = [{
-  id: 1,
-  name: "Szacowna liczba zdjęć",
-  description: "Dla foto takiej proponujemy taką liczbę itp",
-  locale: "pl",
-  baseAmount: 50,
-  doublePrice: 200
-},
-  fuelIndicatorPL
-]
-
-const fotoIndicatorsEN: IndicatorEto[] = [{
-  id: 2,
-  name: "Predicted number of photos",
-  description: "For this kind of service we propose the number",
-  locale: "en",
-  baseAmount: 50,
-  doublePrice: 200
-},
-  fuelIndicatorEN
-]
-
-const filmIndicatorsPL: IndicatorEto[] = [{
-  id: 5,
-  name: "Szacowna liczba filmów",
-  description: "Dla filmu takiego proponujemy taką liczbę filmów",
-  locale: "pl",
-  baseAmount: 1,
-  doublePrice: 150
-},
-{
-  id: 7,
-  name: "Szacowna liczba minut dla filmu",
-  description: "Dla filmu takiego typu proponujemy taką liczbę minut",
-  locale: "pl",
-  baseAmount: 2,
-  doublePrice: 40
-}]
-
-const filmIndicatorsEN: IndicatorEto[] = [{
-  id: 6,
-  name: "Predicted number of clips",
-  description: "For this kind of service we propose the number",
-  locale: "en",
-  baseAmount: 1,
-  doublePrice: 150
-},
-{
-  id: 8,
-  name: "Predicted number of minutes for each clip",
-  description: "For this kind of service we propose the number",
-  locale: "en",
-  baseAmount: 2,
-  doublePrice: 40
-}
-]
-
-const SERVICES: ServiceEto[] = [{
-  id: 1,
-  name: "foto",
-  description: "opis",
-  locale: "pl",
-  basePrice: 300,
-  indicatorEtoList: fotoIndicatorsPL
-},
-{
-  id: 2,
-  name: "Photo",
-  description: "Description",
-  locale: "en",
-  basePrice: 300,
-  indicatorEtoList: fotoIndicatorsEN
-},
-{
-  id: 3,
-  name: "film",
-  description: "opis filmu",
-  locale: "pl",
-  basePrice: 600,
-  indicatorEtoList: filmIndicatorsPL
-},
-{
-  id: 4,
-  name: "Film",
-  description: "Description",
-  locale: "en",
-  basePrice: 600,
-  indicatorEtoList: filmIndicatorsEN
-}];
 
 @Component({
   selector: 'cf-services-overview',
@@ -133,7 +29,8 @@ export class ServicesOverviewComponent implements OnInit {
 
   constructor(
     private translate: TranslateService,
-    private serviceService: ServiceService
+    private serviceService: ServiceService,
+    public dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -209,5 +106,27 @@ export class ServicesOverviewComponent implements OnInit {
           return 0;
       }
     });
+  }
+
+  addService() {
+    const dialogRef = this.dialog.open(AddServiceComponent, { height: '75%', width: '45%' });
+  }
+
+  modifyService(service: ServiceEto) {
+    const dialogRef = this.dialog.open(ModifyServiceComponent, { data: service, height: '55%', width: '45%' });
+  }
+
+  deleteService(service: ServiceEto) {
+    const dialogRef = this.dialog.open(DeleteComponent, { height: '20%', width: '45%' });
+
+    dialogRef.afterClosed().subscribe((isDecisionPositive: boolean) => {
+      if (isDecisionPositive) {
+        this.serviceService.deleteService(service.id);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

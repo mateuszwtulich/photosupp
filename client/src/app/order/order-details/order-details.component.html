@@ -1,12 +1,12 @@
 <mat-tab-group mat-align-tabs="start" color="accent" *ngIf="orderControl.valid">
   <mat-tab label="{{ 'orders.details' | translate}}" color="accent">
-    <div id="header">
-      <button id="modify" mat-mini-fab color="primary" aria-label="Add user button"
-        [disabled]="order.status.includes('FINISHED') || order.status.includes('TO_VERIFY')">
+    <div id="header" >
+      <button id="modify" *ngxPermissionsOnly="['A_CRUD_SUPER', 'A_CRUD_ORDERS']" mat-mini-fab color="primary" aria-label="Modify button"
+        [disabled]="order.status.includes('FINISHED') || order.status.includes('TO_VERIFY')" (click)="modifyOrder()">
         <mat-icon id="icon">edit</mat-icon>
       </button>
-      <button id="delete" mat-mini-fab color="warn" aria-label="Add user button"
-        [disabled]="order.status.includes('IN_PROGRESS') || order.status.includes('TO_VERIFY')">
+      <button id="delete" *ngxPermissionsOnly="['A_CRUD_SUPER', 'A_CRUD_ORDERS']" mat-mini-fab color="warn" aria-label="Delete button"
+        [disabled]="order.status.includes('IN_PROGRESS') || order.status.includes('TO_VERIFY')" (click)="deleteOrder()">
         <mat-icon id="icon">clear</mat-icon>
       </button>
     </div>
@@ -126,7 +126,7 @@
       </mat-card>
       <div id="table-header">
         <button *ngIf="mediaExists" id="download-mediaContent" mat-mini-fab color="primary"
-          aria-label="Dwonload all mediaContent button">
+          aria-label="Dwonload all mediaContent button" [disabled]="!order.status.includes('FINISHED')">
           <mat-icon id="icon">download</mat-icon>
         </button>
       </div>
@@ -152,7 +152,7 @@
               <td mat-cell *matCellDef="let element" class="actions-container">
                 <div>
                   <div>
-                    <button mat-icon-button color="primary" (click)="downloadMediaContent(element)">
+                    <button mat-icon-button color="primary" (click)="downloadMediaContent(element)" [disabled]="!order.status.includes('FINISHED')">
                       <mat-icon>download</mat-icon>
                     </button>
                     <button mat-icon-button color="warn" (click)="deleteMediaContent(element)">
@@ -185,12 +185,12 @@
             <mat-list-item class="comment-item">
               <div class="title-comment">
                 <mat-chip-list>
-                  <mat-chip> {{comment.userEto.name}} {{comment.userEto.surname}} {{comment.createdAt}}</mat-chip>
+                  <mat-chip> {{comment.userEto.name}} {{comment.userEto.surname}}, {{comment.createdAt}}</mat-chip>
                 </mat-chip-list>
               </div>
               <div class="field-comment"> {{comment.content}} </div>
               <button *ngIf="comment.userEto.id == userId" id="delete-comment" mat-mini-fab color="warn"
-                aria-label="Delete comment">
+                aria-label="Delete comment" (click)=deleteComment(comment)>
                 <mat-icon id="icon">clear</mat-icon>
               </button>
             </mat-list-item>

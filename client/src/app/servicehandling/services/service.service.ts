@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { IndicatorEto } from '../to/IndicatorEto';
 import { IndicatorTo } from '../to/IndicatorTo';
+import { ServiceTo } from '../to/ServiceTo';
 
 //   fuelIndicatorPL = {
 //     id: 3,
@@ -183,7 +184,6 @@ export class ServiceService {
           resolve(indicator);
         },
         (e) => {
-          console.log(e)
           this.snackbar.open(this.translate.instant('server.error') + ": " + e.error.message);
           this.spinnerDataSource.next(false);
           reject();
@@ -196,20 +196,13 @@ export class ServiceService {
       this.spinnerDataSource.next(true);
       this.subscription.add(this.http.put<IndicatorEto>(`${ServiceHandlingRestServicePaths.INFICATOR_PATH_WITH_ID(id)}`, indicatorTo).subscribe(
         (indicatorEto: IndicatorEto) => {
-          this.indicatorsDataSource.value.forEach((indicator) => {
-            if(indicator.id == indicatorEto.id) {
-              indicator.name = indicatorEto.name;
-              indicator.description = indicatorEto.description;
-              indicator.baseAmount = indicatorEto.baseAmount;
-              indicator.doublePrice = indicatorEto.doublePrice;
-            }
-          })
-            this.indicatorsDataSource.next(this.indicatorsDataSource.value);
+          let updated = this.indicatorsDataSource.value.filter(indicator => indicator.id != indicatorEto.id);
+          updated.push(indicatorEto);
+          this.indicatorsDataSource.next(updated);
           this.spinnerDataSource.next(false);
           resolve(indicatorEto);
         },
         (e) => {
-          console.log(e)
           this.snackbar.open(this.translate.instant('server.error') + ": " + e.error.message);
           this.spinnerDataSource.next(false);
           reject();
@@ -227,7 +220,65 @@ export class ServiceService {
           resolve();
         },
         (e) => {
-          console.log(e)
+          this.snackbar.open(this.translate.instant('server.error') + ": " + e.error.message);
+          this.spinnerDataSource.next(false);
+          reject();
+        }))
+    })
+  }
+
+  public createService(serviceTo: ServiceTo) {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+      this.subscription.add(this.http.post<ServiceEto>(`${ServiceHandlingRestServicePaths.SERVICE_PATH()}`, serviceTo).subscribe(
+        (service: ServiceEto) => {
+          if (this.servicesDataSource.value) {
+            const currentValue = this.servicesDataSource.value;
+            const updatedValue = [...currentValue, service];
+            this.servicesDataSource.next(updatedValue);
+          } else {
+            this.servicesDataSource.next([service]);
+          }
+          this.spinnerDataSource.next(false);
+          resolve(service);
+        },
+        (e) => {
+          this.snackbar.open(this.translate.instant('server.error') + ": " + e.error.message);
+          this.spinnerDataSource.next(false);
+          reject();
+        }))
+    })
+  }
+
+  public modifyService(serviceTo: ServiceTo, id: number) {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+      this.subscription.add(this.http.put<ServiceEto>(`${ServiceHandlingRestServicePaths.SERVICE_PATH_WITH_ID(id)}`, serviceTo).subscribe(
+        (serviceEto: ServiceEto) => {
+          let updated = this.servicesDataSource.value.filter(service => service.id != serviceEto.id);
+          updated.push(serviceEto);
+          this.servicesDataSource.next(updated);
+          this.spinnerDataSource.next(false);
+          resolve(serviceEto);
+        },
+        (e) => {
+          this.snackbar.open(this.translate.instant('server.error') + ": " + e.error.message);
+          this.spinnerDataSource.next(false);
+          reject();
+        }))
+    })
+  }
+
+  public deleteService(id: number) {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+      this.subscription.add(this.http.delete<void>(`${ServiceHandlingRestServicePaths.SERVICE_PATH_WITH_ID(id)}`).subscribe(
+        () => {
+          this.servicesDataSource.next(this.servicesDataSource.value.filter((service) => service.id != id));
+          this.spinnerDataSource.next(false);
+          resolve();
+        },
+        (e) => {
           this.snackbar.open(this.translate.instant('server.error') + ": " + e.error.message);
           this.spinnerDataSource.next(false);
           reject();

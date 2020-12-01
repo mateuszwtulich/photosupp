@@ -44,8 +44,11 @@
         width: 100%;
 
         td {
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
             width: calc(100% / 3.5) !important;
           }
+
       }
 
       mat-paginator {

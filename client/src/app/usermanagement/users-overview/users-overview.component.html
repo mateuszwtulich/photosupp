@@ -6,7 +6,7 @@
                 <mat-chip color="accent" selected (click)="filterStatus('manager')">{{ 'users.manager' | translate}}</mat-chip>
                 <mat-chip color="accent" selected (click)="filterStatus('user')">{{ 'users.user' | translate}}</mat-chip>
               </mat-chip-list>
-              <button id="add-user" mat-mini-fab color="primary" aria-label="Add user button">
+              <button id="add-user" mat-mini-fab color="primary" aria-label="Add user button" (click)="addUser()">
                 <mat-icon id="icon">add</mat-icon>
             </button>
         </div>
@@ -33,22 +33,22 @@
           
             <ng-container matColumnDef="username">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'users.username' | translate}} </th>
-              <td mat-cell *matCellDef="let element"> {{element.account.username}} </td>
+              <td mat-cell *matCellDef="let element"> {{element.accountEto.username}} </td>
             </ng-container>
 
             <ng-container matColumnDef="email">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'users.email' | translate}} </th>
-                <td mat-cell *matCellDef="let element"> {{element.account.email}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.accountEto.email}} </td>
               </ng-container>
               
             <ng-container matColumnDef="isActivated">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'users.isActivated' | translate}} </th>
-                <td mat-cell *matCellDef="let element"> {{ 'users.' + element.account.isActivated | translate}} </td>
+                <td mat-cell *matCellDef="let element"> {{ 'users.' + !element.accountEto.isActivated | translate}} </td>
               </ng-container>
 
               <ng-container matColumnDef="role">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'users.role' | translate}} </th>
-                <td mat-cell *matCellDef="let element"> {{element.role.name}} </td>
+                <td mat-cell *matCellDef="let element"> {{ 'users.' + element.roleEto.name.toLowerCase() | translate}} </td>
               </ng-container>
 
               <ng-container matColumnDef="actions">
@@ -56,7 +56,7 @@
                 <td mat-cell *matCellDef="let element" class="actions-container">
                     <div>
                         <div>
-                            <button mat-icon-button color="primary" (click)="modifyUser(element)">
+                            <button mat-icon-button color="primary" [disabled]="!element.accountEto.isActivated" (click)="modifyUser(element)">
                                 <mat-icon>edit</mat-icon>
                             </button>
                             <button mat-icon-button color="warn" (click)="deleteUser(element)">
@@ -70,9 +70,6 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           
-            <tr class="mat-row" *matNoDataRow>
-              <td class="mat-cell" colspan="4">{{ 'table.filter-null' | translate}} "{{input.value}}"</td>
-            </tr>
           </table>
           <mat-paginator [pageSizeOptions]="[5, 10]"></mat-paginator>
           </div>

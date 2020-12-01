@@ -183,7 +183,10 @@ public class UcManageOrderImpl implements UcManageOrder {
 
         if( orderTo.getBookingId() != null){
             orderValidator.verifyIfBookingHasAssignedOrders(orderTo.getBookingId());
-            orderEntity.setBooking(getBookingById(orderTo.getBookingId()));
+
+            BookingEntity bookingEntity = getBookingById(orderTo.getBookingId());
+            bookingEntity.setConfirmed(true);
+            orderEntity.setBooking(bookingEntity);
         }
 
         orderEntity.setCoordinator(getUserById(orderTo.getCoordinatorId()));
@@ -220,10 +223,14 @@ public class UcManageOrderImpl implements UcManageOrder {
         orderEntity.setPrice(orderTo.getPrice());
         orderEntity.setCoordinator(getUserById(orderTo.getCoordinatorId()));
 
-        if(orderTo.getBookingId() != null){
+        if(orderTo.getBookingId() != null && ((orderEntity.getBooking() != null &&
+                !(orderEntity.getBooking().getId().equals(orderTo.getBookingId()))) ||
+                (orderEntity.getBooking() == null))){
 
             orderValidator.verifyIfBookingHasAssignedOrders(orderTo.getBookingId());
-            orderEntity.setBooking(getBookingById(orderTo.getBookingId()));
+            BookingEntity bookingEntity = getBookingById(orderTo.getBookingId());
+            bookingEntity.setConfirmed(true);
+            orderEntity.setBooking(bookingEntity);
         }
 
         return orderEntity;

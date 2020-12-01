@@ -41,4 +41,8 @@ export class UserManagementRestServicePaths{
     public static FIND_ALL_ROLES_PATH() {
         return BackendApiServicePath.BACKEND_API() + 'user/v1/roles';
     }
+
+    public static FIND_ALL_PERMISSONS_PATH() {
+        return BackendApiServicePath.BACKEND_API() + 'user/v1/permissions';
+    }
 }

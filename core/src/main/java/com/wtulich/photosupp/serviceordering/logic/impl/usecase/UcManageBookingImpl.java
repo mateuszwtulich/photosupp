@@ -248,7 +248,7 @@ public class UcManageBookingImpl implements UcManageBooking {
             throws EntityDoesNotExistException, EntityAlreadyExistsException, UnprocessableEntityException {
 
         if(!bookingEntity.getName().equals(bookingTo.getName())){
-            bookingValidator.verifyIfBookingNameAlreadyExists(bookingEntity.getName());
+            bookingValidator.verifyIfBookingNameAlreadyExists(bookingTo.getName());
             bookingEntity.setName(bookingTo.getName());
         }
 
@@ -262,7 +262,7 @@ public class UcManageBookingImpl implements UcManageBooking {
             bookingEntity.setEnd( LocalDate.parse(bookingTo.getEnd()) );
         }
 
-        bookingEntity.setDescription(bookingEntity.getDescription());
+        bookingEntity.setDescription(bookingTo.getDescription());
 
         if( !bookingEntity.getService().getId().equals(bookingTo.getServiceId()) ) {
             bookingEntity.setService(getServiceById(bookingTo.getServiceId()));
@@ -276,7 +276,17 @@ public class UcManageBookingImpl implements UcManageBooking {
             addressEntityTest.setId(bookingEntity.getAddress().getId());
             if(!bookingEntity.getAddress().equals(addressEntityTest)) {
                 bookingEntity.setAddress(updateAddress(bookingEntity.getAddress(), bookingTo.getAddressTo()));
+            }
+        }
 
+        if( bookingTo.getPriceIndicatorToList() != null ){
+            for (PriceIndicatorEntity priceIndicator: bookingEntity.getPriceIndicatorList()) {
+                bookingTo.getPriceIndicatorToList().forEach( priceIndicatorTo -> {
+                    if(priceIndicatorTo.getIndicatorId().equals(priceIndicator.getIndicator().getId())){
+                        priceIndicator.setPrice(priceIndicatorTo.getPrice());
+                        priceIndicator.setAmount(priceIndicatorTo.getAmount());
+                    }
+                });
             }
         }
 

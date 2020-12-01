@@ -1,4 +1,7 @@
 <div id="dialog">
+    <div *ngIf="isSpinnerDisplayed" class="spinner-wrapper">
+        <mat-spinner color="accent"></mat-spinner>
+    </div>
     <div id="modal-top">
         <h2 class="mat-h2">{{ 'indicators.modify' | translate }}</h2>
         <button id="close" mat-icon-button (click)="closeDialog()">
@@ -10,11 +13,11 @@
         <form (ngSubmit)="modifyIndicator()">
 
         <mat-form-field class="full-width-input" appearance="outline" color="accent">
-            <mat-label>{{ 'table.name-second' | translate }}</mat-label>
+            <mat-label>{{ 'table.name' | translate }}</mat-label>
                 <input matInput [formControl]="nameControl" name="name" required>
         </mat-form-field>
         <mat-form-field class="full-width-input" appearance="outline" color="accent">
-            <mat-label>{{ 'indicators.description-second' | translate }}</mat-label>
+            <mat-label>{{ 'indicators.description' | translate }}</mat-label>
                 <input matInput [formControl]="descriptionControl" name="description" required>          
         </mat-form-field>
 

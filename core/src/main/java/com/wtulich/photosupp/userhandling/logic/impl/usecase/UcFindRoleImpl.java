@@ -1,10 +1,12 @@
 package com.wtulich.photosupp.userhandling.logic.impl.usecase;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
+import com.wtulich.photosupp.userhandling.dataaccess.api.dao.PermissionDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.dao.RoleDao;
 import com.wtulich.photosupp.userhandling.dataaccess.api.entity.RoleEntity;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.PermissionsMapper;
 import com.wtulich.photosupp.userhandling.logic.api.mapper.RoleMapper;
+import com.wtulich.photosupp.userhandling.logic.api.to.PermissionEto;
 import com.wtulich.photosupp.userhandling.logic.api.to.RoleEto;
 import com.wtulich.photosupp.userhandling.logic.api.usecase.UcFindRole;
 import org.slf4j.Logger;
@@ -29,6 +31,9 @@ public class UcFindRoleImpl implements UcFindRole {
 
     @Inject
     private RoleDao roleDao;
+
+    @Inject
+    private PermissionDao permissionDao;
 
     @Inject
     private RoleMapper roleMapper;
@@ -56,6 +61,13 @@ public class UcFindRoleImpl implements UcFindRole {
 
         return Optional.of(roleDao.findAll().stream()
                 .map(roleEntity -> toRoleEto(roleEntity))
+                .collect(Collectors.toList()));
+    }
+
+    @Override
+    public Optional<List<PermissionEto>> findAllPermissions() {
+        return Optional.of(permissionDao.findAll().stream()
+                .map(permissionEntity -> permissionsMapper.toPermissionEto(permissionEntity))
                 .collect(Collectors.toList()));
     }
 

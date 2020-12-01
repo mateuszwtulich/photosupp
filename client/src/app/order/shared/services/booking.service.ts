@@ -88,6 +88,66 @@ export class BookingService {
     })
   }
 
+  public createBooking(bookingTo: BookingTo) {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+      this.subscription.add(this.http.post<BookingEto>(`${ServiceHandlingRestServicePaths.BOOKING_PATH()}`, bookingTo).subscribe(
+        (booking: BookingEto) => {
+          if (this.bookingsDataSource.value) {
+            const currentValue = this.bookingsDataSource.value;
+            const updatedValue = [...currentValue, booking];
+            this.bookingsDataSource.next(updatedValue);
+          } else {
+            this.bookingsDataSource.next([booking]);
+          }
+          this.spinnerDataSource.next(false);
+          resolve(booking);
+        },
+        (e) => {
+          this.snackbar.open(this.translate.instant('server.error'));
+          this.spinnerDataSource.next(false);
+          reject();
+        }))
+    })
+  }
+
+  public modifyBooking(bookingTo: BookingTo, id: number) {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+      this.subscription.add(this.http.put<BookingEto>(`${ServiceHandlingRestServicePaths.BOOKING_PATH_WITH_ID(id.toFixed())}`, bookingTo).subscribe(
+        (bookingEto: BookingEto) => {
+          let updated = this.bookingsDataSource.value.filter(booking => booking.id != bookingEto.id);
+          updated.push(bookingEto);
+          this.bookingsDataSource.next(updated);
+          this.bookingDetailsDataSource.next(bookingEto);
+          this.spinnerDataSource.next(false);
+          resolve(bookingEto);
+        },
+        (e) => {
+          this.snackbar.open(this.translate.instant('server.error') + ": " + e.error.message);
+          this.spinnerDataSource.next(false);
+          reject();
+        }))
+    })
+  }
+
+  public deleteBooking(id: number) {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+      this.subscription.add(this.http.delete<void>(`${ServiceHandlingRestServicePaths.BOOKING_PATH_WITH_ID(id.toFixed())}`).subscribe(
+        () => {
+          this.bookingsDataSource.next(this.bookingsDataSource.value.filter((booking) => booking.id != id));
+          this.spinnerDataSource.next(false);
+          resolve();
+        },
+        (e) => {
+          this.snackbar.open(this.translate.instant('server.error') + ": " + e.error.message);
+          this.spinnerDataSource.next(false);
+          reject();
+        }))
+    })
+  }
+
   public confirmBooking(id: number) {
     return new Promise((resolve, reject) => {
       this.spinnerDataSource.next(true);

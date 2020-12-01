@@ -1,5 +1,4 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -8,177 +7,14 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { combineLatest, Subscription } from 'rxjs';
-import { combineAll } from 'rxjs/operators';
-import { IndicatorEto } from 'src/app/servicehandling/to/IndicatorEto';
-import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
+import { DeleteComponent } from 'src/app/core/delete/delete.component';
 import { ApplicationPermission } from 'src/app/shared/utils/ApplicationPermission';
 import { SortUtil } from 'src/app/shared/utils/SortUtil';
-import { UserEto } from 'src/app/usermanagement/shared/to/UserEto';
-import { OrderStatus } from '../shared/enum/OrderStatus';
-import { BookingService } from '../shared/services/booking.service';
+import { AddOrderComponent } from '../modals/order/add-order/add-order.component';
+import { ModifyOrderComponent } from '../modals/order/modify-order/modify-order.component';
 import { OrderService } from '../shared/services/order.service';
-import { AddressEto } from '../shared/to/AddressEto';
-import { BookingEto } from '../shared/to/BookingEto';
 import { OrderEto } from '../shared/to/OrderEto';
-import { OrderTo } from '../shared/to/OrderTo';
 
-const fuelIndicatorPL = {
-  id: 3,
-  name: "Odległość od Częstochowy",
-  description: "Proszę podać liczbę kilometrów Państwa lokalizacji od Częstochowy",
-  locale: "pl",
-  baseAmount: 20,
-  doublePrice: 20
-}
-
-const fuelIndicatorEN = {
-  id: 4,
-  name: "Distance from Czestochowa",
-  description: "Kindly provide number of kilometers to your localization from Czestochowa",
-  locale: "en",
-  baseAmount: 20,
-  doublePrice: 20
-}
-
-const fotoIndicators: IndicatorEto[] = [{
-  id: 1,
-  name: "Szacowna liczba zdjęć",
-  description: "Dla foto takiej proponujemy taką liczbę itp",
-  locale: "pl",
-  baseAmount: 50,
-  doublePrice: 200
-},
-{
-  id: 2,
-  name: "Predicted number of photos",
-  description: "For this kind of service we propose the number",
-  locale: "en",
-  baseAmount: 50,
-  doublePrice: 200
-},
-  fuelIndicatorPL,
-  fuelIndicatorEN
-]
-
-const filmIndicators: IndicatorEto[] = [{
-  id: 5,
-  name: "Szacowna liczba filmów",
-  description: "Dla filmu takiego proponujemy taką liczbę filmów",
-  locale: "pl",
-  baseAmount: 1,
-  doublePrice: 150
-},
-{
-  id: 6,
-  name: "Predicted number of clips",
-  description: "For this kind of service we propose the number",
-  locale: "en",
-  baseAmount: 1,
-  doublePrice: 150
-},
-{
-  id: 7,
-  name: "Szacowna liczba minut dla filmu",
-  description: "Dla filmu takiego typu proponujemy taką liczbę minut",
-  locale: "pl",
-  baseAmount: 2,
-  doublePrice: 40
-},
-{
-  id: 8,
-  name: "Predicted number of minutes for each clip",
-  description: "For this kind of service we propose the number",
-  locale: "en",
-  baseAmount: 2,
-  doublePrice: 40
-},
-  fuelIndicatorPL,
-  fuelIndicatorEN
-]
-
-const servicesStored: ServiceEto[] = [{
-  id: 1,
-  name: "foto",
-  description: "opis",
-  locale: "pl",
-  basePrice: 300,
-  indicatorEtoList: fotoIndicators
-},
-{
-  id: 2,
-  name: "Photo",
-  description: "Description",
-  locale: "en",
-  basePrice: 300,
-  indicatorEtoList: fotoIndicators
-},
-{
-  id: 3,
-  name: "film",
-  description: "opis filmu",
-  locale: "pl",
-  basePrice: 600,
-  indicatorEtoList: filmIndicators
-},
-{
-  id: 4,
-  name: "Film",
-  description: "Description",
-  locale: "en",
-  basePrice: 600,
-  indicatorEtoList: filmIndicators
-}];
-
-const COORDINATOR: UserEto = {
-  id: 1,
-  name: "John",
-  surname: "Smith",
-  accountEto: null,
-  roleEto: null
-}
-
-const USER: UserEto = {
-  id: 2,
-  name: "Tom",
-  surname: "Willman",
-  accountEto: null,
-  roleEto: null
-}
-
-const SERVICE: ServiceEto = {
-  id: 1,
-  name: "foto",
-  description: "opis",
-  locale: "pl",
-  basePrice: 300,
-  indicatorEtoList: fotoIndicators
-};
-
-const ADDRESS: AddressEto = {
-  id: 1,
-  city: "Wroclaw",
-  street: "Wroblewskiego",
-  buildingNumber: "20A",
-  apartmentNumber: null,
-  postalCode: "60-324",
-}
-
-
-// const BOOKINGS: BookingEto[] = [
-//   {id: 1, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorEtoList: null},
-//   {id: 2, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null},
-//   {id: 3, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}, 
-//   {id: 4, name: "Booking #1", description: "short description", serviceEto: SERVICE, addressEto: ADDRESS, userEto: USER, isConfirmed: true, predictedPrice: 1000, start: "22-11-2020", end: "20-11-2020", modificationDate: "22-11-2020", priceIndicatorList: null}
-// ];
-
-const ORDERS: OrderEto[] = [
-  { orderNumber: "INVIU0001", coordinator: COORDINATOR, user: USER, status: OrderStatus.NEW, booking: null, price: 1000, createdAt: "22-11-2020" },
-  { orderNumber: "INVIU0002", coordinator: COORDINATOR, user: USER, status: OrderStatus.IN_PROGRESS, booking: null, price: 1000, createdAt: "20-11-2020" },
-  { orderNumber: "INVIU0003", coordinator: COORDINATOR, user: USER, status: OrderStatus.TO_VERIFY, booking: null, price: 1000, createdAt: "19-11-2020" },
-  { orderNumber: "INVIU0004", coordinator: COORDINATOR, user: USER, status: OrderStatus.FINISHED, booking: null, price: 1000, createdAt: "15-11-2020" },
-  { orderNumber: "INVIU0005", coordinator: COORDINATOR, user: USER, status: OrderStatus.IN_PROGRESS, booking: null, price: 1000, createdAt: "19-11-2020" },
-  { orderNumber: "INVIU0006", coordinator: COORDINATOR, user: USER, status: OrderStatus.NEW, booking: null, price: 1000, createdAt: "22-11-2020" },
-];
 
 @Component({
   selector: 'cf-orders-overview',
@@ -328,64 +164,24 @@ export class OrdersOverviewComponent implements OnInit {
   }
 
   addOrder() {
-    const dialogRef = this.dialog.open(OrderAddDialog, { data: [ORDERS, [USER], [COORDINATOR], null], height: '48%', width: '40%' });
-    dialogRef.afterClosed().subscribe((order: OrderEto) => {
-      if (!!order) {
-        order.orderNumber = "INVIU00004";
-        order.createdAt = "27-11-2020";
-        order.status = OrderStatus.NEW;
-        this.dataSource.data.push(order);
-        console.log(order);
+    const dialogRef = this.dialog.open(AddOrderComponent, { height: '55%', width: '40%' });
+  }
+
+  modifyOrder(order: OrderEto) {
+    const dialogRef = this.dialog.open(ModifyOrderComponent, { data: order, height: '55%', width: '45%' });
+  }
+
+  deleteOrder(order: OrderEto) {
+    const dialogRef = this.dialog.open(DeleteComponent, { height: '22%', width: '45%' });
+
+    dialogRef.afterClosed().subscribe((isDecisionPositive: boolean) => {
+      if (isDecisionPositive) {
+        this.orderService.deleteOrder(order.orderNumber);
       }
-    })
+    });
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-  }
-}
-
-
-@Component({
-  selector: 'order-details-add-dialog',
-  templateUrl: 'order-details-add-dialog.html',
-  styleUrls: ['./orders-overview.component.scss']
-})
-export class OrderAddDialog implements OnInit {
-  isSpinnerDisplayed = false;
-  subscription = new Subscription();
-  coordinatorControl = new FormControl("", Validators.required);
-  userControl = new FormControl("", Validators.required);
-  bookingControl = new FormControl("");
-  priceControl = new FormControl("", Validators.required);
-  coordinators: UserEto[];
-  users: UserEto[];
-  orders: OrderEto[];
-  bookings: BookingEto[];
-
-  constructor(
-    public dialogRef: MatDialogRef<OrderAddDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: [OrderEto[], UserEto[], UserEto[], BookingEto[]]) { }
-
-  ngOnInit(): void {
-    this.orders = this.data[0];
-    this.users = this.data[1];
-    this.coordinators = this.data[2];
-    this.bookings = this.data[3];
-  }
-
-  addOrder() {
-    if (this.coordinatorControl.valid && this.userControl.valid && this.bookingControl.valid && this.priceControl.valid) {
-      this.dialogRef.close({
-        coordinator: this.coordinatorControl.value,
-        user: this.userControl.value,
-        booking: this.bookingControl.value,
-        price: this.priceControl.value,
-      })
-    }
-  }
-
-  closeDialog() {
-    this.dialogRef.close();
   }
 }

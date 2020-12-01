@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 import { ServiceService } from 'src/app/servicehandling/services/service.service';
 import { IndicatorEto } from 'src/app/servicehandling/to/IndicatorEto';
 import { IndicatorTo } from 'src/app/servicehandling/to/IndicatorTo';
@@ -16,6 +17,8 @@ export class ModifyIndicatorComponent implements OnInit {
   public descriptionControl: FormControl;
   public amountControl: FormControl;
   public doublePriceControl: FormControl;
+  public subscription = new Subscription();
+  public isSpinnerDisplayed = false;
 
 
   constructor(
@@ -29,6 +32,17 @@ export class ModifyIndicatorComponent implements OnInit {
     this.descriptionControl = new FormControl(this.data.description, Validators.required);
     this.amountControl = new FormControl(this.data.baseAmount, Validators.required);
     this.doublePriceControl = new FormControl(this.data.doublePrice, Validators.required);
+    this.onSpinnerDisplayed();
+  }
+
+  private onSpinnerDisplayed() {
+    this.subscription.add(this.serviceService.spinnerData.subscribe((isSpinnerDisplayed: boolean) => {
+      this.isSpinnerDisplayed = isSpinnerDisplayed;
+    }));
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   modifyIndicator() {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { ServiceService } from 'src/app/servicehandling/services/service.service';
 import { IndicatorTo } from 'src/app/servicehandling/to/IndicatorTo';
 
@@ -22,6 +23,8 @@ export class AddIndicatorComponent implements OnInit {
     public localeEn = "en";
     public localePl = "pl";
     public isLocaleEnabled: boolean;
+    public subscription = new Subscription();
+    public isSpinnerDisplayed = false;
   
     constructor(
       public dialogRef: MatDialogRef<AddIndicatorComponent>,
@@ -37,8 +40,18 @@ export class AddIndicatorComponent implements OnInit {
       } else {
         this.secondLocale = this.localePl;
       }
+      this.onSpinnerDisplayed();
     }
-
+  
+    private onSpinnerDisplayed() {
+      this.subscription.add(this.serviceService.spinnerData.subscribe((isSpinnerDisplayed: boolean) => {
+        this.isSpinnerDisplayed = isSpinnerDisplayed;
+      }));
+    }
+  
+    ngOnDestroy() {
+      this.subscription.unsubscribe();
+    }
     public changeLocaleCondition(){
       this.isLocaleEnabled = !this.isLocaleEnabled;
     }

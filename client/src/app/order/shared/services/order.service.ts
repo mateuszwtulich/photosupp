@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { LocalStorageService } from 'src/app/shared/cache/localStorage.service';
 import { OrderRestServicePaths } from '../rest-service-paths/OrderRestServicePaths';
 import { CommentEto } from '../to/CommentEto';
 import { CommentTo } from '../to/CommentTo';
 import { MediaContentEto } from '../to/MediaContentEto';
 import { OrderEto } from '../to/OrderEto';
+import { OrderTo } from '../to/OrderTo';
 
 @Injectable({
   providedIn: 'root'
@@ -160,7 +161,6 @@ export class OrderService {
       this.spinnerDataSource.next(true);
       this.subscription.add(this.http.post<CommentEto>(`${OrderRestServicePaths.COMMENT_PATH()}`, commentTo).subscribe(
         (comment: CommentEto) => {
-          console.log(this.commentsOrderDataSource.value)
           if (this.commentsOrderDataSource.value) {
             const currentValue = this.commentsOrderDataSource.value;
             const updatedValue = [...currentValue, comment];
@@ -179,6 +179,23 @@ export class OrderService {
     })
   }
 
+  public deleteComment(id: number) {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+      this.subscription.add(this.http.delete<void>(`${OrderRestServicePaths.COMMENT_PATH_WTIH_ID(id)}`).subscribe(
+        () => {
+          this.commentsOrderDataSource.next(this.commentsOrderDataSource.value.filter((comment) => comment.id != id));
+          this.spinnerDataSource.next(false);
+          resolve();
+        },
+        (e) => {
+          this.snackbar.open(this.translate.instant('server.error') + ": " + e.error.message);
+          this.spinnerDataSource.next(false);
+          reject();
+        }))
+    })
+  }
+
   public getMediaContentOfOrder(orderNumber: string) {
     return new Promise((resolve, reject) => {
       this.spinnerDataSource.next(true);
@@ -190,6 +207,65 @@ export class OrderService {
         },
         (e) => {
           this.snackbar.open(this.translate.instant('server.error'))
+          this.spinnerDataSource.next(false);
+          reject();
+        }))
+    })
+  }
+
+  public createOrder(orderTo: OrderTo) {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+      this.subscription.add(this.http.post<OrderEto>(`${OrderRestServicePaths.ORDER_PATH()}`, orderTo).subscribe(
+        (order: OrderEto) => {
+          if (this.ordersDataSource.value) {
+            const currentValue = this.ordersDataSource.value;
+            const updatedValue = [...currentValue, order];
+            this.ordersDataSource.next(updatedValue);
+          } else {
+            this.ordersDataSource.next([order]);
+          }
+          this.spinnerDataSource.next(false);
+          resolve(order);
+        },
+        (e) => {
+          this.snackbar.open(this.translate.instant('server.error') + ": " + e.error.message);
+          this.spinnerDataSource.next(false);
+          reject();
+        }))
+    })
+  }
+
+  public modifyOrder(orderTo: OrderTo, orderNumber: string) {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+      this.subscription.add(this.http.put<OrderEto>(`${OrderRestServicePaths.ORDER_PATH_WITH_ORDER_NUMBER(orderNumber)}`, orderTo).subscribe(
+        (orderEto: OrderEto) => {
+          let updated = this.ordersDataSource.value.filter(order => order.orderNumber != orderEto.orderNumber);
+          updated.push(orderEto);
+          this.ordersDataSource.next(updated);
+          this.spinnerDataSource.next(false);
+          resolve(orderEto);
+        },
+        (e) => {
+          this.snackbar.open(this.translate.instant('server.error') + ": " + e.error.message);
+          this.spinnerDataSource.next(false);
+          reject();
+        }))
+    })
+  }
+
+  public deleteOrder(orderNumber: string) {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+      this.subscription.add(this.http.delete<void>(`${OrderRestServicePaths.ORDER_PATH_WITH_ORDER_NUMBER(orderNumber)}`).subscribe(
+        () => {
+          this.ordersDataSource.next(this.ordersDataSource.value.filter((order) => order.orderNumber != orderNumber));
+          this.spinnerDataSource.next(false);
+          resolve();
+        },
+        (e) => {
+          this.snackbar.open(this.translate.instant('server.error') + ": " + e.error.message);
           this.spinnerDataSource.next(false);
           reject();
         }))
