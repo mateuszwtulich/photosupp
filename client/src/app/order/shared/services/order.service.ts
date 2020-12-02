@@ -8,6 +8,7 @@ import { OrderRestServicePaths } from '../rest-service-paths/OrderRestServicePat
 import { CommentEto } from '../to/CommentEto';
 import { CommentTo } from '../to/CommentTo';
 import { MediaContentEto } from '../to/MediaContentEto';
+import { MediaContentTo } from '../to/MediaContentTo';
 import { OrderEto } from '../to/OrderEto';
 import { OrderTo } from '../to/OrderTo';
 
@@ -207,6 +208,46 @@ export class OrderService {
         },
         (e) => {
           this.snackbar.open(this.translate.instant('server.error'))
+          this.spinnerDataSource.next(false);
+          reject();
+        }))
+    })
+  }
+
+  public addMediaContent(mediaContentTo: MediaContentTo) {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+      this.subscription.add(this.http.post<MediaContentEto>(`${OrderRestServicePaths.MEDIA_CONTENT_PATH()}`, mediaContentTo).subscribe(
+        (mediaContent: MediaContentEto) => {
+          if (this.mediaContentOrderDataSource.value) {
+            const currentValue = this.mediaContentOrderDataSource.value;
+            const updatedValue = [...currentValue, mediaContent];
+            this.mediaContentOrderDataSource.next(updatedValue);
+          } else {
+            this.mediaContentOrderDataSource.next([mediaContent]);
+          }
+          this.spinnerDataSource.next(false);
+          resolve(mediaContent);
+        },
+        (e) => {
+          this.snackbar.open(this.translate.instant('server.error'))
+          this.spinnerDataSource.next(false);
+          reject();
+        }))
+    })
+  }
+
+  public deleteMediaContent(id: number) {
+    return new Promise((resolve, reject) => {
+      this.spinnerDataSource.next(true);
+      this.subscription.add(this.http.delete<void>(`${OrderRestServicePaths.MEDIA_CONTENT_PATH_WTIH_ID(id)}`).subscribe(
+        () => {
+          this.mediaContentOrderDataSource.next(this.mediaContentOrderDataSource.value.filter((mediaContent) => mediaContent.id != id));
+          this.spinnerDataSource.next(false);
+          resolve();
+        },
+        (e) => {
+          this.snackbar.open(this.translate.instant('server.error') + ": " + e.error.message);
           this.spinnerDataSource.next(false);
           reject();
         }))

@@ -8,7 +8,8 @@
     "username": "Username",
     "title": "Signing in",
     "button": "Sign in",
-    "password-message": "If you forget the password, you can change it. New password will be send on your e-mail."
+    "password-message": "If you forget the password, you can change it. New password will be send on your e-mail.",
+    "error": "The username or password are incorrect."
   },
   "pricing": {
     "title": "Estimate your service now!",
@@ -27,12 +28,12 @@
         "1st-part": "Quality of services is our highest priority. Photosupp system underlines our presence in the world of the newest technologies.",
         "2nd-part": "We can help you with choosing a service that suits you the most, without registration!"
       },
-      "name": "Piotr Łodziński",
-      "title": "The owner of inviu"
+      "name": "Name Surname",
+      "title": "The owner of photographic company"
     }
   },
   "system-statement": {
-    "title": "Photosupp system provides System Photosupp guidance while taking advantage of inviu's services:",
+    "title": "Photosupp system provides System Photosupp guidance while taking advantage of photographic company services:",
     "advantage": {
       "1st": "Help with choosing apriopriate service for your needs and enables you to book a meeting.",
       "2nd": "Provides access to order realisation and verification.",
@@ -51,7 +52,11 @@
     "button": "Register",
     "login-message": "Log in, in case you are already registered.",
     "email-null": "You must enter a value",
-    "email-invalid": "Not a valid email"
+    "email-invalid": "Not a valid email",
+    "enter-password": "You have to enter password",
+    "password-not-match": "The password do not match each other",
+    "email-not-match": "The e-mail addresses do not much each other",
+    "check-mailbox": "Check your mailbox in order to verify your account"
   },
   "sidenav": {
     "login": "Sign in",
@@ -94,7 +99,12 @@
     "en": "English",
     "all": "All",
     "language": "Language",
-    "name": "Name"
+    "name": "Name",
+    "name-second": "Name in foreign language",
+    "locale-add": "Foreign language",
+    "delete": "Are you sure?",
+    "cancel": "Cancel",
+    "delete-confirm": "Delete"
   },
   "orders": {
     "plural": "Orders",
@@ -119,7 +129,10 @@
     "comment-button": "Add comment",
     "comment-write": "Write comment",
     "verify": "Verify the order",
-    "add": "Create new order"
+    "inprogress": "Start the order",
+    "finish": "Finish the order",
+    "add": "Create new order",
+    "modify": "Update the order"
   },
   "bookings": {
     "plural": "Bookings",
@@ -138,70 +151,84 @@
     "unconfirmed": "Unconfirmed",
     "1st-step": "Choose free meeting date",
     "last-step": "Create booking",
-    "details":"Booking details",
-    "description":"Description",
-    "indicators":"Indicators increasing the price",
+    "details": "Booking details",
+    "description": "Description",
+    "indicators": "Indicators increasing the price",
     "indicator-amount": "Amount",
     "indicator-price": "Extra price",
     "start-booking": "Accept the booking",
     "information": "Give an information",
-    "save": "Create the booking"
+    "save": "Create the booking",
+    "mine": "Mine",
+    "add": "Create new booking",
+    "modify": "Update the booking"
   },
   "services": {
     "plural": "Services",
     "basePrice": "Base price",
-    "indicators": "Indicators affecting the price"
+    "indicators": "Indicators affecting the price",
+    "modify": "Update the service",
+    "add": "Create new service"
   },
   "indicators": {
     "plural": "Indicators",
     "description": "Description",
     "baseAmount": "Free amount from extra charge",
-    "doublePrice": "Extra price for double amount"
-},
-"users": {
-  "plural": "Users",
-  "name": "Name",
-  "surname": "Surname",
-  "username": "Username",
-  "email": "E-mail address",
-  "isActivated": "Is activated",
-  "role": "Role",
-  "manager": "Manager",
-  "user": "User",
-  "false": "Yes",
-  "true": "No",
-  "personal-data": "Personal data",
-  "password-update": "Password update",
-  "email-update": "E-mail address update",
-  "new-password-1st": "New password",
-  "new-password-2nd": "Retype new password",
-  "email-1st": "New e-mail address",
-  "email-2nd": "Retype e-mail address",
-  "password-button": "Update password",
-  "email-button": "Update e-mail address",
-  "modify": "Update your pesronal data"
-},
-"roles": {
-  "plural": "Roles",
-  "description": "Description",
-  "permissions": "Permissions"
-},
-"permissions": {
-  "A_CRUD_SUPER": "Administrator",
-  "A_CRUD_USERS": "User management",
-  "A_CRUD_ROLES":"User roles",
-  "A_CRUD_SERVICES": "User services",
-  "A_CRUD_BOOKINGS": "User bookings",
-  "A_CRUD_INDICATORS": "User indicators",
-  "A_CRUD_ORDERS": "User orders",
-  "AUTH_USER": "Client"
-},
-"mediaContent": {
-  "type": "Type",
-  "name": "Name",
-  "IMAGE": "Image",
-  "VIDEO": "Video"
-},
+    "doublePrice": "Extra price for double amount",
+    "add": "Create new indicator",
+    "description-second": "Description in foreign language",
+    "modify": "Update the indicator"
+  },
+  "users": {
+    "plural": "Users",
+    "name": "Name",
+    "surname": "Surname",
+    "username": "Username",
+    "email": "E-mail address",
+    "isActivated": "Is activated",
+    "role": "Role",
+    "manager": "Manager",
+    "admin": "Administrator",
+    "user": "User",
+    "false": "Yes",
+    "true": "No",
+    "personal-data": "Personal data",
+    "password-update": "Password update",
+    "email-update": "E-mail address update",
+    "new-password-1st": "New password",
+    "new-password-2nd": "Retype new password",
+    "email-1st": "New e-mail address",
+    "email-2nd": "Retype e-mail address",
+    "password-button": "Update password",
+    "email-button": "Update e-mail address",
+    "modify": "Update your personal data",
+    "modified": "Personal date has been updated.",
+    "check-mailbox": "Chech your mailbox. Personal data has been changed.",
+    "add": "Create new user"
+  },
+  "roles": {
+    "plural": "Roles",
+    "description": "Description",
+    "permissions": "Permissions",
+    "add": "Create new role",
+    "modify": "Update the role"
+  },
+  "permissions": {
+    "A_CRUD_SUPER": "Administrator",
+    "A_CRUD_USERS": "User management",
+    "A_CRUD_ROLES": "User roles",
+    "A_CRUD_SERVICES": "User services",
+    "A_CRUD_BOOKINGS": "User bookings",
+    "A_CRUD_INDICATORS": "User indicators",
+    "A_CRUD_ORDERS": "User orders",
+    "AUTH_USER": "Client"
+  },
+  "mediaContent": {
+    "type": "Type",
+    "name": "Name",
+    "IMAGE": "Image",
+    "VIDEO": "Video"
+  },
   "address": {
     "city": "City",
     "street": "Street",
@@ -212,5 +239,8 @@
   "dialog": {
     "modify": "Update",
     "add": "Create"
+  },
+  "server": {
+    "error": "Error"
   }
 }

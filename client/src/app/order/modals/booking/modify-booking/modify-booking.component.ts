@@ -8,6 +8,7 @@ import { BookingService } from 'src/app/order/shared/services/booking.service';
 import { BookingEto } from 'src/app/order/shared/to/BookingEto';
 import { BookingTo } from 'src/app/order/shared/to/BookingTo';
 import { ServiceService } from 'src/app/servicehandling/services/service.service';
+import { IndicatorEto } from 'src/app/servicehandling/to/IndicatorEto';
 import { ServiceEto } from 'src/app/servicehandling/to/ServiceEto';
 import { UsersService } from 'src/app/usermanagement/shared/services/users.service';
 import { UserEto } from 'src/app/usermanagement/shared/to/UserEto';
@@ -27,7 +28,6 @@ export class ModifyBookingComponent implements OnInit {
   public apartmentNumberControl: FormControl;
   public postalCodeControl: FormControl;
   public userControl: FormControl;
-  public predictedPriceControl: FormControl;
   public startDateControl: FormControl;
   public endDateControl: FormControl;
   public servicesControl: FormControl;
@@ -61,7 +61,6 @@ export class ModifyBookingComponent implements OnInit {
     this.apartmentNumberControl = new FormControl(this.data.addressEto.apartmentNumber);
     this.postalCodeControl = new FormControl(this.data.addressEto.postalCode, Validators.required);
     this.userControl = new FormControl(this.data.userEto, Validators.required);
-    this.predictedPriceControl = new FormControl(this.data.predictedPrice, Validators.required);
     this.startDateControl = new FormControl(this.data.start, Validators.required);
     this.endDateControl = new FormControl(this.data.end, Validators.required);
     this.servicesControl = new FormControl(this.data.serviceEto, Validators.required);
@@ -93,7 +92,7 @@ export class ModifyBookingComponent implements OnInit {
   modifyBooking() {
     if (this.nameControl.valid && this.descriptionControl.valid && this.cityControl.valid && this.streetControl.valid &&
       this.buildingNumberControl.valid && this.postalCodeControl.valid && this.userControl.valid &&
-      this.servicesControl.valid && this.predictedPriceControl.valid && this.startDateControl.valid && this.endDateControl.valid) {
+      this.servicesControl.valid  && this.startDateControl.valid && this.endDateControl.valid) {
 
       let bookingTo: BookingTo = {
         name: this.nameControl.value,

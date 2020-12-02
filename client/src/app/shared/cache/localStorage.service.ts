@@ -57,6 +57,14 @@ import { ApplicationPermission } from 'src/app/shared/utils/ApplicationPermissio
       }
       return true;
     }
+
+    public setIsRequestToServer(condition: boolean){
+      localStorage.setItem('RequestToServer', JSON.stringify(condition));
+    }
+
+    public getIsRequestToServer(): boolean {
+      return JSON.parse(localStorage.getItem('RequestToServer'));
+    }
   
     public parseHeaderToAuthInfo(token: any): string {
       const authInfo: AuthInfo = {

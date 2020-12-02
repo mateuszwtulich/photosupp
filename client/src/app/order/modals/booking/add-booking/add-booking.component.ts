@@ -28,7 +28,6 @@ export class AddBookingComponent implements OnInit {
   public apartmentNumberControl = new FormControl("");
   public postalCodeControl = new FormControl("", Validators.required);
   public userControl = new FormControl("", Validators.required);
-  public predictedPriceControl = new FormControl("", Validators.required);
   public startDateControl = new FormControl("", Validators.required);
   public endDateControl = new FormControl("", Validators.required);
   public servicesControl = new FormControl("", Validators.required);
@@ -74,7 +73,7 @@ export class AddBookingComponent implements OnInit {
   addBooking() {
     if (this.nameControl.valid && this.descriptionControl.valid && this.cityControl.valid && this.streetControl.valid &&
       this.buildingNumberControl.valid && this.postalCodeControl.valid && this.userControl.valid &&
-      this.servicesControl.valid && this.predictedPriceControl.valid && this.startDateControl.valid && this.endDateControl.valid) {
+      this.servicesControl.valid && this.startDateControl.valid && this.endDateControl.valid) {
 
       this.priceIndicatorToList = this.servicesControl.value.indicatorEtoList.map((indicator: IndicatorEto) => {
         return {

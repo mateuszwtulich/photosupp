@@ -221,7 +221,7 @@ public class UcManageUserImpl implements UcManageUser {
         StringBuilder generatePasswordMessage = new StringBuilder();
         StringBuilder message = new StringBuilder();
         message.append(messages.getMessage("message.passwordSucc", null, Locale.getDefault()));
-        message.append("\n\nPassword: " + password + "\n");
+        message.append("\n\nHasło: " + password + "\n");
         message.append("\r\n\n" + messages.getMessage("frontend", null, Locale.getDefault()) + "/login" + generatePasswordMessage.toString());
 
         SimpleMailMessage email = new SimpleMailMessage();
@@ -237,7 +237,7 @@ public class UcManageUserImpl implements UcManageUser {
         StringBuilder generatePasswordMessage = new StringBuilder();
         StringBuilder message = new StringBuilder();
         message.append(messages.getMessage("message.usernameSucc", null, Locale.getDefault()));
-        message.append("\n\nUsername: " + account.getUsername() + "\n");
+        message.append("\n\nNazwa użytkownika: " + account.getUsername() + "\n");
         message.append("\r\n\n" + messages.getMessage("frontend", null, Locale.getDefault()) + "/login" + generatePasswordMessage.toString());
 
         SimpleMailMessage email = new SimpleMailMessage();

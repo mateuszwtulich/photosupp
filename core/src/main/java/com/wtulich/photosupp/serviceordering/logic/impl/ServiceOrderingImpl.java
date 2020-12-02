@@ -57,7 +57,7 @@ public class ServiceOrderingImpl implements ServiceOrdering {
     }
 
     @Override
-    public void deleteBooking(Long id) throws EntityDoesNotExistException {
+    public void deleteBooking(Long id) throws EntityDoesNotExistException, EntityAlreadyExistsException {
         ucDeleteBooking.deleteBooking(id);
     }
 

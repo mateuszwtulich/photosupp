@@ -33,6 +33,17 @@
     margin-bottom: 5%;
     margin-top: 1%;
 
+        .spinner-wrapper {
+        position: absolute !important;
+        width: 100% !important;
+        height: 80% !important;
+        z-index: 3;
+        background-color: rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
         ::ng-deep .mat-card {
             border-color: white !important;
             -moz-border-radius: 0px;
@@ -55,6 +66,10 @@
             padding-bottom: 3%;
             margin-bottom: 0;
             justify-content: center;
+        }
+
+        #gallery{
+            object-fit: contain;
         }
     }
 
@@ -253,23 +268,9 @@
 }
 
 #content-header, .width-card {
-    @media only screen and (max-width: 700px) {
-        margin-left: 5%;
-        margin-right: 5%;
-        width: 90%;
-   }
-
-@media only screen and (max-width: 1000px) and (min-width: 700px) {
-    margin-left: 5%;
-    margin-right: 5%;
-    width: 90%;
-  }
-
-  @media only screen and (min-width: 1000px) {
-    margin-left: 10%;
-    margin-right: 10%;
-    width: 80%;
-  }
+    margin-left: 7.5%;
+    margin-right: 7.5%;
+    width: 85%;
 }
 
 #header{
@@ -442,13 +443,3 @@
     }
 }
 
-.spinner-wrapper {
-    position: absolute !important;
-    width: 100% !important;
-    height: 80% !important;
-    z-index: 3;
-    background-color: rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }

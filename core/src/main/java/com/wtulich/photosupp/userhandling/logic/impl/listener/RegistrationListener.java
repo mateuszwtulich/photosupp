@@ -56,7 +56,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         StringBuilder message = new StringBuilder();
         message.append(messages.getMessage("message.regSucc", null, event.getLocale()));
         message.append("\r\n\n" + messages.getMessage("api", null, event.getLocale()) + confirmationUrl.toString());
-        message.append("\n\nLogin: " + account.getUsername()+ "\nPassword: " + event.getPassword() + "\n\n");
+        message.append("\n\nNazwa użytkownika: " + account.getUsername()+ "\nHasło: " + event.getPassword() + "\n\n");
 
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);

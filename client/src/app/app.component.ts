@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'cf-root',
@@ -8,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 
 export class AppComponent {
-  title = 'client';
+  title = 'photosupp';
   
   constructor() {
   }

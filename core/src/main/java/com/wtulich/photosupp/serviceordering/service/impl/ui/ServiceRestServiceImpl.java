@@ -194,6 +194,8 @@ public class ServiceRestServiceImpl implements ServiceRestService {
             return ResponseEntity.ok().build();
         } catch (EntityDoesNotExistException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (EntityAlreadyExistsException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         }
     }
 

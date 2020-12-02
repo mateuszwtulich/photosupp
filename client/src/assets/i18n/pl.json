@@ -28,12 +28,12 @@
         "1st-part": "Jakość świadczonych usług jest naszym najwyższym priorytetem. System photosupp podkreśla naszą obecność w świecie najnowszych rozwiązań i technologii.",
         "2nd-part": "Już teraz pomożemy Ci wybrać najlepszą usługę dla Ciebie bez konieczności rejestracji!"
       },
-      "name": "Piotr Łodziński",
-      "title": "Właściciel firmy inviu"
+      "name": "Imię Nazwisko",
+      "title": "Właściciel firmy fotograficznej"
     }
   },
   "system-statement": {
-    "title": "System Photosupp zapewni Ci opiękę w trakcie korzystania z usług firmy inviu:",
+    "title": "System Photosupp zapewni Ci opiękę w trakcie korzystania z usług firmy fotograficznej:",
     "advantage": {
       "1st": "Pomoże Ci wybrać odpowiednią usługę i pozwoli ustalić termin realizacji.",
       "2nd": "Zapewni Ci dostęp do postępów realizacji i weryfikacji zlecenia.",
@@ -167,7 +167,8 @@
       "plural": "Usługi",
       "basePrice": "Cena podstawowa",
       "indicators": "Czynniki podwyższające cenę",
-      "modify": "Zaktualizuj usługę"
+      "modify": "Zaktualizuj usługę",
+      "add":"Dodaj usługę"
   },
   "indicators": {
       "plural": "Czynniki",
@@ -240,6 +241,6 @@
     "add": "Utwórz"
   },
   "server": {
-    "error": "Błąd serwera. Proszę spróbuj ponownie."
+    "error": "Błąd"
   }
 }

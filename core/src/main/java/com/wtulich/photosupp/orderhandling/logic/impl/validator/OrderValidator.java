@@ -19,7 +19,7 @@ public class OrderValidator {
 
     public void verifyIfBookingHasAssignedOrders(Long bookingId) throws EntityAlreadyExistsException {
         if(orderDao.existsByBooking_Id(bookingId)){
-            throw new EntityAlreadyExistsException("Booking with id " + bookingId + " has already assigned Order.");
+            throw new EntityAlreadyExistsException("Booking with id " + bookingId + " has assigned Order.");
         }
     }
 

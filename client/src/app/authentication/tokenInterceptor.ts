@@ -12,26 +12,35 @@ export class TokenInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         let jsonRequest: HttpRequest<any> = null;
-        if (this.localStorageService.isStorageInitialized()) {
-            const scopeInfo: ScopePermissionInfo = {
-                userId: this.localStorageService.getAuthInfo().userId,
-                isAdmin: this.localStorageService.getAuthorities().includes(ApplicationPermission.A_CRUD_SUPER) ? true : false
-            };
+        if (!this.localStorageService.getIsRequestToServer()) {
 
-            jsonRequest = request.clone({
-                setHeaders: {
-                    Authorization: `Bearer ${this.localStorageService.getToken()}`,
-                    Scope: JSON.stringify(scopeInfo)
+            if (this.localStorageService.isStorageInitialized()) {
+                const scopeInfo: ScopePermissionInfo = {
+                    userId: this.localStorageService.getAuthInfo().userId,
+                    isAdmin: this.localStorageService.getAuthorities().includes(ApplicationPermission.A_CRUD_SUPER) ? true : false
+                };
+
+                jsonRequest = request.clone({
+                    setHeaders: {
+                        Authorization: `Bearer ${this.localStorageService.getToken()}`,
+                        Scope: JSON.stringify(scopeInfo)
+                    }
                 }
+                );
+            } else {
+                jsonRequest = request.clone({
+                    setHeaders: {
+                        Authorization: `Bearer `
+                    }
+                }
+                );
             }
-            );
         } else {
             jsonRequest = request.clone({
                 setHeaders: {
-                    Authorization: `Bearer `
+                    Authorization: `Client-ID 5b4843a31687786`
                 }
-            }
-            );
+            });
         }
         return next.handle(jsonRequest);
     }

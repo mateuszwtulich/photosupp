@@ -14,10 +14,12 @@ import { SortUtil } from 'src/app/shared/utils/SortUtil';
 import { ModifyOrderComponent } from '../modals/order/modify-order/modify-order.component';
 import { OrderStatus } from '../shared/enum/OrderStatus';
 import { OrderService } from '../shared/services/order.service';
+import { ServerService } from '../shared/services/server.service';
 import { CommentEto } from '../shared/to/CommentEto';
 import { CommentTo } from '../shared/to/CommentTo';
 import { ImagePath } from '../shared/to/ImagePath';
 import { MediaContentEto } from '../shared/to/MediaContentEto';
+import { MediaContentTo } from '../shared/to/MediaContentTo';
 import { OrderEto } from '../shared/to/OrderEto';
 
 @Component({
@@ -36,7 +38,7 @@ export class OrderDetailsComponent implements OnInit {
   public commentControl: FormControl;
   public comments: Observable<CommentEto[]>;
   public mediaContents: MediaContentEto[];
-  public imagePaths: ImagePath[] = [];
+  public urlsData: string[] = [];
   public userId: number;
   public mediaExists = false;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -49,7 +51,8 @@ export class OrderDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private orderSevice: OrderService,
     private localStorage: LocalStorageService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private serwerService: ServerService,
   ) {
   }
 
@@ -75,24 +78,27 @@ export class OrderDetailsComponent implements OnInit {
         this.orderControl.setValue(order);
         this.comments = this.orderSevice.commentOrderData;
         this.mediaContents = mediaContents;
-        this.mediaExists = this.mediaContents.length > 0;
+        this.mediaExists = this.mediaContents ? this.mediaContents.length > 0 : false;
         this.prepareMediaContentTable();
       }))
     })
   }
 
   private prepareMediaContentTable() {
-    let dataSource = this.mediaContents.map((mediaContent: MediaContentEto) => {
-      return {
-        id: mediaContent.id,
-        type: mediaContent.type,
-        orderNumber: mediaContent.orderNumber,
-        url: mediaContent.url.substring(mediaContent.url.lastIndexOf("/") + 1)
-      }
-    })
-    this.dataSource = new MatTableDataSource(dataSource);
-    this.setDataSource();
-    this.loadImages(this.mediaContents);
+    if (!!this.mediaContents) {
+      this.urlsData = [];
+      let dataSource = this.mediaContents.map((mediaContent: MediaContentEto) => {
+        this.urlsData.push(mediaContent.url);
+        return {
+          id: mediaContent.id,
+          type: mediaContent.type,
+          orderNumber: mediaContent.orderNumber,
+          url: mediaContent.url.substring(mediaContent.url.lastIndexOf("/") + 1)
+        }
+      })
+      this.dataSource = new MatTableDataSource(dataSource);
+      this.setDataSource();
+    }
   }
 
   private setDataSource() {
@@ -104,15 +110,9 @@ export class OrderDetailsComponent implements OnInit {
     this.subscription.add(this.orderSevice.spinnerData.subscribe((isSpinnerDisplayed: boolean) => {
       this.isSpinnerDisplayed = isSpinnerDisplayed;
     }));
-  }
-
-  private loadImages(mediaContents) {
-    this.imagePaths = [];
-    mediaContents.forEach((mediaContent: MediaContentEto) => {
-      this.imagePaths.push({
-        path: mediaContent.url
-      });
-    })
+    this.subscription.add(this.serwerService.spinnerData.subscribe((isSpinnerDisplayed: boolean) => {
+      this.isSpinnerDisplayed = isSpinnerDisplayed;
+    }));
   }
 
   ngOnDestroy() {
@@ -127,9 +127,11 @@ export class OrderDetailsComponent implements OnInit {
 
   showGallery(index: number) {
     let prop = {
-      images: this.imagePaths,
-      index
+      images: [],
+      index: index
     };
+
+    this.urlsData.forEach(url => prop.images.push(new ImagePath(url)));
     this.gallery.load(prop);
   }
 
@@ -200,6 +202,16 @@ export class OrderDetailsComponent implements OnInit {
     });
   }
 
+  deleteMediaContent(mediaContent: MediaContentEto) {
+    const dialogRef = this.dialog.open(DeleteComponent, { height: '22%', width: '45%' });
+
+    dialogRef.afterClosed().subscribe((isDecisionPositive: boolean) => {
+      if (isDecisionPositive) {
+        this.orderSevice.deleteMediaContent(mediaContent.id);
+      }
+    });
+  }
+
   deleteComment(comment: CommentEto) {
     const dialogRef = this.dialog.open(DeleteComponent, { height: '22%', width: '45%' });
 
@@ -208,6 +220,31 @@ export class OrderDetailsComponent implements OnInit {
         this.orderSevice.deleteComment(comment.id);
       }
     });
+  }
+
+  downloadMediaContent(element: MediaContentEto) {
+    let mediaContent = this.mediaContents.find(mC => mC.id == element.id);
+    const downloadLink = document.createElement("a");
+
+    downloadLink.href = mediaContent.url;
+    downloadLink.target = "_blank";
+    downloadLink.click();
+  }
+
+  onChange(file) {
+    this.subscription.add(this.serwerService.addImage(file)
+      .subscribe((url: string) => {
+        console.log(url);
+        let type = file.type.substring(0, file.type.indexOf('/'));
+
+        let mediaContentTo: MediaContentTo = {
+          type: type.toUpperCase(),
+          url: url + "/" + file.name,
+          orderNumber: this.order.orderNumber,
+        }
+
+        this.orderSevice.addMediaContent(mediaContentTo);
+      }));
   }
 }
 

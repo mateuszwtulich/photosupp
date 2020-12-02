@@ -1,11 +1,13 @@
 <mat-tab-group mat-align-tabs="start" color="accent" *ngIf="orderControl.valid">
   <mat-tab label="{{ 'orders.details' | translate}}" color="accent">
-    <div id="header" >
-      <button id="modify" *ngxPermissionsOnly="['A_CRUD_SUPER', 'A_CRUD_ORDERS']" mat-mini-fab color="primary" aria-label="Modify button"
-        [disabled]="order.status.includes('FINISHED') || order.status.includes('TO_VERIFY')" (click)="modifyOrder()">
+    <div id="header">
+      <button id="modify" *ngxPermissionsOnly="['A_CRUD_SUPER', 'A_CRUD_ORDERS']" mat-mini-fab color="primary"
+        aria-label="Modify button" [disabled]="order.status.includes('FINISHED') || order.status.includes('TO_VERIFY')"
+        (click)="modifyOrder()">
         <mat-icon id="icon">edit</mat-icon>
       </button>
-      <button id="delete" *ngxPermissionsOnly="['A_CRUD_SUPER', 'A_CRUD_ORDERS']" mat-mini-fab color="warn" aria-label="Delete button"
+      <button id="delete" *ngxPermissionsOnly="['A_CRUD_SUPER', 'A_CRUD_ORDERS']" mat-mini-fab color="warn"
+        aria-label="Delete button"
         [disabled]="order.status.includes('IN_PROGRESS') || order.status.includes('TO_VERIFY')" (click)="deleteOrder()">
         <mat-icon id="icon">clear</mat-icon>
       </button>
@@ -113,27 +115,22 @@
   </mat-tab>
   <mat-tab label="{{ 'orders.content' | translate}}" color="accent">
     <div class="content-container">
+      <div *ngIf="isSpinnerDisplayed" class="spinner-wrapper">
+        <mat-spinner color="accent"></mat-spinner>
+      </div>
       <div id="content-header">
         <button id="add-mediaContent" mat-mini-fab color="primary" aria-label="Add mediaContent button"
-          [disabled]="order.status.includes('FINISHED') || order.status.includes('NEW')">
+          (click)="fileInput.click()" [disabled]="order.status.includes('FINISHED') || order.status.includes('NEW')">
           <mat-icon id="icon">add</mat-icon>
         </button>
+        <input hidden type="file" mat-raised-button color="accent" #fileInput
+          (change)="onChange($event.target.files[0])">
       </div>
-      <mat-card class="content-card">
-        <mat-card-title class="card-title">{{ 'orders.gallery' | translate}}</mat-card-title>
-        <img *ngIf="imagePaths.lenght > 0" mat-card-image src="imagePaths[0]" (click)="showGallery(1)"
-          alt="Photo of a Shiba Inu">
-      </mat-card>
+
       <div id="table-header">
-        <button *ngIf="mediaExists" id="download-mediaContent" mat-mini-fab color="primary"
-          aria-label="Dwonload all mediaContent button" [disabled]="!order.status.includes('FINISHED')">
-          <mat-icon id="icon">download</mat-icon>
-        </button>
       </div>
       <div id="mediaContent-table">
-        <div *ngIf="isSpinnerDisplayed" class="spinner-wrapper">
-          <mat-spinner color="accent"></mat-spinner>
-        </div>
+
         <div id="table-wrapper" class="mat-elevation-z8">
           <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
 
@@ -144,7 +141,12 @@
 
             <ng-container matColumnDef="name">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'mediaContent.name' | translate}} </th>
-              <td mat-cell *matCellDef="let element"> {{element.url}} </td>
+              <td mat-cell *matCellDef="let element; let i = index">
+                <mat-chip-list>
+                  <mat-chip (click)="showGallery(i)">{{element.url}}
+                  </mat-chip>
+                </mat-chip-list>
+              </td>
             </ng-container>
 
             <ng-container matColumnDef="actions">
@@ -152,7 +154,8 @@
               <td mat-cell *matCellDef="let element" class="actions-container">
                 <div>
                   <div>
-                    <button mat-icon-button color="primary" (click)="downloadMediaContent(element)" [disabled]="!order.status.includes('FINISHED')">
+                    <button mat-icon-button color="primary" (click)="downloadMediaContent(element)"
+                      [disabled]="!order.status.includes('FINISHED')">
                       <mat-icon>download</mat-icon>
                     </button>
                     <button mat-icon-button color="warn" (click)="deleteMediaContent(element)">
@@ -170,7 +173,6 @@
           <mat-paginator [pageSizeOptions]="[5, 10]"></mat-paginator>
         </div>
       </div>
-
     </div>
   </mat-tab>
   <mat-tab label="{{ 'orders.comments' | translate}}" color="accent">

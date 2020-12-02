@@ -12,7 +12,7 @@ export enum ApplicationPermission {
 
 export class BasicRole {
     static getClientRoleId(): number{
-        return 2;
+        return 102;
     }
 }
 

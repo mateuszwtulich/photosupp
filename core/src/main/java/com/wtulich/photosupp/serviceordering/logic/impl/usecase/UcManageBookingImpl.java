@@ -255,7 +255,6 @@ public class UcManageBookingImpl implements UcManageBooking {
         if(!(DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format(bookingEntity.getStart()).equals(bookingTo.getStart()) &&
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format(bookingEntity.getEnd()).equals(bookingTo.getEnd()))) {
 
-            bookingValidator.verifyIfBookingAlreadyCreatedAtThatDate(bookingTo);
             bookingValidator.verifyIfDatesAreValid(LocalDate.parse(bookingTo.getStart()), LocalDate.parse(bookingTo.getEnd()));
 
             bookingEntity.setStart( LocalDate.parse(bookingTo.getStart()) );
