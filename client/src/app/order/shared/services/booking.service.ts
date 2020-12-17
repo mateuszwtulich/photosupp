@@ -131,7 +131,7 @@ export class BookingService {
     })
   }
 
-  public deleteBooking(id: number) {
+  public deleteBooking(id: number): Promise<void> {
     return new Promise((resolve, reject) => {
       this.spinnerDataSource.next(true);
       this.subscription.add(this.http.delete<void>(`${ServiceHandlingRestServicePaths.BOOKING_PATH_WITH_ID(id.toFixed())}`).subscribe(

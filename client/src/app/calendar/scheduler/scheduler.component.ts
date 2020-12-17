@@ -1,16 +1,16 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { CalendarOptions, FullCalendarComponent } from '@fullcalendar/angular';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-import { CalendarEvent } from '../to/CalendarEvent';
-import { Router } from '@angular/router';
-import { SchedulerService } from '../services/scheduler.service';
-import { BookingEto } from 'src/app/order/shared/to/BookingEto';
-import { DatePipe } from '@angular/common';
 import { NgxPermissionsService } from 'ngx-permissions';
+import { Subscription } from 'rxjs';
 import { BookingService } from 'src/app/order/shared/services/booking.service';
+import { BookingEto } from 'src/app/order/shared/to/BookingEto';
 import { LocalStorageService } from 'src/app/shared/cache/localStorage.service';
 import { ApplicationPermission } from 'src/app/shared/utils/ApplicationPermission';
+import { SchedulerService } from '../services/scheduler.service';
+import { CalendarEvent } from '../to/CalendarEvent';
 
 @Component({
   selector: 'cf-scheduler',
@@ -39,13 +39,13 @@ export class SchedulerComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.subscritpion.add(this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.calendarOptions.locale = event.lang;
-    }));
-
     this.createsCalendarOptions();
     this.loadsBookings();
     this.checkIfPlanning();
+
+    this.subscritpion.add(this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.calendarOptions.locale = event.lang;
+    }));
   }
 
   private createsCalendarOptions() {

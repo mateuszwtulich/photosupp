@@ -17,7 +17,7 @@ export class CalculateComponent implements OnInit {
   public firstFormGroup: FormGroup;
   public secondFormGroup: FormGroup;
   public services: ServiceEto[];
-  private servicesStored: ServiceEto[];
+  private servicesStored: ServiceEto[] = [];
   public isSpinnerDisplayed = false;
   public priceIndicators: PriceIndicatorTo[];
   public selectedService: ServiceEto;
@@ -43,10 +43,10 @@ export class CalculateComponent implements OnInit {
     });
 
     this.onSpinnerDisplayed();
-    this.onLangChange();
     this.getServices();
+    this.onLangChange();
   }
-
+  
   private onSpinnerDisplayed(){
     this.subscription.add(this.serviceService.spinnerData.subscribe((isSpinnerDisplayed: boolean) => {
       this.isSpinnerDisplayed = isSpinnerDisplayed;

@@ -38,9 +38,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.createsForms();
-    this.subscritpion.add(this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.changeHintLabel();
-    }));
   }
 
   private createsForms() {
@@ -58,7 +55,9 @@ export class HomeComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.changeHintLabel();
+    this.subscritpion.add(this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.changeHintLabel();
+    }));  
   }
 
   private changeHintLabel() {
