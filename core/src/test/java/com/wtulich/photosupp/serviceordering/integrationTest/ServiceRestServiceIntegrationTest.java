@@ -78,9 +78,11 @@ public class ServiceRestServiceIntegrationTest {
 
         addressEto = new AddressEto(1L, "Wroclaw", "Wroblewskiego", "27", null, "51-627");
 
-        List<IndicatorEto> indicatorEtos = List.of(indicatorEto);
-        indicatorEto = new IndicatorEto(1L,"Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 30);
-        serviceEto2 = new ServiceEto(2L, "FOTOGRAFIA", "PRODUKTOWA", 1500D, "pl", indicatorEtos);
+        indicatorEto = new IndicatorEto(1L,"Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
+        List<IndicatorEto> indicatorEtos = new ArrayList<>();
+        indicatorEtos.add(indicatorEto);
+
+        serviceEto2 = new ServiceEto(2L, "FOTOGRAFIA", "PRODUKTOWA", 1500D, "pl", new ArrayList<>());
         serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl", indicatorEtos);
 
         List<PermissionEto> permissionEtoList = new ArrayList<>();
@@ -97,11 +99,12 @@ public class ServiceRestServiceIntegrationTest {
         priceIndicatorEtoList.add(priceIndicatorEto);
 
         addressTo = new AddressTo("Wroclaw", "Wroblewskiego", "27", null, "51-627");
-        List<Long> indicatorsIds = List.of(1L);
+        List<Long> indicatorsIds = new ArrayList<>();
+        indicatorsIds.add(1L);
         serviceTo = new ServiceTo("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl", indicatorsIds);
-        indicatorTo = new IndicatorTo("Podróż służbowa", "Paliwo, amortyzacja", "pl", 20, 30);
+        indicatorTo = new IndicatorTo("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
 
-        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, 1L, 20, 0);
+        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, 1L, 20, 400);
         priceIndicatorToList = new ArrayList<>();
         priceIndicatorToList.add(priceIndicatorTo);
         bookingTo = new BookingTo("Film dla TestCompany", "Film produktowy z dojazdem", 1L, 1L, addressTo,
@@ -161,6 +164,7 @@ public class ServiceRestServiceIntegrationTest {
         //Arrange
         ArrayList<BookingEto> bookings = new ArrayList<>();
         bookings.add(bookingEto);
+        bookingEto.getServiceEto().setIndicatorEtoList(null);
 
         //Act
         MvcResult result = mockMvc.perform(get(GET_ALL_BOOKINGS_URL)
@@ -194,6 +198,7 @@ public class ServiceRestServiceIntegrationTest {
         //Arrange
         ArrayList<BookingEto> bookings = new ArrayList<>();
         bookings.add(bookingEto);
+        bookingEto.getServiceEto().setIndicatorEtoList(null);
 
         //Act
         MvcResult result = mockMvc.perform(get(GET_ALL_BOOKINGS_BY_USER_ID_URL, userEto.getId())
@@ -205,7 +210,7 @@ public class ServiceRestServiceIntegrationTest {
                 .andReturn();
 
         BookingEto[] bookingEtos = objectMapper.readValue(result.getResponse().getContentAsString(), BookingEto[].class);
-        assertThat(bookingEtos).isEqualTo(bookings.toArray());
+        assertThat(bookingEtos[0]).isEqualToIgnoringGivenFields(bookings.toArray()[0], "service", "priceIndicatorList");
     }
 
     @Test
@@ -293,6 +298,7 @@ public class ServiceRestServiceIntegrationTest {
     void testGetAllIndicatorsNoContent() throws Exception {
         //Arrange
         mockMvc.perform(delete(BOOKING_ID_URL, bookingEto.getId()));
+        mockMvc.perform(delete(SERVICE_ID_URL, indicatorEto.getId()));
         mockMvc.perform(delete(INDICATOR_ID_URL, indicatorEto.getId()));
 
         //Act
@@ -305,6 +311,9 @@ public class ServiceRestServiceIntegrationTest {
     @Test
     @DisplayName("GET /service/v1/booking/1 - Found")
     void testGetBookingByIdFound() throws Exception {
+        //Arrange
+        bookingEto.getServiceEto().setIndicatorEtoList(null);
+
         //Act
         MvcResult result = mockMvc.perform(get(GET_BOOKING_BY_ID_URL, bookingEto.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -334,6 +343,7 @@ public class ServiceRestServiceIntegrationTest {
     void testDeleteIndicatorOk() throws Exception {
         //Act
         mockMvc.perform(delete(BOOKING_ID_URL, bookingEto.getId()));
+        mockMvc.perform(delete(SERVICE_ID_URL, indicatorEto.getId()));
         mockMvc.perform(delete(INDICATOR_ID_URL, indicatorEto.getId()))
 
                 //Assert
@@ -417,6 +427,7 @@ public class ServiceRestServiceIntegrationTest {
     void testCreateIndicatorOk() throws Exception {
         //Arrange
         mockMvc.perform(delete(BOOKING_ID_URL, bookingEto.getId()));
+        mockMvc.perform(delete(SERVICE_ID_URL, indicatorEto.getId()));
         mockMvc.perform(delete(INDICATOR_ID_URL, indicatorEto.getId()));
         indicatorEto.setId(2L);
 
@@ -503,7 +514,7 @@ public class ServiceRestServiceIntegrationTest {
                 .andReturn();
 
         assertThat(bookingEto)
-                .isEqualToComparingFieldByField(objectMapper.readValue(result.getResponse().getContentAsString(), BookingEto.class));
+                .isEqualToIgnoringGivenFields(objectMapper.readValue(result.getResponse().getContentAsString(), BookingEto.class), "priceIndicatorEtoList");
     }
 
     @Test
@@ -623,7 +634,8 @@ public class ServiceRestServiceIntegrationTest {
     @DisplayName("PUT /service/v1/service/1 - Unprocessable Entity")
     void testUpdateServiceUnprocessableEntity() throws Exception {
         //Arrange
-        List<Long> indicatorsIds = List.of(1L);
+        List<Long> indicatorsIds = new ArrayList<>();
+        indicatorsIds.add(1L);
         ServiceTo serviceTo2 = new ServiceTo("FOTOGRAFIA", "PRODUKTOWA", 500D, "pl", indicatorsIds);
 
         //Act
@@ -652,7 +664,7 @@ public class ServiceRestServiceIntegrationTest {
                 .andReturn();
 
         assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), BookingEto.class))
-                .isEqualToComparingFieldByField(bookingEto);
+                .isEqualToIgnoringGivenFields(bookingEto, "priceIndicatorEtoList");
     }
 
     @Test
@@ -665,28 +677,6 @@ public class ServiceRestServiceIntegrationTest {
 
                 //Assert
                 .andExpect(status().isNotFound())
-                .andReturn();
-    }
-
-    @Test
-    @DisplayName("PUT /service/v1/booking/1 - Unprocessable Entity")
-    void testUpdateBookingUnprocessableEntity() throws Exception {
-        //Arrange
-        BookingTo bookingTo2 = new BookingTo("Film dla TestCompany2", "Film produktowy z dojazdem", 1L, 1L, addressTo,
-                "2020-04-11", "2020-04-12", priceIndicatorToList);
-        bookingTo2.setUserId(1L);
-
-        mockMvc.perform(post(BOOKING_URL)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(bookingTo2)));
-
-        //Act
-        mockMvc.perform(put(BOOKING_ID_URL, bookingEto.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(bookingTo2)))
-
-                //Assert
-                .andExpect(status().isUnprocessableEntity())
                 .andReturn();
     }
 
@@ -717,7 +707,7 @@ public class ServiceRestServiceIntegrationTest {
                 .andReturn();
 
         assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), CalculateCto.class))
-                .isEqualToComparingFieldByField(calculateCto);
+                .isEqualToIgnoringGivenFields(calculateCto, "serviceEto", "priceIndicatorEtoList");
     }
 
     @Test

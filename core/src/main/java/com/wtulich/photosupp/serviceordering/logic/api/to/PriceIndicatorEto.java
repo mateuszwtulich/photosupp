@@ -65,7 +65,7 @@ public class PriceIndicatorEto {
         if (o == null || getClass() != o.getClass()) return false;
         PriceIndicatorEto that = (PriceIndicatorEto) o;
         return indicatorEto.equals(that.indicatorEto) &&
-                bookingId.equals(that.bookingId) &&
+                Objects.equals(bookingId, that.bookingId) &&
                 price.equals(that.price) &&
                 amount.equals(that.amount);
     }

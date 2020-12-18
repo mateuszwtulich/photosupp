@@ -55,7 +55,9 @@ public class UcFindServiceTest {
     void testFindAllServicesSuccess() {
         //Arrange
         when(serviceDao.findAll()).thenReturn(serviceEntities);
-        serviceEtoList.add(serviceMapper.toServiceEto(serviceEntity));
+        ServiceEto serviceEto = serviceMapper.toServiceEto(serviceEntity);
+        serviceEto.setIndicatorEtoList(new ArrayList<>());
+        serviceEtoList.add(serviceEto);
 
         //Act
         Optional<List<ServiceEto>> result = ucFindService.findAllServices();

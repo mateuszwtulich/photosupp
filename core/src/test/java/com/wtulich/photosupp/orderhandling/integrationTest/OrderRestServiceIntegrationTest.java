@@ -556,6 +556,10 @@ public class OrderRestServiceIntegrationTest {
         mockMvc.perform(delete(GET_ALL_MEDIA_CONTENT_BY_ORDER_NUMBER_URL, orderEto.getOrderNumber()));
         mockMvc.perform(delete(ORDER_NUMBER_URL, orderEto.getOrderNumber()));
 
+        mockMvc.perform(post(ORDER_URL)
+                .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(orderTo)));
+
         orderTo.setBookingId(1L);
         mockMvc.perform(post(ORDER_URL)
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE)

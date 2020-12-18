@@ -93,16 +93,20 @@ INSERT INTO public.photosupp_user(
     VALUES (2, 'NAME2', 'SURNAME2', 2, 2);
 
 INSERT INTO public.indicator(
-    id, name, description, base_amount)
-    VALUES (1, 'Podroz sluzbowa', 'Paliwo, amortyzacja', 40);
+    id, name, description, locale, base_amount, double_price)
+    VALUES (1, 'Podroz sluzbowa', 'Paliwo, amortyzacja', 'pl', 20, 40);
 
 INSERT INTO public.service(
-    id, name, description, base_price)
-    VALUES (1, 'Film produktowy', 'Film produktow na bialym tle i odpowiednim oswietleniu', 500);
+    id, name, description, locale, base_price)
+    VALUES (1, 'Film produktowy', 'Film produktow na bialym tle i odpowiednim oswietleniu', 'pl', 500);
 
 INSERT INTO public.service(
-    id, name, description, base_price)
-    VALUES (2, 'FOTOGRAFIA', 'PRODUKTOWA', 1500);
+    id, name, description, locale, base_price)
+    VALUES (2, 'FOTOGRAFIA', 'PRODUKTOWA', 'pl', 1500);
+
+INSERT INTO public.SERVICE_INDICATORS(
+    INDICATOR_ID, SERVICE_ID)
+    VALUES (1,1);
 
 INSERT INTO public.address(
     id, CITY, STREET, BUILDING_NUMBER, APARTMENT_NUMBER, POSTAL_CODE)
@@ -113,7 +117,7 @@ INSERT INTO public.booking(
     VALUES (1, 'Film dla TestCompany', 'Film produktowy z dojazdem', '2020-04-11', '2020-04-12', 1400, '2020-04-11', false, 1, 1, 1);
 
 INSERT INTO public.price_indicator(
-    INDICATOR_ID, BOOKING_ID, INDICATOR_PRICE, MULTIPLIER)
+    INDICATOR_ID, BOOKING_ID, PRICE, AMOUNT)
     VALUES (1, 1, 400, 10);
 
 INSERT INTO public.photosupp_order(

@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({SpringExtension.class})
@@ -33,7 +34,7 @@ public class IndicatorValidatorTest {
 
     @BeforeEach
     void setUp() {
-        IndicatorEntity indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
+        indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
         indicatorEntity.setId(1L);
         indicatorTo = new IndicatorTo("Podróż służbowa", "Paliwo, amortyzacja", "pl", 20, 40);
     }
@@ -42,7 +43,7 @@ public class IndicatorValidatorTest {
     @DisplayName("Test verifyIfIndicatorAlreadyExists Success")
     void verifyIfServiceAlreadyExistsSuccess() {
         //Arrange
-        when(indicatorDao.existsByName(indicatorEntity.getName())).thenReturn(true);
+        when(indicatorDao.existsByName(any())).thenReturn(true);
 
         //Act Assert
         Assertions.assertThrows(EntityAlreadyExistsException.class, () ->
@@ -53,7 +54,7 @@ public class IndicatorValidatorTest {
     @DisplayName("Test verifyIfIndicatorAlreadyExists Failure")
     void verifyIfRoleAlreadyExistsFailure() {
         //Arrange
-        when(indicatorDao.existsByName(indicatorEntity.getName())).thenReturn(false);
+        when(indicatorDao.existsByName(any())).thenReturn(false);
 
         //Act Assert
         Assertions.assertDoesNotThrow(() ->  indicatorValidator.verifyIfIndicatorNameAlreadyExists(indicatorTo.getName()));
