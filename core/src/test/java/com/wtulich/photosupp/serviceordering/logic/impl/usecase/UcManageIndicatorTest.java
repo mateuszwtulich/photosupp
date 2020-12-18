@@ -21,6 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -44,7 +45,7 @@ public class UcManageIndicatorTest {
 
     @BeforeEach
     void setUp() {
-        IndicatorEntity indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
+        indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
         indicatorEntity.setId(1L);
 
         indicatorEto = new IndicatorEto(1L, "Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
@@ -56,7 +57,7 @@ public class UcManageIndicatorTest {
     @DisplayName("Test createIndicator Success")
     void testCreateIndicatorSuccess() throws EntityAlreadyExistsException {
         //Arrange
-        when(indicatorDao.save(indicatorEntity)).thenReturn(indicatorEntity);
+        when(indicatorDao.save(any())).thenReturn(indicatorEntity);
 
         //Act
         Optional<IndicatorEto> result = ucManageIndicator.createIndicator(indicatorTo);

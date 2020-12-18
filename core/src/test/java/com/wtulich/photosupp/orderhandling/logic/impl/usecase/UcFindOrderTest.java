@@ -110,7 +110,9 @@ public class UcFindOrderTest {
 
         AddressEntity addressEntity =  new AddressEntity("Wroclaw", "Wroblewskiego", "27", null, "51-627");
         ServiceEntity serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl");
+        serviceEntity.setId(1L);
         IndicatorEntity indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
+        indicatorEntity.setId(1L);
         serviceEntity.setIndicatorList(List.of(indicatorEntity));
 
         BookingEntity bookingEntity = new BookingEntity("Film dla TestCompany", "Film produktowy z dojazdem", 900D,

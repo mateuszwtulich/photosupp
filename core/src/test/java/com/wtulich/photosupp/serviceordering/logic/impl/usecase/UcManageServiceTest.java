@@ -42,6 +42,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -58,16 +59,26 @@ public class UcManageServiceTest {
     private ServiceDao serviceDao;
 
     @MockBean
+    private IndicatorDao indicatorDao;
+
+    @MockBean
     private ServiceValidator serviceValidator;
 
     private ServiceEntity serviceEntity;
     private ServiceEto serviceEto;
     private ServiceTo serviceTo;
+    private List<IndicatorEntity> indicatorEntities;
 
     @BeforeEach
     void setUp() {
+        IndicatorEntity indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 30);
+        indicatorEntity.setId(1L);
+        indicatorEntities = new ArrayList<>();
+        indicatorEntities.add(indicatorEntity);
+
         serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl");
         serviceEntity.setId(1L);
+        serviceEntity.setIndicatorList(indicatorEntities);
 
         List<Long> indicatorsIds = List.of(1L);
 
@@ -83,7 +94,8 @@ public class UcManageServiceTest {
     @DisplayName("Test createService Success")
     void testCreateServiceSuccess() throws EntityAlreadyExistsException, EntityDoesNotExistException {
         //Arrange
-        when(serviceDao.save(serviceEntity)).thenReturn(serviceEntity);
+        when(serviceDao.save(any())).thenReturn(serviceEntity);
+        when(indicatorDao.findAllById(any())).thenReturn(indicatorEntities);
 
         //Act
         Optional<ServiceEto> result = ucManageService.createService(serviceTo);
@@ -112,6 +124,7 @@ public class UcManageServiceTest {
         serviceTo.setName("Nowy");
         serviceEto.setName("Nowy");
         when(serviceDao.findById(serviceEntity.getId())).thenReturn(Optional.of(serviceEntity));
+        when(indicatorDao.findAllById(any())).thenReturn(indicatorEntities);
 
         //Act
         Optional<ServiceEto> result = ucManageService.updateService(serviceTo, serviceEntity.getId());

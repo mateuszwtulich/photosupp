@@ -1,6 +1,7 @@
 package com.wtulich.photosupp.serviceordering.logic.impl.usecase;
 
 import com.wtulich.photosupp.general.logic.api.exception.EntityDoesNotExistException;
+import com.wtulich.photosupp.orderhandling.dataaccess.api.dao.OrderDao;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.dao.BookingDao;
 import com.wtulich.photosupp.serviceordering.dataaccess.api.entity.BookingEntity;
 import org.junit.jupiter.api.Assertions;
@@ -29,6 +30,9 @@ public class UcDeleteBookingTest {
     @MockBean
     private BookingDao bookingDao;
 
+    @MockBean
+    private OrderDao orderDao;
+
     private BookingEntity bookingEntity;
 
     @BeforeEach
@@ -41,7 +45,7 @@ public class UcDeleteBookingTest {
     void testDeleteBookingSuccess() {
         //Arrange
         when(bookingDao.findById(1L)).thenReturn(Optional.of(bookingEntity));
-
+        when(orderDao.existsByBooking_Id(1L)).thenReturn(false);
         //Act Assert
         Assertions.assertDoesNotThrow(() -> ucDeleteBooking.deleteBooking(1L));
     }

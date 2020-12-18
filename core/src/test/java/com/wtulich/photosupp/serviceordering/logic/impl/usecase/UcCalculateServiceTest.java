@@ -56,9 +56,10 @@ public class UcCalculateServiceTest {
     @BeforeEach
     void setUp() {
         IndicatorEto indicatorEto = new IndicatorEto(1L,"Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 30);
-        List<IndicatorEto> indicatorEtos = List.of(indicatorEto);
+        List<IndicatorEto> indicatorEtos = new ArrayList<>();
+        indicatorEtos.add(indicatorEto);
 
-        ServiceEto serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl", indicatorEtos);
+        ServiceEto serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl", null);
         List<PriceIndicatorEto> priceIndicatorEtoList = new ArrayList<>();
 
         PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorEto, null, 400, 10);
@@ -69,7 +70,7 @@ public class UcCalculateServiceTest {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd").format(getCurrentDate(LocalDate.now(), 1)),
                 priceIndicatorEtoList);
 
-        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, 1L, 20, 0);
+        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, null, 10, 400);
         List<PriceIndicatorTo> priceIndicatorToList = new ArrayList<>();
         priceIndicatorToList.add(priceIndicatorTo);
 
@@ -78,10 +79,13 @@ public class UcCalculateServiceTest {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd").format(getCurrentDate(LocalDate.now(), 1)),
                 priceIndicatorToList);
 
-        ServiceEntity serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl");
-        IndicatorEntity indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
-        serviceEntity.setIndicatorList(List.of(indicatorEntity));
-
+        serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl");
+        serviceEntity.setId(1L);
+        indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
+        indicatorEntity.setId(1L);
+        List<IndicatorEntity> indicatorEntities = new ArrayList<>();
+        indicatorEntities.add(indicatorEntity);
+        serviceEntity.setIndicatorList(indicatorEntities);
     }
 
     public LocalDate getCurrentDate(LocalDate currentDate, int addDays) {

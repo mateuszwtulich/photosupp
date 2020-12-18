@@ -42,7 +42,7 @@ public class UcFindIndicatorTest {
 
     @BeforeEach
     void setUp() {
-        IndicatorEntity indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
+        indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
 
         indicatorEntities = new ArrayList<>();
         indicatorEntities.add(indicatorEntity);

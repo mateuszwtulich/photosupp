@@ -170,6 +170,7 @@ public class UcManageOrderTest {
         when(userDao.findById(userEntity.getId())).thenReturn(Optional.ofNullable(userEntity));
         when(userDao.findById(userEntity2.getId())).thenReturn(Optional.ofNullable(userEntity2));
         when(bookingDao.findById(bookingEntity.getId())).thenReturn(Optional.ofNullable(bookingEntity));
+        orderEto.getBooking().setConfirmed(true);
 
         //Act
         Optional<OrderEto> result = ucManageOrder.createOrder(orderTo);

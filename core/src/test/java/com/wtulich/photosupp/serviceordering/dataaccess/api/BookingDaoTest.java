@@ -76,9 +76,9 @@ public class BookingDaoTest {
 
         // Assert
         assertThat(bookingEntities).hasSize(1);
-        assertThat(bookingEntities.get(0)).isEqualToIgnoringGivenFields(bookingEntity, "user", "priceIndicatorList", "start", "end", "modificationDate");
+        assertThat(bookingEntities.get(0)).isEqualToIgnoringGivenFields(bookingEntity, "user", "service", "priceIndicatorList", "start", "end", "modificationDate");
         assertThat(bookingEntities.get(0).getAddress()).isEqualToIgnoringGivenFields(bookingEntity.getAddress(), "bookingList");
-        assertThat(bookingEntities.get(0).getService()).isEqualToIgnoringGivenFields(bookingEntity.getService(), "bookingList");
+        assertThat(bookingEntities.get(0).getService()).isEqualToIgnoringGivenFields(bookingEntity.getService(), "bookingList", "indicatorList");
         assertThat(bookingEntities.get(0).getUser()).isEqualToIgnoringGivenFields(bookingEntity.getUser(), "orderList", "bookingList", "role", "account");
     }
 
@@ -126,9 +126,9 @@ public class BookingDaoTest {
 
         // Assert
         assertThat(bookingEntities).hasSize(1);
-        assertThat(bookingEntities.get(0)).isEqualToIgnoringGivenFields(bookingEntity, "user", "priceIndicatorList", "start", "end", "modificationDate");
+        assertThat(bookingEntities.get(0)).isEqualToIgnoringGivenFields(bookingEntity, "user", "service", "priceIndicatorList", "start", "end", "modificationDate");
         assertThat(bookingEntities.get(0).getAddress()).isEqualToIgnoringGivenFields(bookingEntity.getAddress(), "bookingList");
-        assertThat(bookingEntities.get(0).getService()).isEqualToIgnoringGivenFields(bookingEntity.getService(), "bookingList");
+        assertThat(bookingEntities.get(0).getService()).isEqualToIgnoringGivenFields(bookingEntity.getService(), "bookingList", "indicatorList");
         assertThat(bookingEntities.get(0).getUser()).isEqualToIgnoringGivenFields(bookingEntity.getUser(), "orderList", "bookingList", "role", "account");
     }
 

@@ -42,7 +42,7 @@ public class UcDeleteIndicatorTest {
 
     @BeforeEach
     void setUp() {
-        IndicatorEntity indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
+        indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
         indicatorEntity.setId(1L);
     }
 

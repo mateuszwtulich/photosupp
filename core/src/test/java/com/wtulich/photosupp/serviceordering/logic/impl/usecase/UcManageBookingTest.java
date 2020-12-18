@@ -98,7 +98,7 @@ public class UcManageBookingTest {
     @BeforeEach
     void setUp() {
         AddressEto addressEto = new AddressEto(1L, "Wroclaw", "Wroblewskiego", "27", null, "51-627");
-        IndicatorEto indicatorEto = new IndicatorEto(1L,"Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 30);
+        IndicatorEto indicatorEto = new IndicatorEto(1L,"Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
         List<IndicatorEto> indicatorEtos = List.of(indicatorEto);
 
         ServiceEto serviceEto = new ServiceEto(1L, "Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl", indicatorEtos);
@@ -117,12 +117,12 @@ public class UcManageBookingTest {
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
                 priceIndicatorEtoList);
 
-        PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorEto, bookingEto.getId(), 400,10);
+        PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorEto, bookingEto.getId(), 400,20);
         priceIndicatorEtoList.add(priceIndicatorEto);
 
         AddressTo addressTo = new AddressTo("Wroclaw", "Wroblewskiego", "27", null, "51-627");
 
-        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, 1L, 20, 0);
+        PriceIndicatorTo priceIndicatorTo = new PriceIndicatorTo(1L, 1L, 20, 400);
         List<PriceIndicatorTo> priceIndicatorToList = new ArrayList<>();
         priceIndicatorToList.add(priceIndicatorTo);
 
@@ -138,8 +138,12 @@ public class UcManageBookingTest {
         addressEntity2.setId(1L);
 
         serviceEntity = new ServiceEntity("Film produktowy", "Film produktow na bialym tle i odpowiednim oswietleniu", 500D, "pl");
+        serviceEntity.setId(1L);
         indicatorEntity = new IndicatorEntity("Podroz sluzbowa", "Paliwo, amortyzacja", "pl", 20, 40);
-        serviceEntity.setIndicatorList(List.of(indicatorEntity));
+        indicatorEntity.setId(1L);
+        List<IndicatorEntity> indicatorEntities = new ArrayList<>();
+        indicatorEntities.add(indicatorEntity);
+        serviceEntity.setIndicatorList(indicatorEntities);
 
         PermissionEntity permissionEntity = new PermissionEntity(ApplicationPermissions.A_CRUD_SUPER, "DESC1");
         permissionEntity.setId(1L);
@@ -159,7 +163,7 @@ public class UcManageBookingTest {
                 getCurrentDate(LocalDate.now(),1), getCurrentDate(LocalDate.now(),0));
         bookingEntity.setId(1L);
 
-        priceIndicatorEntity = new PriceIndicatorEntity(indicatorEntity, bookingEntity, 400, 10);
+        priceIndicatorEntity = new PriceIndicatorEntity(indicatorEntity, bookingEntity, 400, 20);
         priceIndicatorEntities = new ArrayList<>();
         priceIndicatorEntities.add(priceIndicatorEntity);
         bookingEntity.setPriceIndicatorList(priceIndicatorEntities);
@@ -180,7 +184,7 @@ public class UcManageBookingTest {
         when(userDao.findById(bookingTo.getUserId())).thenReturn(Optional.of(userEntity));
         when(addressDao.save(any())).thenReturn(addressEntity);
         when(bookingDao.save(any())).thenReturn(bookingEntity);
-        when(indicatorDao.findById(indicatorEntity.getId())).thenReturn(Optional.ofNullable(indicatorEntity));
+        when(indicatorDao.findById(any())).thenReturn(Optional.ofNullable(indicatorEntity));
         when(priceIndicatorDao.save(any())).thenReturn(priceIndicatorEntity);
 
         //Act
@@ -299,12 +303,11 @@ public class UcManageBookingTest {
         bookingTo.setStart(DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)));
         bookingTo.setAddressTo(null);
         bookingTo.setPriceIndicatorToList(Collections.emptyList());
-        bookingTo.setServiceId(2L);
         bookingEto.setPredictedPrice(900D);
         bookingEto.setName("Nowa nazwa");
         bookingEto.setStart(DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),1)));
         bookingEto.setAddressEto(null);
-        bookingEto.getServiceEto().setId(2L);
+        bookingEntity.setAddress(null);
         when(bookingDao.findById(bookingEntity.getId())).thenReturn(Optional.of(bookingEntity));
         when(indicatorDao.findById(indicatorEntity.getId())).thenReturn(Optional.ofNullable(indicatorEntity));
         when(priceIndicatorDao.save(any())).thenReturn(priceIndicatorEntity);
@@ -419,7 +422,7 @@ public class UcManageBookingTest {
                 DateTimeFormatter.ofPattern( "yyyy-MM-dd" ).format( getCurrentDate(LocalDate.now(),0)),
                 priceIndicatorEtoList, "INVIU_00001");
 
-        PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorEto, bookingEto.getId(), 400, 10);
+        PriceIndicatorEto priceIndicatorEto = new PriceIndicatorEto(indicatorEto, bookingEto.getId(), 400, 20);
         priceIndicatorEtoList.add(priceIndicatorEto);
 
         OrderEntity orderEntity = new OrderEntity("INVIU_00001", OrderStatus.NEW, 1400D, LocalDate.now(), userEntity, userEntity,  bookingEntity);
